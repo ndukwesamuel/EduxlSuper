@@ -94,9 +94,9 @@ const testSlice = createSlice({
       state.currentIndex = Math.max(state.currentIndex - 1, 0);
     },
     saveResult: (state, action: PayloadAction<{
-      result: TestResultSummary;
+      result:             TestResultSummary;
       wrongAnswerDetails: WrongAnswerDetail[];
-      progress?: ProgressUpdate;
+      progress?:          ProgressUpdate;
     }>) => {
       state.result             = action.payload.result;
       state.wrongAnswerDetails = action.payload.wrongAnswerDetails;

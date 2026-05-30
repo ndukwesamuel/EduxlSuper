@@ -1,13 +1,109 @@
+// // import { configureStore } from '@reduxjs/toolkit';
+// // import {
+// //   persistStore,
+// //   persistReducer,
+// //   FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,
+// // } from 'redux-persist';
+// // import AsyncStorage from '@react-native-async-storage/async-storage';
+// // import { combineReducers } from '@reduxjs/toolkit';
+// // import authReducer from './authSlice';
+// // import testReducer  from './testSlice';
+// // import { setTokenGetter } from '../../config/client';
+// // // setTokenGetter
+// // // setTokenGetter
+
+// // const persistConfig = {
+// //   key:       'root',
+// //   storage:   AsyncStorage,
+// //   whitelist: ['auth'], // only persist auth — test state is session-only
+// // };
+
+// // const rootReducer = combineReducers({
+// //   auth: authReducer,
+// //   test: testReducer,
+// // });
+
+// // const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// // export const store = configureStore({
+// //   reducer: persistedReducer,
+// //   middleware: (getDefaultMiddleware) =>
+// //     getDefaultMiddleware({
+// //       serializableCheck: {
+// //         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+// //       },
+// //     }),
+// // });
+
+// // // ── Wire token into API client automatically ──────────────────────
+// // // Every API call will now include the JWT token if logged in
+// // setTokenGetter(() => store.getState().auth?.token ?? null);
+
+// // export const persistor   = persistStore(store);
+// // export type RootState    = ReturnType<typeof store.getState>;
+// // export type AppDispatch  = typeof store.dispatch;
+
+
+// import { configureStore } from '@reduxjs/toolkit';
+// import {
+//   persistStore,
+//   persistReducer,
+//   FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,
+// } from 'redux-persist';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { combineReducers } from '@reduxjs/toolkit';
+// import authReducer from './authSlice';
+// import testReducer  from './testSlice';
+// import { setTokenGetter } from '../api/client';
+
+// const persistConfig = {
+//   key:       'root',
+//   storage:   AsyncStorage,
+//   whitelist: ['auth'], // only persist auth — test state is session-only
+// };
+
+// const rootReducer = combineReducers({
+//   auth: authReducer,
+//   test: testReducer,
+// });
+
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// export const store = configureStore({
+//   reducer: persistedReducer,
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware({
+//       serializableCheck: {
+//         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+//       },
+//     }),
+// });
+
+// // ── Wire token into API client automatically ──────────────────────
+// // Every API call will now include the JWT token if logged in
+// setTokenGetter(() => store.getState().auth?.token ?? null);
+
+// export const persistor   = persistStore(store);
+// export type RootState    = ReturnType<typeof store.getState>;
+// export type AppDispatch  = typeof store.dispatch;
+
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,
+} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
 import testReducer  from './testSlice';
+import { setTokenGetter } from  "../../config/client" 
+
+// '../api/client';
 
 const persistConfig = {
-  key:     'root',
-  storage: AsyncStorage,
+  key:       'root',
+  storage:   AsyncStorage,
   whitelist: ['auth'], // only persist auth — test state is session-only
 };
 
@@ -28,6 +124,10 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store);
-export type RootState   = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// ── Wire token into API client automatically ──────────────────────
+// Every API call will now include the JWT token if logged in
+setTokenGetter(() => store.getState().auth?.token ?? null);
+
+export const persistor   = persistStore(store);
+export type RootState    = ReturnType<typeof store.getState>;
+export type AppDispatch  = typeof store.dispatch;

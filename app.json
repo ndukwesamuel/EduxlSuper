@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "my-minimal-app",
-    "slug": "my-minimal-app",
-    "version": "1.0.0",
+    "name": "EduXL",
+    "slug": "eduxl",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,20 +16,21 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.samheart.myminimalapp"
+      "package": "com.samheart.eduxl"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "dbd7a281-e315-4115-812f-784bc0a69e08"
+        "projectId": "f2825f25-3c1c-4532-a612-bd445107a264"
       }
     },
     "plugins": [

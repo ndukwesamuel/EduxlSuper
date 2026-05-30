@@ -28,6 +28,13 @@ import BankReadyHomeScreen from "../screens/bankready/BankReadyHomeScreen";
 import TestScreen from "../screens/bankready/TestScreen";
 import ResultsScreen from "../screens/bankready/ResultsScreen";
 import HistoryScreen from "../screens/bankready/HistoryScreen";
+
+import DrillPadHomeScreen from '../screens/drillpad/DrillPadHomeScreen';
+import DrillSubjectScreen from '../screens/drillpad/DrillSubjectScreen';
+import DrillAddQuestionsScreen from '../screens/drillpad/DrillAddQuestionsScreen';
+import DrillSessionScreen from '../screens/drillpad/DrillSessionScreen';
+import DrillResultsScreen from '../screens/drillpad/DrillResultsScreen';
+
 // import BottomTabNavigator from "./Bottomtabnavigator";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -50,6 +57,14 @@ function AppNavigator() {
       <AppStack.Screen name="Test" component={TestScreen} />
       <AppStack.Screen name="Results" component={ResultsScreen} />
       <AppStack.Screen name="History" component={HistoryScreen} />
+
+
+      <AppStack.Screen name="DrillPad" component={DrillPadHomeScreen} />
+      <AppStack.Screen name="DrillSubject" component={DrillSubjectScreen} />
+      <AppStack.Screen name="DrillAddQuestions" component={DrillAddQuestionsScreen} />
+      <AppStack.Screen name="DrillSession" component={DrillSessionScreen} options={{ gestureEnabled: false }} />
+      <AppStack.Screen name="DrillResults" component={DrillResultsScreen} options={{ gestureEnabled: false }} />
+   
     </AppStack.Navigator>
   );
 }

@@ -1,6 +1,4 @@
-// ─── TestScreen.tsx ───────────────────────────────────────────────
-// Full test flow: exam / practice / speed modes
-// Equivalent of web TestPage.tsx
+
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
@@ -26,7 +24,7 @@ import {
   goToQuestion,
   saveResult,
 } from "../../store/testSlice";
-import { fetchQuestions, submitTest } from "../../api/client";
+import { fetchQuestions, submitTest } from "../../../config/client"  //"../../api/client";
 import {
   Colors,
   FontSize,
@@ -264,18 +262,19 @@ export default function TestScreen() {
           questionId: q._id,
           selectedOption: answers[q._id] ?? ("A" as OptionKey),
         }));
+
+        // Server reads userId from JWT token — no need to pass it
         const data = await submitTest(
-          user!._id,
           answersArray,
           timeTaken,
           module as ModuleCategory,
           mode,
         );
+
         dispatch(
           saveResult({
             result: data.result,
             wrongAnswerDetails: data.wrongAnswerDetails,
-            progress: data.progress,
           }),
         );
         navigation.navigate("Results");
@@ -355,6 +354,7 @@ export default function TestScreen() {
 
   if (pageState === "loading")
     return <CCLoader message={`Loading ${cfg.label} questions...`} />;
+
   if (pageState === "error")
     return (
       <SafeAreaView style={styles.safe}>
@@ -373,6 +373,7 @@ export default function TestScreen() {
         </View>
       </SafeAreaView>
     );
+
   if (questions.length === 0) return null;
 
   const question = questions[currentIndex];
@@ -396,7 +397,7 @@ export default function TestScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* ── Toast D3 ── */}
+      {/* ── Toast ── */}
       {toast && (
         <Animated.View
           style={[
@@ -408,7 +409,7 @@ export default function TestScreen() {
         </Animated.View>
       )}
 
-      {/* ── Streak banner D3 ── */}
+      {/* ── Streak banner ── */}
       {correctStreak >= 3 && (
         <View style={styles.streakBanner}>
           <Text style={styles.streakBannerText}>
@@ -769,7 +770,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // Toast D3
+  // Toast
   toast: {
     position: "absolute",
     top: 80,
@@ -782,7 +783,7 @@ const styles = StyleSheet.create({
   },
   toastText: { color: "#fff", fontWeight: "700", fontSize: FontSize.bodySmall },
 
-  // Streak banner D3
+  // Streak banner
   streakBanner: {
     backgroundColor: Colors.warning,
     paddingVertical: 8,

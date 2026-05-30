@@ -7,17 +7,30 @@ export interface User {
 }
 
 interface AuthState {
-  user: User | null;
+  user:  User | null;
+  token: string | null;
 }
 
-const initialState: AuthState = { user: null };
+const initialState: AuthState = {
+  user:  null,
+  token: null,
+};
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser:   (state, action: PayloadAction<User>) => { state.user = action.payload; },
-    clearUser: (state) => { state.user = null; },
+    setUser: (
+      state,
+      action: PayloadAction<{ user: User; token: string }>,
+    ) => {
+      state.user  = action.payload.user;
+      state.token = action.payload.token;
+    },
+    clearUser: (state) => {
+      state.user  = null;
+      state.token = null;
+    },
   },
 });
 

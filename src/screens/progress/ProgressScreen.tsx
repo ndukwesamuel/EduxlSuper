@@ -1,3 +1,6 @@
+
+
+
 // ─── ProgressScreen.tsx ───────────────────────────────────────────
 import React, { useEffect, useState } from "react";
 import {
@@ -15,7 +18,7 @@ import {
   fetchProgress,
   UserProgress,
   applyStreakFreeze,
-} from "../../api/client";
+} from   "../../../config/client" 
 import { Colors, FontSize, Radius, Spacing, Shadows } from "../../theme";
 import StreakBadge from "../../components/StreakBadge";
 import XPBar from "../../components/XPBar";
@@ -31,9 +34,8 @@ export default function ProgressScreen() {
   const [freezeMsg, setFreezeMsg] = useState("");
 
   const load = async () => {
-    if (!user?._id) return;
     try {
-      setProgress(await fetchProgress(user._id));
+      setProgress(await fetchProgress());
     } catch {}
   };
 
@@ -47,9 +49,9 @@ export default function ProgressScreen() {
   };
 
   const handleFreeze = async () => {
-    if (!user?._id || !progress?.streakFreezeAvailable) return;
+    if (!progress?.streakFreezeAvailable) return;
     try {
-      await applyStreakFreeze(user._id);
+      await applyStreakFreeze();
       setFreezeMsg("🧊 Streak freeze applied! Your streak is safe today.");
       setProgress((p) => (p ? { ...p, streakFreezeAvailable: false } : p));
       setTimeout(() => setFreezeMsg(""), 4000);
