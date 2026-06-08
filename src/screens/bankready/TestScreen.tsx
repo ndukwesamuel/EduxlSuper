@@ -130,8 +130,8 @@ export default function TestScreen() {
     module === "numerical" ? 720 : 600,
   );
   const [speedTimeLeft, setSpeedTimeLeft] = useState(15);
-  const examTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const speedTimerRef = useRef<NodeJS.Timeout | null>(null);
+const examTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+const speedTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(Date.now());
 
   // Toast

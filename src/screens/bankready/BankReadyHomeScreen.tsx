@@ -138,7 +138,7 @@ export default function BankReadyHomeScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("MainTabs")}
             style={styles.backBtn}
           >
             <Text style={styles.backText}>← Home</Text>
