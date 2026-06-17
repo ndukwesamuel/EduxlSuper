@@ -357,4 +357,72 @@ export const getDrillHistory = (subjectId: string): Promise<DrillSessionHistory[
 export const getDrillStats = (subjectId: string): Promise<DrillStats> =>
   api.get<{ success: boolean; data: DrillStats }>(`/drillpad/subjects/${subjectId}/stats`).then(unwrap);
 
+
+// Client.podcast.patch · TS
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
+ 
+// ── Podcast / AI Lesson types ──────────────────────────────────────
+export interface SubjectPodcast {
+  _id: string;
+  name: string;
+  podcastScript?: string;
+  podcastAudioUrl?: string;
+  podcastAudioPublicId?: string;
+  podcastDurationSeconds?: number;
+  podcastGeneratedAt?: string;
+}
+ 
+// ── Get existing podcast for a subject ─────────────────────────────
+export const getSubjectPodcast = (subjectId: string): Promise<SubjectPodcast> =>
+  api.get<{ success: boolean; data: SubjectPodcast }>(`/drillpad/subjects/${subjectId}/podcast`).then(unwrap);
+ 
+// ── Generate/regenerate podcast — multipart form-data ──────────────
+// formData must contain: file (PDF/image), topic (optional)
+export const generateSubjectPodcast = (subjectId: string, formData: FormData): Promise<SubjectPodcast> =>
+  api.post<{ success: boolean; data: SubjectPodcast }>(`/drillpad/subjects/${subjectId}/podcast`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60_000, // podcast generation takes 20-40s
+  }).then(unwrap);
+ 
+
+
+
+  // ─── ADD/REPLACE THESE IN config/client.ts ─────────────────────────
+
+export interface Podcast {
+  _id: string;
+  subjectId: string | { _id: string; name: string };
+  userId: string;
+  title: string;
+  script: string;
+  audioUrl: string;
+  audioPublicId: string;
+  durationSeconds: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ── List all podcasts for a subject ──────────────────────────────
+export const getSubjectPodcasts = (subjectId: string): Promise<Podcast[]> =>
+  api.get<{ success: boolean; data: Podcast[] }>(`/drillpad/subjects/${subjectId}/podcast`).then(unwrap);
+
+// ── Create a new podcast — multipart form-data: file, title (optional) ──
+export const createSubjectPodcast = (subjectId: string, formData: FormData): Promise<Podcast> =>
+  api.post<{ success: boolean; data: Podcast }>(`/drillpad/subjects/${subjectId}/podcast`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60_000,
+  }).then(unwrap);
+
+// ── Get a single podcast ───────────────────────────────────────────
+export const getPodcast = (podcastId: string): Promise<Podcast> =>
+  api.get<{ success: boolean; data: Podcast }>(`/drillpad/podcast/${podcastId}`).then(unwrap);
+
+// ── Rename a podcast ───────────────────────────────────────────────
+export const renamePodcast = (podcastId: string, title: string): Promise<Podcast> =>
+  api.put<{ success: boolean; data: Podcast }>(`/drillpad/podcast/${podcastId}`, { title }).then(unwrap);
+
+// ── Delete a podcast ───────────────────────────────────────────────
+export const deletePodcast = (podcastId: string): Promise<{ deleted: boolean }> =>
+  api.delete<{ success: boolean; data: { deleted: boolean } }>(`/drillpad/podcast/${podcastId}`).then(unwrap);
+
 export default api;
