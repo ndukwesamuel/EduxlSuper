@@ -2622,6 +2622,11 @@ expo-status-bar@~2.2.3:
     react-native-edge-to-edge "1.6.0"
     react-native-is-edge-to-edge "^1.1.6"
 
+expo-video@~2.2.2:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-2.2.3.tgz#38a543a8fcd3751e938d5286ce66ceffff1998bd"
+  integrity sha512-3e58J0ZOfXAz10NBsSbCGykAazi41tLOu/1QNglDPmK1yeA0t2tpLuZk59PZNy/t4ZVSn/cRDCZxG+gfQpx2yg==
+
 expo@~53.0.0:
   version "53.0.25"
   resolved "https://registry.npmjs.org/expo/-/expo-53.0.25.tgz"

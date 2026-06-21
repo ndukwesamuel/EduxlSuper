@@ -13,8 +13,7 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-const BASE_URL =  "https://eduxl2-production.up.railway.app/api/v1"  //"https://foreverlove-mroh.onrender.com/api/v1";
-// const BASE_URL = "http://localhost:7070/api/v1";
+const BASE_URL =  "https://eduxl2-production.up.railway.app/api/v1" 
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -424,5 +423,115 @@ export const renamePodcast = (podcastId: string, title: string): Promise<Podcast
 // ── Delete a podcast ───────────────────────────────────────────────
 export const deletePodcast = (podcastId: string): Promise<{ deleted: boolean }> =>
   api.delete<{ success: boolean; data: { deleted: boolean } }>(`/drillpad/podcast/${podcastId}`).then(unwrap);
+
+
+
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
+// Endpoint confirmed: GET /api/v1/drillpad/subjects/:subjectId/whiteboard-video
+// (matches BASE_URL already defined at the top of client.ts, e.g.
+//  http://localhost:7070/api/v1/drillpad/subjects/6a1a7b340b4ec6f198c5c362/whiteboard-video)
+
+// ── Whiteboard Video Types ──────────────────────────────────────
+export interface WhiteboardScene {
+  scene: number;
+  narration: string;
+  animation_instruction: string;
+  layout_type: 'TITLE' | 'FLOW_CHART' | 'BULLET_LIST' | 'COMPARISON' | string;
+  layout_data: Record<string, any>;
+  estimated_duration: number;
+  actual_duration: number;
+  audio_url: string;
+}
+
+export interface WhiteboardVideo {
+  _id: string;
+  subjectId: string;
+  userId: string;
+  topic: string;
+  style: string;
+  video_url: string;
+  video_public_id: string;
+  total_scenes: number;
+  total_duration_seconds: number;
+  scenes: WhiteboardScene[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+// // ── Get whiteboard videos for a subject ───────────────────────────
+// export const getWhiteboardVideos = (subjectId: string): Promise<WhiteboardVideo[]> =>
+//   api
+//     .get<{ success: boolean; data: WhiteboardVideo[] }>(`/drillpad/subjects/${subjectId}/whiteboard-video`)
+//     .then(unwrap);
+
+// ─────────────────────────────────────────────────────────────────
+// NOT INCLUDED (paths unconfirmed — add once you share the routes):
+//   - fetching a single whiteboard video by id (for the player screen)
+//   - generating a new whiteboard video (for WhiteboardCreate screen)
+//   - deleting a whiteboard video
+// These would likely follow the same pattern as the podcast endpoints
+// above (e.g. POST .../whiteboard-video, GET .../whiteboard-video/:id),
+// but I don't want to guess at a backend route that might not exist.
+// ─────────────────────────────────────────────────────────────────
+
+
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
+// Endpoint confirmed: GET /api/v1/drillpad/subjects/:subjectId/whiteboard-video
+// (matches BASE_URL already defined at the top of client.ts, e.g.
+//  http://localhost:7070/api/v1/drillpad/subjects/6a1a7b340b4ec6f198c5c362/whiteboard-video)
+
+// ── Whiteboard Video Types ──────────────────────────────────────
+export interface WhiteboardScene {
+  scene: number;
+  narration: string;
+  animation_instruction: string;
+  layout_type: 'TITLE' | 'FLOW_CHART' | 'BULLET_LIST' | 'COMPARISON' | string;
+  layout_data: Record<string, any>;
+  estimated_duration: number;
+  actual_duration: number;
+  audio_url: string;
+}
+
+export interface WhiteboardVideo {
+  _id: string;
+  subjectId: string;
+  userId: string;
+  topic: string;
+  style: string;
+  video_url: string;
+  video_public_id: string;
+  total_scenes: number;
+  total_duration_seconds: number;
+  scenes: WhiteboardScene[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ── Get whiteboard videos for a subject ───────────────────────────
+export const getWhiteboardVideos = (subjectId: string): Promise<WhiteboardVideo[]> =>
+  api
+    .get<{ success: boolean; data: WhiteboardVideo[] }>(`/drillpad/subjects/${subjectId}/whiteboard-video`)
+    .then(unwrap);
+
+// ── Generate a new whiteboard video — multipart/form-data ──────────
+// Same path as the list endpoint, different verb (POST).
+// formData fields: file (PDF/image, only needed in "file" mode), topic (text), style (text)
+// Generation takes 20-40s+, so this needs a generous timeout.
+export const generateWhiteboardVideo = (subjectId: string, formData: FormData): Promise<WhiteboardVideo> =>
+  api
+    .post<{ success: boolean; data: WhiteboardVideo }>(`/drillpad/subjects/${subjectId}/whiteboard-video`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120_000,
+    })
+    .then(unwrap);
+
+// ─────────────────────────────────────────────────────────────────
+// STILL NOT INCLUDED (no confirmed route for these yet):
+//   - fetching a single whiteboard video by id
+//   - deleting a whiteboard video
+// Not strictly needed right now — the create→generate→play flow below
+// passes the freshly created/fetched video object through navigation
+// params instead of refetching it by id.
+// ─────────────────────────────────────────────────────────────────
 
 export default api;

@@ -6,6 +6,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 
+
+
+
 import type {
   RootStackParamList,
   AppStackParamList,
@@ -61,6 +64,10 @@ import ShellResultsScreen            from '../screens/shell/ShellResultsScreen';
 import ShellCaseStudyScreen          from '../screens/shell/ShellCaseStudyScreen';
 import ShellConnectScreen            from '../screens/shell/ShellConnectScreen';
 import ShellProgressScreen           from '../screens/shell/ShellProgressScreen';
+import WhiteboardLibraryScreen from '../screens/drillpad/WhiteboardLibraryScreen';
+import WhiteboardCreateScreen from '../screens/drillpad/WhiteboardCreateScreen';
+import WhiteboardPlayerScreen from '../screens/drillpad/WhiteboardPlayerScreen';
+import WhiteboardGeneratingScreen from '../screens/drillpad/WhiteboardGeneratingScreen';
 
 // ─────────────────────────────────────────────────────────────────
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -124,6 +131,16 @@ function AppNavigator() {
       <AppStack.Screen name="ShellCaseStudy" component={ShellCaseStudyScreen} />
       <AppStack.Screen name="ShellConnect"   component={ShellConnectScreen}   />
       <AppStack.Screen name="ShellProgress"  component={ShellProgressScreen}  />
+
+
+
+
+
+      {/* ── Whiteboard Video ── */}
+      <AppStack.Screen name="WhiteboardLibrary"    component={WhiteboardLibraryScreen} />
+      <AppStack.Screen name="WhiteboardCreate"     component={WhiteboardCreateScreen} />
+      <AppStack.Screen name="WhiteboardGenerating" component={WhiteboardGeneratingScreen} options={{ gestureEnabled: false }} />
+      <AppStack.Screen name="WhiteboardPlayer"     component={WhiteboardPlayerScreen} />
 
     </AppStack.Navigator>
   );

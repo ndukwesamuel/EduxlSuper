@@ -20,14 +20,16 @@ const TRACKS = [
     emoji: '🐚',
     name: 'Shell Nigeria',
     desc: 'Graduate Trainee Programme — VJT, CAR behavioral, HireVue video',
-    tag: 'LIVE',
+    // tag: 'LIVE',
+    tag: 'COMING SOON',
+
     tagColor: '#059669',
     tagBg: '#D1FAE5',
     borderColor: '#1D4ED8',
     screen: 'ShellTrackHome' as keyof AppStackParamList,
     stages: '4 stages · 16 screens',
     vendor: 'Cubiks/Talogy Logiks Advanced',
-    active: true,
+    active: false,
   },
   {
     id: 'gtbank',
