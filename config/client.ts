@@ -534,4 +534,115 @@ export const generateWhiteboardVideo = (subjectId: string, formData: FormData): 
 // params instead of refetching it by id.
 // ─────────────────────────────────────────────────────────────────
 
+
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
+// Place after the whiteboard video section at the bottom
+
+// ── Profile Types ─────────────────────────────────────────────────
+export type UserPersona = 'undergraduate' | 'graduate';
+
+export interface ProfileStatus {
+  hasProfile: boolean;
+  onboardingCompleted: boolean;
+  persona: UserPersona | null;
+  onboardingStep: number;
+}
+
+// ── Get profile status (used on login to check persona) ───────────
+export const getProfileStatus = (): Promise<ProfileStatus> =>
+  api
+    .get<{ success: boolean; data: ProfileStatus }>('/user/me')
+    .then(unwrap);
+
+
+    export const getProfile = (): Promise<ProfileStatus> =>
+  api
+    .get<{ success: boolean; data: ProfileStatus }>('/user')
+    .then(unwrap);
+
+// ── Update profile (sets persona on modal submit) ──────────────────
+export const updateProfile = (data: {
+  persona?: UserPersona;
+  institution?: string;
+  levelOfStudy?: string;
+  semesterEndDate?: string;
+  onboardingCompleted?: boolean;
+}) =>
+  api
+    .put<{ success: boolean; data: any }>('/user', data)
+    .then(unwrap);
+
+
+    export const forgotPassword = (email: string) =>
+  api.post('/auth/forgot-password', { email }).then(r => r.data);
+
+export const resetPassword = (email: string, otp: string, newPassword: string) =>
+  api.post('/auth/reset-password', { email, otp, newPassword }).then(r => r.data);
+
+
+
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
+// Place after the whiteboard video section, before export default api
+
+// ── Material Types ────────────────────────────────────────────────
+export interface SubjectMaterial {
+  _id: string;
+  subjectId: string;
+  userId: string;
+  filename: string;
+  mimeType: string;
+  fileSize: number;
+  fileUrl: string;
+  filePublicId: string;
+  status: 'ready' | 'processing' | 'failed';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ── Get all materials for a subject ──────────────────────────────
+export const getSubjectMaterials = (subjectId: string): Promise<SubjectMaterial[]> =>
+  api
+    .get<{ success: boolean; data: SubjectMaterial[] }>(`/drillpad/subjects/${subjectId}/materials`)
+    .then(unwrap);
+
+// ── Upload a material — multipart/form-data: file ─────────────────
+export const uploadSubjectMaterial = (subjectId: string, formData: FormData): Promise<SubjectMaterial> =>
+  api
+    .post<{ success: boolean; data: SubjectMaterial }>(`/drillpad/subjects/${subjectId}/materials`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 60_000, // extraction can take 15-30s
+    })
+    .then(unwrap);
+
+// ── Delete a material ─────────────────────────────────────────────
+export const deleteMaterial = (materialId: string): Promise<{ deleted: boolean }> =>
+  api
+    .delete<{ success: boolean; data: { deleted: boolean } }>(`/drillpad/materials/${materialId}`)
+    .then(unwrap);
+
+// ── Chat Types ────────────────────────────────────────────────────
+export interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
+
+export interface ChatResponse {
+  reply: string;
+}
+
+// ── Send a chat message (grounded in subject materials) ───────────
+export const sendSubjectChat = (
+  subjectId: string,
+  subjectName: string,
+  message: string,
+  messages: ChatMessage[] = []
+): Promise<ChatResponse> =>
+  api
+    .post<{ success: boolean; data: ChatResponse }>(`/drillpad/subjects/${subjectId}/chat`, {
+      message,
+      subjectName,
+      messages,
+    })
+    .then(unwrap);
+
 export default api;
