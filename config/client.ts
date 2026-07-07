@@ -13,7 +13,11 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-const BASE_URL =  "https://eduxl2-production.up.railway.app/api/v1" 
+const BASE_URL = "https://eduxl2.up.railway.app/api/v1/"
+
+
+// "eduxl2-production-0b8e.up.railway.app/api/v1"  
+
 
 const api = axios.create({
   baseURL: BASE_URL,
