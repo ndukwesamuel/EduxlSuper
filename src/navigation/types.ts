@@ -19,6 +19,7 @@ export type AppTabParamList = {
   LearnPad:    undefined;
   Progress: undefined;
   Profile:  undefined;
+  Graduate:  undefined;
 };
 
 export type BankReadyStackParamList = {

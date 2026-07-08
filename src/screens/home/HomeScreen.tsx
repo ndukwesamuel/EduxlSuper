@@ -409,28 +409,12 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
 
-          {/* ── SPECIALIST TRACKS — graduate only ───────────────── */}
+          {/* ── SPECIALIST TRACKS — graduate only ─────────────────
           {persona === 'graduate' && (
             <>
               <Text style={s.sec}>SPECIALIST TRACKS</Text>
               <View style={s.tracksRow}>
-                <TouchableOpacity
-                  style={[s.trackCard, s.trackDark]}
-                  onPress={() => navigation.navigate("BankReady")}
-                  activeOpacity={0.88}
-                >
-                  <View style={s.trackTopRow}>
-                    <View style={[s.trackIcon, s.trackIconDark]}>
-                      <Text style={{ fontSize: 18 }}>🏦</Text>
-                    </View>
-                    <View style={[s.trackBadge, s.trackBadgeActive]}>
-                      <Text style={s.trackBadgeActiveText}>ACTIVE</Text>
-                    </View>
-                  </View>
-                  <Text style={[s.trackName, { color: "#fff" }]}>BankReady</Text>
-                  <Text style={[s.trackDesc, { color: "rgba(255,255,255,0.65)" }]}>GTBank, Access, Stanbic & more</Text>
-                  <Text style={[s.trackCta, { color: "rgba(255,255,255,0.8)" }]}>639+ questions →</Text>
-                </TouchableOpacity>
+              
 
                 <TouchableOpacity
                   style={[s.trackCard, s.trackLight]}
@@ -451,7 +435,34 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </View>
             </>
-          )}
+          )} */}
+
+          {/* ── SPECIALIST TRACKS — graduate only ───────────────── */}
+{persona === 'graduate' && (
+  <>
+    <Text style={s.sec}>SPECIALIST TRACKS</Text>
+    <View style={s.tracksRow}>
+
+      <TouchableOpacity
+        style={[s.trackCard, s.trackLight]}
+        onPress={() => navigation.navigate('MainTabs', { screen: 'Graduate' } as any)}
+        activeOpacity={0.88}
+      >
+        <View style={s.trackTopRow}>
+          <View style={[s.trackIcon, s.trackIconLight]}>
+            <Text style={{ fontSize: 18 }}>🏢</Text>
+          </View>
+          <View style={[s.trackBadge, s.trackBadgeNew]}>
+            <Text style={s.trackBadgeNewText}>NEW</Text>
+          </View>
+        </View>
+        <Text style={[s.trackName, { color: "#0F172A" }]}>Company Tracks</Text>
+        <Text style={[s.trackDesc, { color: "#64748B" }]}>Shell, KPMG, PwC simulations</Text>
+        <Text style={[s.trackCta, { color: "#4F46E5" }]}>Explore →</Text>
+      </TouchableOpacity>
+    </View>
+  </>
+)}
 
           {/* ── COMING SOON — graduate only ─────────────────────── */}
           {persona === 'graduate' && (
