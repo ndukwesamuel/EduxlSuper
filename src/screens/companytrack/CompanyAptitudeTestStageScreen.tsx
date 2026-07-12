@@ -1,3 +1,5 @@
+
+
 // ─── screens/tracks/AptitudeTestStageScreen.tsx ───────────────────
 import React, { useEffect, useState, useRef } from 'react';
 import {
@@ -30,7 +32,7 @@ const CATEGORIES: { id: CompanyModuleCategory; label: string; icon: string }[] =
   { id: 'abstract',  label: 'Abstract',  icon: '🔷' },
 ];
 
-export default function Aptitudeteststagescreen() {
+export default function CompanyAptitudeTestStageScreen() {
   const navigation = useNavigation<Nav>();
   const route      = useRoute<Route>();
   const { companyId, stageName } = route.params;
