@@ -227,6 +227,10 @@ import WhiteboardPlayerScreen     from '../screens/drillpad/WhiteboardPlayerScre
 import WhiteboardGeneratingScreen from '../screens/drillpad/WhiteboardGeneratingScreen';
 import SubjectMaterialsScreen from '../screens/drillpad/SubjectMaterialsScreen';
 import SubjectChatScreen from '../screens/drillpad/SubjectChatScreen';
+import CompanyTrackHomeScreen from '../screens/companytrack/CompanyTrackHomeScreen';
+import AptitudeTestStageScreen from '../screens/companytrack/Aptitudeteststagescreen';
+import CompanyTestResultsScreen from '../screens/companytrack/CompanyTestResultsScreen';
+import CompanyHistoryScreen from '../screens/companytrack/CompanyHistoryScreen';
 
 // ─────────────────────────────────────────────────────────────────
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -271,6 +275,13 @@ function AppNavigator() {
 
       {/* ── Company Tracks ── */}
       <AppStack.Screen name="CompanyTracks" component={CompanyTracksScreen} />
+      {/* ── Company Tracks ── */}
+<AppStack.Screen name="CompanyTrackHome" component={CompanyTrackHomeScreen} />
+
+
+<AppStack.Screen name="AptitudeTestStage" component={AptitudeTestStageScreen} />
+<AppStack.Screen name="CompanyTestResults" component={CompanyTestResultsScreen} />
+<AppStack.Screen name="CompanyHistory" component={CompanyHistoryScreen} />
 
       {/* ── Shell Track ── */}
       <AppStack.Screen name="ShellTrackHome"    component={ShellTrackHomeScreen} />

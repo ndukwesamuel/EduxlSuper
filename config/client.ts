@@ -649,4 +649,165 @@ export const sendSubjectChat = (
     })
     .then(unwrap);
 
+
+
+    // ─── ADD THESE TO config/client.ts ────────────────────────────────
+// Place after the whiteboard/material sections, before export default api
+
+// ── Company Track Types ────────────────────────────────────────────
+export type StageType =
+  | "cv_gate"
+  | "aptitude_test"
+  | "psychometric"
+  | "assessment_center"
+  | "essay_practice"
+  | "interview"
+  | "onboarding";
+
+export type CompanyModuleCategory = "numerical" | "verbal" | "logical" | "abstract" | "behavioral";
+export type CompanyOptionKey = "A" | "B" | "C" | "D";
+
+export interface StageConfig {
+  type: StageType;
+  name: string;
+  order: number;
+  status: "live" | "coming_soon";
+  fallbackMessage?: string;
+}
+
+export interface CompanyTrack {
+  _id: string;
+  companyId: string;
+  name: string;
+  emoji: string;
+  brandColor: string;
+  stages: StageConfig[];
+  isActive: boolean;
+}
+
+export interface CompanyQuestion {
+  _id: string;
+  questionText: string;
+  options: Record<CompanyOptionKey, string>;
+  category: CompanyModuleCategory;
+  tags: string[];
+  difficulty: "easy" | "medium" | "hard";
+  correctAnswer?: CompanyOptionKey;
+  explanation?: string;
+}
+
+export interface CompanyQuestionsResponse {
+  questions: CompanyQuestion[];
+  total: number;
+}
+
+export interface CompanyWrongAnswerDetail {
+  questionId: string;
+  questionText: string;
+  yourAnswer: CompanyOptionKey;
+  correctAnswer: CompanyOptionKey;
+  explanation: string;
+  tags: string[];
+}
+
+export interface CompanyTestResultSummary {
+  _id: string;
+  companyId: string;
+  stageType: StageType;
+  category: CompanyModuleCategory;
+  score: number;
+  totalQuestions: number;
+  accuracy: number;
+  timeTaken: number;
+  weakAreas: string[];
+  createdAt: string;
+}
+
+export interface SubmitCompanyTestResponse {
+  result: CompanyTestResultSummary;
+  wrongAnswerDetails: CompanyWrongAnswerDetail[];
+  progress?: ProgressUpdate;
+}
+
+export interface CompanyHistoryAttempt {
+  attemptNumber: number;
+  _id: string;
+  companyId: string;
+  stageType: StageType;
+  category: CompanyModuleCategory;
+  score: number;
+  totalQuestions: number;
+  accuracy: number;
+  timeTaken: number;
+  weakAreas: string[];
+  createdAt: string;
+}
+
+export interface CompanyHistoryResponse {
+  userId: string;
+  companyId: string;
+  totalAttempts: number;
+  trend: {
+    firstAttemptAccuracy: number;
+    latestAttemptAccuracy: number;
+    change: number;
+    improving: boolean;
+  } | null;
+  history: CompanyHistoryAttempt[];
+}
+
+// ── Get all company tracks ─────────────────────────────────────────
+export const getCompanyTracks = (): Promise<CompanyTrack[]> =>
+  api
+    .get<{ success: boolean; data: CompanyTrack[] }>("companytrack/tracks")
+    .then(unwrap);
+
+// ── Get a single company track ─────────────────────────────────────
+export const getCompanyTrack = (companyId: string): Promise<CompanyTrack> =>
+  api
+    .get<{ success: boolean; data: CompanyTrack }>(`companytrack/tracks/${companyId}`)
+    .then(unwrap);
+
+// ── Get questions for a company/stage ──────────────────────────────
+export const getCompanyQuestions = (
+  companyId: string,
+  stageType: StageType,
+  category: CompanyModuleCategory = "numerical",
+  limit = 10,
+  difficulty?: "easy" | "medium" | "hard",
+  mode?: "practice" | "exam",
+): Promise<CompanyQuestionsResponse> => {
+  const params: Record<string, string | number> = { companyId, stageType, category, limit };
+  if (difficulty) params.difficulty = difficulty;
+  if (mode) params.mode = mode;
+  return api
+    .get<{ success: boolean; data: CompanyQuestionsResponse }>("/companytrack/questions", { params })
+    .then(unwrap);
+};
+
+// ── Submit a company test ──────────────────────────────────────────
+export const submitCompanyTest = (
+  companyId: string,
+  stageType: StageType,
+  category: CompanyModuleCategory,
+  answers: { questionId: string; selectedOption: CompanyOptionKey }[],
+  timeTaken: number,
+  mode: "practice" | "exam" = "exam",
+): Promise<SubmitCompanyTestResponse> =>
+  api
+    .post<{ success: boolean; data: SubmitCompanyTestResponse }>("/companytrack/submit", {
+      companyId, stageType, category, answers, timeTaken, mode,
+    })
+    .then(unwrap);
+
+// ── Get history for a company ──────────────────────────────────────
+export const getCompanyHistory = (companyId?: string, stageType?: StageType): Promise<CompanyHistoryResponse> => {
+  const params: Record<string, string> = {};
+  if (companyId) params.companyId = companyId;
+  if (stageType) params.stageType = stageType;
+  return api
+    .get<{ success: boolean; data: CompanyHistoryResponse }>("/companytrack/history", { params })
+    .then(unwrap);
+};
+
 export default api;

@@ -37,6 +37,18 @@ export type BankReadyStackParamList = {
 export type AppStackParamList = {
   // ── Core ──────────────────────────────────────────────────────────
   MainTabs: undefined;
+  CompanyTrackHome:undefined;  // ← add this line
+
+  // CompanyTrackHome: { companyId: string };
+AptitudeTestStage: { companyId: string; stageType: string; stageName: string };
+CompanyTestResults: {
+  result: any;
+  wrongAnswerDetails: any[];
+  progress?: any;
+  companyId: string;
+  stageName: string;
+};
+CompanyHistory: { companyId: string };
 
   SubjectChat: { subjectId: string; subjectName: string; documentCount?: number };
   // ── BankReady ─────────────────────────────────────────────────────
