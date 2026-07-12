@@ -30,7 +30,7 @@ const CATEGORIES: { id: CompanyModuleCategory; label: string; icon: string }[] =
   { id: 'abstract',  label: 'Abstract',  icon: '🔷' },
 ];
 
-export default function AptitudeTestStageScreen() {
+export default function Aptitudeteststagescreen() {
   const navigation = useNavigation<Nav>();
   const route      = useRoute<Route>();
   const { companyId, stageName } = route.params;
