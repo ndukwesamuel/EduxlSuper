@@ -1664,7 +1664,7 @@ import React, { useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, Alert, KeyboardAvoidingView,
-  Platform, ActivityIndicator,
+  Platform, ActivityIndicator, Modal, TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -1675,7 +1675,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, Spacing } from '../../theme';
-import { addBulkQuestions, addSingleQuestion, DrillOption } from '../../../config/client';
+import { addBulkQuestions, addSingleQuestion, DrillOption, BASE_URL } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'DrillAddQuestions'>;
@@ -1794,6 +1794,8 @@ export default function DrillAddQuestionsScreen() {
   // ── Materials tab state — save documents for chat context, no question generation ──
   const [materialUploading, setMaterialUploading] = useState(false);
   const [materialName, setMaterialName]            = useState('');
+  const [materialLinkModalVisible, setMaterialLinkModalVisible] = useState(false);
+  const [materialLinkUrl, setMaterialLinkUrl]      = useState('');
 
   const handleCopyPrompt = async () => {
     await Clipboard.setStringAsync(getChatGPTPrompt(subjectName));
@@ -1894,7 +1896,7 @@ export default function DrillAddQuestionsScreen() {
       const { store } = require('../../../src/store/store');
       const token = store.getState().auth?.token ?? '';
 
-      const fetchResponse = await fetch('https://eduxl2-production.up.railway.app/api/v1/ai', {
+      const fetchResponse = await fetch(`${BASE_URL}/ai`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1966,7 +1968,7 @@ export default function DrillAddQuestionsScreen() {
       const token = store.getState().auth?.token ?? '';
 
       const fetchResponse = await fetch(
-        `https://eduxl2-production.up.railway.app/api/v1/drillpad/subjects/${subjectId}/materials`,
+        `${BASE_URL}/drillpad/subjects/${subjectId}/materials`,
         {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
@@ -1985,6 +1987,52 @@ export default function DrillAddQuestionsScreen() {
       ]);
     } catch (err: any) {
       Alert.alert('Error', err?.message ?? 'Could not save material. Check your connection and try again.');
+    } finally {
+      setMaterialUploading(false);
+    }
+  };
+
+  // ── Materials: save a link to a document instead of uploading a file ──
+  const handleUploadMaterialLink = async () => {
+    const url = materialLinkUrl.trim();
+    if (!url) return;
+    if (!/^https?:\/\//i.test(url)) {
+      Alert.alert('Invalid link', 'Please enter a valid URL starting with http:// or https://');
+      return;
+    }
+
+    setMaterialLinkModalVisible(false);
+    setMaterialName(url);
+    setMaterialUploading(true);
+
+    try {
+      const { store } = require('../../../src/store/store');
+      const token = store.getState().auth?.token ?? '';
+
+      const fetchResponse = await fetch(
+        `${BASE_URL}/drillpad/subjects/${subjectId}/materials`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ subjectId, url }),
+        }
+      );
+
+      const json = await fetchResponse.json();
+
+      if (!fetchResponse.ok) {
+        throw new Error(json?.message ?? 'Upload failed');
+      }
+
+      setMaterialLinkUrl('');
+      Alert.alert('Saved!', `Link added to ${subjectName}'s materials. The AI can now reference it in chat.`, [
+        { text: 'OK', onPress: () => navigation.goBack() },
+      ]);
+    } catch (err: any) {
+      Alert.alert('Error', err?.message ?? 'Could not save the link. Check your connection and try again.');
     } finally {
       setMaterialUploading(false);
     }
@@ -2205,9 +2253,18 @@ export default function DrillAddQuestionsScreen() {
               </View>
 
               {!materialUploading ? (
-                <TouchableOpacity style={styles.materialBtn} onPress={handleUploadMaterial} activeOpacity={0.8}>
-                  <Text style={styles.materialBtnText}>📤 Upload Document</Text>
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity style={styles.materialBtn} onPress={handleUploadMaterial} activeOpacity={0.8}>
+                    <Text style={styles.materialBtnText}>📤 Upload Document</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.materialLinkBtn}
+                    onPress={() => setMaterialLinkModalVisible(true)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.materialLinkBtnText}>🔗 Add a link instead</Text>
+                  </TouchableOpacity>
+                </>
               ) : (
                 <View style={styles.generatingCard}>
                   <ActivityIndicator color="#7C3AED" size="large" />
@@ -2220,6 +2277,52 @@ export default function DrillAddQuestionsScreen() {
           )}
 
         </ScrollView>
+
+        {/* ── Add material by link modal ── */}
+        <Modal
+          visible={materialLinkModalVisible}
+          animationType="fade"
+          transparent
+          onRequestClose={() => setMaterialLinkModalVisible(false)}
+        >
+          <View style={styles.linkModalOverlay}>
+            <View style={styles.linkModalCard}>
+              <Text style={styles.linkModalTitle}>Add a document link</Text>
+              <Text style={styles.linkModalSubtitle}>
+                Paste a link to a PDF, article, or notes page. We'll save it to {subjectName}'s materials.
+              </Text>
+              <TextInput
+                style={styles.linkModalInput}
+                placeholder="https://example.com/notes.pdf"
+                placeholderTextColor={Colors.textMuted}
+                value={materialLinkUrl}
+                onChangeText={setMaterialLinkUrl}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+                returnKeyType="done"
+                onSubmitEditing={handleUploadMaterialLink}
+              />
+              <View style={styles.linkModalActions}>
+                <TouchableOpacity
+                  style={styles.linkModalCancelBtn}
+                  onPress={() => { setMaterialLinkModalVisible(false); setMaterialLinkUrl(''); }}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.linkModalCancelBtnText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.linkModalSaveBtn, !materialLinkUrl.trim() && { opacity: 0.5 }]}
+                  onPress={handleUploadMaterialLink}
+                  disabled={!materialLinkUrl.trim()}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.linkModalSaveBtnText}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -2313,4 +2416,22 @@ const styles = StyleSheet.create({
   materialInfoText:  { fontSize: 13, color: '#4338CA', lineHeight: 20, marginBottom: 12 },
   materialBtn:       { backgroundColor: '#7C3AED', borderRadius: 50, paddingVertical: 16, alignItems: 'center', marginBottom: 12 },
   materialBtnText:   { fontSize: 16, fontWeight: '700', color: '#fff' },
+  materialLinkBtn:     { borderWidth: 1.5, borderColor: '#7C3AED', borderRadius: 50, paddingVertical: 14, alignItems: 'center', marginBottom: 12 },
+  materialLinkBtnText: { fontSize: 15, fontWeight: '700', color: '#7C3AED' },
+
+  // ── Link modal ──
+  linkModalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', padding: 24 },
+  linkModalCard:    { backgroundColor: Colors.surface, borderRadius: 20, padding: 20 },
+  linkModalTitle:   { fontSize: 18, fontWeight: '800', color: Colors.textPrimary, marginBottom: 6 },
+  linkModalSubtitle:{ fontSize: 13, color: Colors.textSecondary, lineHeight: 19, marginBottom: 16 },
+  linkModalInput: {
+    borderWidth: 1, borderColor: Colors.border, borderRadius: 12,
+    paddingHorizontal: 14, paddingVertical: 12, fontSize: 14,
+    color: Colors.textPrimary, marginBottom: 16,
+  },
+  linkModalActions:  { flexDirection: 'row', gap: 10 },
+  linkModalCancelBtn: { flex: 1, paddingVertical: 13, borderRadius: 50, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  linkModalCancelBtnText: { fontSize: 14, fontWeight: '700', color: Colors.textSecondary },
+  linkModalSaveBtn:  { flex: 1, paddingVertical: 13, borderRadius: 50, alignItems: 'center', backgroundColor: '#7C3AED' },
+  linkModalSaveBtnText: { fontSize: 14, fontWeight: '700', color: '#fff' },
 });

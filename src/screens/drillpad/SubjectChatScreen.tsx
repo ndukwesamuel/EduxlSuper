@@ -11,6 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors } from '../../theme';
+import { sendSubjectChat } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'SubjectChat'>;
@@ -20,42 +21,6 @@ interface Message {
   id:   string;
   role: 'user' | 'ai';
   text: string;
-}
-
-// ── API call ──────────────────────────────────────────────────────
-async function sendChat(
-  subjectId: string,
-  subjectName: string,
-  message: string,
-  history: { role: 'user' | 'model'; content: string }[]
-): Promise<string> {
-  const { store } = require('../../../src/store/store');
-  const token = store.getState().auth?.token ?? '';
-
-  console.log({
-    ggg:token
-  });
-  
-
-  const res = await fetch(
-    `https://eduxl2-production.up.railway.app/api/v1/drillpad/subjects/${subjectId}/chat`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ message, messages: history, subjectName }),
-    }
-  );
-
-  const json = await res.json();
-  console.log({
-    ddd:json
-  });
-  
-  if (!res.ok) throw new Error(json?.message ?? 'Chat failed');
-  return json?.data?.reply ?? '';
 }
 
 // ── SVG Icons ─────────────────────────────────────────────────────
@@ -99,7 +64,13 @@ const getSuggestions = (subjectName: string) => [
 export default function SubjectChatScreen() {
   const navigation = useNavigation<Nav>();
   const route      = useRoute<Route>();
-  const { subjectId, subjectName, documentCount = 0 } = route.params;
+  const { subjectId, subjectName, documentCount = 0, fileCount = 0, linkCount = 0 } = route.params;
+
+  // "3 files, 2 links" / "3 files" / "2 links" — whichever parts are non-zero
+  const materialBreakdown = [
+    fileCount > 0 ? `${fileCount} file${fileCount !== 1 ? 's' : ''}` : null,
+    linkCount > 0 ? `${linkCount} link${linkCount !== 1 ? 's' : ''}` : null,
+  ].filter(Boolean).join(', ') || `${documentCount} document${documentCount !== 1 ? 's' : ''}`;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -131,9 +102,10 @@ export default function SubjectChatScreen() {
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
 
     try {
-      // Send history BEFORE the new message (Gemini expects prior turns only)
-      const history = buildHistory(messages);
-      const reply   = await sendChat(subjectId, subjectName, trimmed, history);
+      // Send history BEFORE the new message (backend expects prior turns only)
+      const history  = buildHistory(messages);
+      const response = await sendSubjectChat(subjectId, subjectName, trimmed, history);
+      const reply    = response.reply;
 
       const aiMsg: Message = {
         id:   (Date.now() + 1).toString(),
@@ -201,7 +173,7 @@ export default function SubjectChatScreen() {
               styles.docBadgeText,
               { color: documentCount > 0 ? '#059669' : '#94A3B8' },
             ]}>
-              📄 {documentCount} doc{documentCount !== 1 ? 's' : ''}
+              📄 {materialBreakdown}
             </Text>
           </View>
         </View>
@@ -227,7 +199,7 @@ export default function SubjectChatScreen() {
                   { color: documentCount > 0 ? '#059669' : '#64748B' },
                 ]}>
                   {documentCount > 0
-                    ? `📚 Grounded in ${documentCount} document${documentCount !== 1 ? 's' : ''}`
+                    ? `📚 Grounded in ${materialBreakdown}`
                     : '💬 General AI tutor — upload notes for grounded answers'}
                 </Text>
               </View>
