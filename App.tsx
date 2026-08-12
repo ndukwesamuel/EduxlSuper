@@ -63,7 +63,7 @@
 //   );
 // }
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -73,6 +73,15 @@ import UpdateModal from "./src/updateApp/UpdateModal"
 
 
 import { useUpdateChecker } from "./src/updateApp/useUpdateChecker";
+import { PermissionsAndroid, Platform, Alert } from "react-native";
+import messagingModule, { getMessaging, AuthorizationStatus } from "@react-native-firebase/messaging";
+
+const getFcm = () => {
+  if (typeof messagingModule === "function") {
+    return (messagingModule as any)();
+  }
+  return getMessaging();
+};
 
 function AppContent() {
   const { visible, force, message, dismiss } = useUpdateChecker();
@@ -88,6 +97,107 @@ function AppContent() {
 }
 
 export default function App() {
+  const [phoneToken, setPhoneToken] = useState<any>(null)
+  let token: any;
+
+  const requestUserPermission = async () => {
+    try {
+      let hasPermission = false;
+
+      if (Platform.OS === 'android') {
+        if (Platform.Version >= 33) {
+          const status = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+          );
+          hasPermission = status === PermissionsAndroid.RESULTS.GRANTED;
+        } else {
+          hasPermission = true;
+        }
+      } else if (Platform.OS === 'ios') {
+        await getFcm().registerDeviceForRemoteMessages();
+        const authStatus = await getFcm().requestPermission();
+        hasPermission =
+          authStatus === AuthorizationStatus.AUTHORIZED ||
+          authStatus === AuthorizationStatus.PROVISIONAL;
+      }
+
+      if (hasPermission) {
+        const fetchedToken = await getFcm().getToken();
+        console.log("FCM Token retrieved successfully:", fetchedToken);
+        setPhoneToken(fetchedToken);
+        return fetchedToken;
+      } else {
+        console.warn("Notification permission was not granted.");
+      }
+    } catch (error: any) {
+      console.error('Error in requestUserPermission:', error?.message || error);
+      throw error;
+    }
+  };
+
+  const getNewFCMToken = async () => {
+    try {
+      await requestUserPermission();
+    } catch (error: any) {
+      console.error('Error getting new FCM token:', error?.message || error, error?.code ? `[code: ${error.code}]` : '');
+    }
+  };
+
+  useEffect(() => {
+    let unsubscribeForeground: any;
+
+    const setupMessaging = async () => {
+      try {
+        await getNewFCMToken();
+
+        // // Foreground notifications
+        // unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+        //   const channelId = await notifee.createChannel({
+        //     id: "default",
+        //     name: "Default Channel",
+        //     sound: "default",
+        //     importance: AndroidImportance.HIGH,
+        //   });
+
+        //   await notifee.requestPermission();
+
+        //   await notifee.displayNotification({
+        //     id: "1234",
+        //     title: remoteMessage?.notification?.title ?? "Notification",
+        //     body: remoteMessage?.notification?.body ?? "",
+        //     android: {
+        //       channelId,
+        //       color: "#6495ed",
+        //       timestamp: Date.now() - 800,
+        //       showTimestamp: true,
+        //     },
+        //   });
+        // });
+
+        // // Handle background and quit state notifications
+        // messaging().onNotificationOpenedApp(async remoteMessage => {
+        //   if (remoteMessage) {
+        //     // Handle navigation or alert if needed
+        //   }
+        // });
+
+        // // Handle notification when the app is opened from a quit state
+        // const initialNotification = await messaging().getInitialNotification();
+        // if (initialNotification) {
+        // }
+      } catch (error) {
+        console.error("Error setting up FCM:", error);
+      }
+    };
+
+    setupMessaging();
+
+    // ✅ Clean up listeners on unmount
+    return () => {
+      unsubscribeForeground?.();
+    };
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
