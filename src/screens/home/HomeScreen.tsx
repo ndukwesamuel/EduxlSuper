@@ -1,285 +1,194 @@
-
-
-
-// // ─── HomeScreen.tsx ───────────────────────────────────────────────
-// import React, { useEffect, useState } from "react";
-// import {
-//   View,
-//   Text,
-//   ScrollView,
-//   TouchableOpacity,
-//   StyleSheet,
-//   RefreshControl,
-// } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import { useSelector, useDispatch } from "react-redux";
-// import { useNavigation } from "@react-navigation/native";
-// import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-// import { RootState } from "../../store/store";
-// import { clearUser } from "../../store/authSlice";
-// import { fetchProgress, UserProgress } from  "../../../config/client"  
-// import { Colors, FontSize, Radius, Spacing, Shadows } from "../../theme";
-// import { AppStackParamList } from "../../navigation/types";
-// import StreakBadge from "../../components/StreakBadge";
-// import XPBar from "../../components/XPBar";
-// import CCCard from "../../components/CCCard";
-
-// type Nav = NativeStackNavigationProp<AppStackParamList>;
-
-// const COMING_SOON = [
-//   { id: "ican",      icon: "📊", label: "ICAN Prep",       color: "#7C3AED", desc: "Foundation, Skills & Professional" },
-//   { id: "acca",      icon: "🌍", label: "ACCA Prep",       color: "#0891B2", desc: "Applied Knowledge to Strategic" },
-//   { id: "interview", icon: "🎤", label: "Interview Coach", color: "#059669", desc: "Mock interviews & feedback" },
-//   { id: "cv",        icon: "📄", label: "CV Builder",      color: "#EA580C", desc: "ATS-ready professional CVs" },
-// ];
-
-// function getLagosGreeting(): string {
-//   const hour = new Date(Date.now() + 3600000).getUTCHours();
-//   if (hour < 12) return "Good morning";
-//   if (hour < 17) return "Good afternoon";
-//   return "Good evening";
-// }
-
-// export default function HomeScreen() {
-//   const navigation = useNavigation<Nav>();
-//   const dispatch   = useDispatch();
-//   const user       = useSelector((s: RootState) => s.auth.user);
-//   const [progress, setProgress] = useState<UserProgress | null>(null);
-//   const [refreshing, setRefreshing] = useState(false);
-
-//   const loadProgress = async () => {
-//     if (!user?._id) return;
-//     try {
-//       setProgress(await fetchProgress());
-//     } catch {}
-//   };
-
-//   useEffect(() => { loadProgress(); }, [user]);
-
-//   const onRefresh = async () => {
-//     setRefreshing(true);
-//     await loadProgress();
-//     setRefreshing(false);
-//   };
-
-//   const firstName = user?.name?.split(" ")[0] ?? "there";
-
-//   return (
-//     <SafeAreaView style={styles.safe}>
-//       <ScrollView
-//         contentContainerStyle={styles.scroll}
-//         showsVerticalScrollIndicator={false}
-//         refreshControl={
-//           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.brand} />
-//         }
-//       >
-//         {/* Header */}
-//         <View style={styles.header}>
-//           <View>
-//             <Text style={styles.greeting}>{getLagosGreeting()},</Text>
-//             <Text style={styles.name}>{firstName} 👋</Text>
-//           </View>
-//           <TouchableOpacity style={styles.avatar} onPress={() => dispatch(clearUser())}>
-//             <Text style={styles.avatarText}>{user?.name?.charAt(0).toUpperCase()}</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Streak + XP */}
-//         {progress && (
-//           <CCCard style={styles.progressCard}>
-//             <StreakBadge streak={progress.streak} />
-//             <View style={styles.divider} />
-//             <XPBar xp={progress.xp} />
-//             {progress.streakFreezeAvailable && (
-//               <TouchableOpacity style={styles.freezeBtn}>
-//                 <Text style={styles.freezeText}>🧊 Streak Freeze Available</Text>
-//               </TouchableOpacity>
-//             )}
-//           </CCCard>
-//         )}
-
-//         {/* Active Modules */}
-//         <Text style={styles.sectionTitle}>Your Modules</Text>
-//         <TouchableOpacity
-//           style={styles.bankReadyCard}
-//           onPress={() => navigation.navigate("BankReady")}
-//           activeOpacity={0.85}
-//         >
-//           <View style={styles.bankReadyLeft}>
-//             <View style={styles.bankReadyIconWrap}>
-//               <Text style={styles.bankReadyIcon}>🏦</Text>
-//             </View>
-//             <View style={{ flex: 1 }}>
-//               <View style={styles.bankReadyHeader}>
-//                 <Text style={styles.bankReadyTitle}>BankReady</Text>
-//                 <View style={styles.activePill}>
-//                   <Text style={styles.activePillText}>ACTIVE</Text>
-//                 </View>
-//               </View>
-//               <Text style={styles.bankReadyDesc}>
-//                 Bank aptitude test prep — Numerical, Verbal, Logical & Abstract
-//               </Text>
-//               <View style={styles.bankReadyMeta}>
-//                 <Text style={styles.metaText}>📚 639+ questions</Text>
-//                 <Text style={styles.metaText}>🎯 4 modules</Text>
-//               </View>
-//             </View>
-//           </View>
-//           <Text style={styles.bankReadyArrow}>→</Text>
-//         </TouchableOpacity>
-
-//         {/* Coming Soon */}
-//         <Text style={styles.sectionTitle}>Coming Soon</Text>
-//         <View style={styles.comingSoonGrid}>
-//           {COMING_SOON.map((m) => (
-//             <View key={m.id} style={styles.comingSoonCard}>
-//               <View style={[styles.comingSoonIcon, { backgroundColor: m.color + "18" }]}>
-//                 <Text style={{ fontSize: 22 }}>{m.icon}</Text>
-//               </View>
-//               <Text style={styles.comingSoonLabel}>{m.label}</Text>
-//               <Text style={styles.comingSoonDesc}>{m.desc}</Text>
-//               <View style={styles.comingSoonPill}>
-//                 <Text style={styles.comingSoonPillText}>Soon</Text>
-//               </View>
-//             </View>
-//           ))}
-//         </View>
-
-//         {/* Badges */}
-//         {progress && progress.badges.length > 0 && (
-//           <>
-//             <Text style={styles.sectionTitle}>Recent Badges</Text>
-//             <CCCard>
-//               <View style={styles.badgeRow}>
-//                 {progress.badges.slice(0, 5).map((b) => (
-//                   <View key={b.id} style={styles.badgeItem}>
-//                     <Text style={{ fontSize: 28 }}>{b.icon}</Text>
-//                     <Text style={styles.badgeName}>{b.name}</Text>
-//                   </View>
-//                 ))}
-//               </View>
-//             </CCCard>
-//           </>
-//         )}
-
-
-//         {/* DrillPad Module */}
-// <TouchableOpacity
-//   style={styles.drillPadCard}
-//   onPress={() => navigation.navigate("DrillPad")}
-//   activeOpacity={0.85}
-// >
-//   <View style={styles.bankReadyLeft}>
-//     <View style={[styles.bankReadyIconWrap, { backgroundColor: 'rgba(124,58,237,0.15)' }]}>
-//       <Text style={styles.bankReadyIcon}>📖</Text>
-//     </View>
-//     <View style={{ flex: 1 }}>
-//       <View style={styles.bankReadyHeader}>
-//         <Text style={[styles.bankReadyTitle, { color: Colors.textPrimary }]}>DrillPad</Text>
-//         <View style={[styles.activePill, { backgroundColor: '#7C3AED' }]}>
-//           <Text style={styles.activePillText}>ACTIVE</Text>
-//         </View>
-//       </View>
-//       <Text style={[styles.bankReadyDesc, { color: Colors.textSecondary }]}>
-//         Upload your questions, practice anything — any course, any exam
-//       </Text>
-//     </View>
-//   </View>
-//   <Text style={styles.bankReadyArrow}>→</Text>
-// </TouchableOpacity>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   safe:   { flex: 1, backgroundColor: Colors.background },
-//   scroll: { padding: Spacing.lg, paddingBottom: Spacing["5xl"] },
-//   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: Spacing["2xl"] },
-//   greeting: { fontSize: FontSize.body, color: Colors.textSecondary },
-//   name:     { fontSize: FontSize.displayL, fontWeight: "800", color: Colors.textPrimary, marginTop: 2 },
-//   avatar:   { width: 44, height: 44, borderRadius: Radius.full, backgroundColor: "#DBEAFE", alignItems: "center", justifyContent: "center" },
-//   avatarText: { fontSize: FontSize.bodyLarge, fontWeight: "700", color: Colors.brand },
-//   progressCard: { marginBottom: Spacing["2xl"], gap: Spacing.md },
-//   divider: { height: 1, backgroundColor: Colors.border },
-//   freezeBtn: { marginTop: 4, paddingVertical: 8, alignItems: "center", backgroundColor: "#EFF6FF", borderRadius: Radius.md, borderWidth: 1, borderColor: "#BFDBFE" },
-//   freezeText: { fontSize: FontSize.caption, fontWeight: "600", color: Colors.brand },
-//   sectionTitle: { fontSize: FontSize.heading3, fontWeight: "700", color: Colors.textPrimary, marginBottom: Spacing.md, marginTop: Spacing.sm },
-//   bankReadyCard: { backgroundColor: Colors.brand, borderRadius: Radius.xl, padding: Spacing.lg, marginBottom: Spacing["2xl"], flexDirection: "row", alignItems: "center", ...Shadows.brand },
-//   bankReadyLeft: { flex: 1, flexDirection: "row", alignItems: "flex-start", gap: Spacing.md },
-//   bankReadyIconWrap: { width: 48, height: 48, borderRadius: Radius.md, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" },
-//   bankReadyIcon: { fontSize: 24 },
-//   bankReadyHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 },
-//   bankReadyTitle: { fontSize: FontSize.heading2, fontWeight: "700", color: "#fff" },
-//   activePill: { backgroundColor: "rgba(255,255,255,0.25)", paddingHorizontal: 8, paddingVertical: 2, borderRadius: Radius.full },
-//   activePillText: { fontSize: FontSize.micro, fontWeight: "700", color: "#fff" },
-//   bankReadyDesc: { fontSize: FontSize.bodySmall, color: "rgba(255,255,255,0.85)", lineHeight: 18, marginBottom: 8 },
-//   bankReadyMeta: { flexDirection: "row", gap: Spacing.md },
-//   metaText: { fontSize: FontSize.caption, color: "rgba(255,255,255,0.75)" },
-//   bankReadyArrow: { fontSize: 20, color: "rgba(255,255,255,0.7)", marginLeft: 8 },
-//   comingSoonGrid: { flexDirection: "row", flexWrap: "wrap", gap: Spacing.md, marginBottom: Spacing["2xl"] },
-//   comingSoonCard: { width: "47%", backgroundColor: Colors.surface, borderRadius: Radius.lg, padding: Spacing.md, borderWidth: 1, borderColor: Colors.border, ...Shadows.sm },
-//   comingSoonIcon: { width: 44, height: 44, borderRadius: Radius.md, alignItems: "center", justifyContent: "center", marginBottom: Spacing.sm },
-//   comingSoonLabel: { fontSize: FontSize.body, fontWeight: "700", color: Colors.textPrimary, marginBottom: 2 },
-//   comingSoonDesc: { fontSize: FontSize.micro, color: Colors.textMuted, lineHeight: 16, marginBottom: Spacing.sm },
-//   comingSoonPill: { backgroundColor: Colors.surface2, paddingHorizontal: 8, paddingVertical: 3, borderRadius: Radius.full, alignSelf: "flex-start" },
-//   comingSoonPillText: { fontSize: FontSize.micro, color: Colors.textMuted, fontWeight: "600" },
-//   badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: Spacing.md },
-//   badgeItem: { alignItems: "center", gap: 4 },
-//   drillPadCard: { backgroundColor: Colors.surface, borderRadius: Radius.xl, padding: Spacing.lg, marginBottom: Spacing["2xl"], flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: '#7C3AED' + '40', ...Shadows.sm },
-//   badgeName: { fontSize: FontSize.micro, color: Colors.textMuted, textAlign: "center", maxWidth: 60 },
-// });
-
-
 // ─── HomeScreen.tsx ───────────────────────────────────────────────
 import React, { useEffect, useState, useRef } from "react";
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, RefreshControl, Animated, Dimensions,
+  StyleSheet, RefreshControl, Animated, Easing,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootState } from "../../store/store";
-import { clearUser } from "../../store/authSlice";
-import { fetchProgress, UserProgress } from "../../../config/client";
-import { Colors, FontSize, Radius, Spacing, Shadows } from "../../theme";
+import { RootState, AppDispatch } from "../../store/store";
+import { setProfile, setProfileStatus } from "../../store/profileSlice";
+import {
+  fetchProgress, UserProgress,
+  getSubjects, DrillSubject,
+  getProfileStatus, getProfile,
+} from "../../../config/client";
+import { Colors } from "../../theme";
 import { AppStackParamList } from "../../navigation/types";
-import CCCard from "../../components/CCCard";
+import PersonaModal from "./PersonaModal";
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
-const { width } = Dimensions.get("window");
 
-const COMING_SOON = [
-  { id: "ican",      icon: "📊", label: "ICAN Prep",       color: "#7C3AED" },
-  { id: "acca",      icon: "🌍", label: "ACCA Prep",       color: "#0891B2" },
-  { id: "interview", icon: "🎤", label: "Interview Coach", color: "#059669" },
-  { id: "cv",        icon: "📄", label: "CV Builder",      color: "#EA580C" },
+// ── Static data ────────────────────────────────────────────────────
+const GRADUATE_COMING_SOON = [
+  { id: "ican",      icon: "📊", label: "ICAN Prep",       desc: "Foundation to Professional" },
+  { id: "acca",      icon: "🌍", label: "ACCA Prep",       desc: "Applied Knowledge to Strategic" },
+  { id: "interview", icon: "🎤", label: "Interview Coach", desc: "Mock interviews & feedback" },
+  { id: "cv",        icon: "📄", label: "CV Builder",      desc: "ATS-ready professional CVs" },
 ];
 
+const HOOK_PHRASES = [
+  "Exam coming.\nNot ready?",
+  "Your notes.\nYour coach.\nYour results.",
+  "Study smarter.\nScore higher.",
+  "From notes to\nexam-ready — fast.",
+];
+
+const HOOK_FEATURES = [
+  { emoji: "🎯", title: "Know what to study today", desc: "Your coach tells you exactly where to focus — no guessing." },
+  { emoji: "📈", title: "Track weak spots early", desc: "Find what you don't know before exam day, not during it." },
+  { emoji: "🎬", title: "Notes → videos & audio", desc: "Upload anything. AI turns it into lessons you'll actually finish." },
+];
+
+const ACCENTS = [
+  { fill: "#D97706", bg: "#FEF3C7" },
+  { fill: "#7C3AED", bg: "#EDE9FE" },
+  { fill: "#2563EB", bg: "#DBEAFE" },
+  { fill: "#059669", bg: "#D1FAE5" },
+  { fill: "#DB2777", bg: "#FCE7F3" },
+  { fill: "#DC2626", bg: "#FEE2E2" },
+];
+const COURSE_EMOJIS = ["📐", "📱", "✍️", "🧬", "📓", "🔬", "📊", "🧪", "🌍", "📖"];
+
+function accentFor(i: number) { return ACCENTS[i % ACCENTS.length]; }
+function emojiFor(i: number)  { return COURSE_EMOJIS[i % COURSE_EMOJIS.length]; }
+
 function getLagosGreeting(): string {
-  const hour = new Date(Date.now() + 3600000).getUTCHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
+  const h = new Date(Date.now() + 3_600_000).getUTCHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
   return "Good evening";
 }
-
 function getLagosEmoji(): string {
-  const hour = new Date(Date.now() + 3600000).getUTCHours();
-  if (hour < 12) return "☀️";
-  if (hour < 17) return "🌤️";
+  const h = new Date(Date.now() + 3_600_000).getUTCHours();
+  if (h < 12) return "☀️";
+  if (h < 17) return "🌤️";
   return "🌙";
 }
 
-export default function HomeScreen() {
-  const navigation = useNavigation<Nav>();
-  const dispatch   = useDispatch();
-  const user       = useSelector((s: RootState) => s.auth.user);
-  const [progress, setProgress] = useState<UserProgress | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
+// ── Animated Hook Section ──────────────────────────────────────────
+function HookSection({ persona, onCTA }: { persona: string | null | undefined; onCTA: () => void }) {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const fadePhrase = useRef(new Animated.Value(1)).current;
 
-  // Fade in animation
+  // Feature card animations — stagger slide-up
+  const cardAnims = useRef(HOOK_FEATURES.map(() => ({
+    opacity:   new Animated.Value(0),
+    translateY: new Animated.Value(30),
+  }))).current;
+
+  // Cycle phrases every 2.5s with fade
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.timing(fadePhrase, {
+        toValue: 0, duration: 250, useNativeDriver: true,
+      }).start(() => {
+        setPhraseIdx((i) => (i + 1) % HOOK_PHRASES.length);
+        Animated.timing(fadePhrase, {
+          toValue: 1, duration: 350, useNativeDriver: true,
+        }).start();
+      });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Stagger feature cards on mount
+  useEffect(() => {
+    const animations = cardAnims.map((anim, i) =>
+      Animated.parallel([
+        Animated.timing(anim.opacity, {
+          toValue: 1, duration: 500,
+          delay: 300 + i * 150,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease),
+        }),
+        Animated.timing(anim.translateY, {
+          toValue: 0, duration: 500,
+          delay: 300 + i * 150,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.back(1.2)),
+        }),
+      ])
+    );
+    Animated.parallel(animations).start();
+  }, []);
+
+  return (
+    <View style={h.wrap}>
+
+      {/* Cycling headline */}
+      <View style={h.headlineWrap}>
+        <Animated.Text style={[h.headline, { opacity: fadePhrase }]}>
+          {HOOK_PHRASES[phraseIdx]}
+        </Animated.Text>
+        <Text style={h.sub}>
+          EduXL is your personal study coach — built for students and graduates who want real results.
+        </Text>
+      </View>
+
+      {/* Feature cards — staggered */}
+      {HOOK_FEATURES.map((f, i) => (
+        <Animated.View
+          key={f.title}
+          style={[
+            h.featureCard,
+            {
+              opacity:   cardAnims[i].opacity,
+              transform: [{ translateY: cardAnims[i].translateY }],
+            },
+          ]}
+        >
+          <View style={h.featureIconWrap}>
+            <Text style={h.featureIcon}>{f.emoji}</Text>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={h.featureTitle}>{f.title}</Text>
+            <Text style={h.featureDesc}>{f.desc}</Text>
+          </View>
+        </Animated.View>
+      ))}
+
+      {/* CTA */}
+      <TouchableOpacity style={h.cta} onPress={onCTA} activeOpacity={0.85}>
+        <Text style={h.ctaText}>
+          {persona === 'graduate' ? 'Start Prep →' : 'Start Studying →'}
+        </Text>
+      </TouchableOpacity>
+
+      <Text style={h.nudge}>Join thousands already studying smarter 🇳🇬</Text>
+    </View>
+  );
+}
+
+const h = StyleSheet.create({
+  wrap:          { paddingHorizontal: 22, paddingTop: 8, paddingBottom: 4 },
+  headlineWrap:  { marginBottom: 24 },
+  headline:      { fontSize: 34, fontWeight: '800', color: '#0F172A', lineHeight: 42, letterSpacing: -1 },
+  sub:           { fontSize: 13, color: '#64748B', lineHeight: 20, marginTop: 10 },
+  featureCard:   { flexDirection: 'row', alignItems: 'flex-start', gap: 14, backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 18, padding: 16, marginBottom: 10 },
+  featureIconWrap:{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#F1F5F9', alignItems: 'center', justifyContent: 'center' },
+  featureIcon:   { fontSize: 22 },
+  featureTitle:  { fontSize: 14, fontWeight: '700', color: '#0F172A', marginBottom: 3 },
+  featureDesc:   { fontSize: 12, color: '#64748B', lineHeight: 18 },
+  cta:           { backgroundColor: '#0F172A', borderRadius: 999, paddingVertical: 16, alignItems: 'center', marginTop: 8, shadowColor: '#0F172A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.25, shadowRadius: 14, elevation: 8 },
+  ctaText:       { fontSize: 16, fontWeight: '800', color: '#fff', letterSpacing: 0.2 },
+  nudge:         { fontSize: 12, color: '#94A3B8', textAlign: 'center', marginTop: 14 },
+});
+
+// ── Main Component ─────────────────────────────────────────────────
+export default function HomeScreen() {
+  const navigation    = useNavigation<Nav>();
+  const dispatch      = useDispatch<AppDispatch>();
+  const user          = useSelector((s: RootState) => s.auth.user);
+  const profileStatus = useSelector((s: RootState) => s.profile.status);
+
+  const [progress,         setProgress]         = useState<UserProgress | null>(null);
+  const [subjects,         setSubjects]         = useState<DrillSubject[]>([]);
+  const [refreshing,       setRefreshing]       = useState(false);
+  const [showPersonaModal, setShowPersonaModal] = useState(false);
+
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -290,269 +199,429 @@ export default function HomeScreen() {
     ]).start();
   }, []);
 
-  const loadProgress = async () => {
+  const loadData = async () => {
     if (!user?._id) return;
-    try { setProgress(await fetchProgress()); } catch {}
+    try {
+      const [prog, subs, status, prof] = await Promise.all([
+        fetchProgress(),
+        getSubjects(),
+        getProfileStatus(),
+        getProfile(),
+      ]);
+      setProgress(prog);
+      setSubjects(subs);
+      dispatch(setProfileStatus(status));
+      dispatch(setProfile(prof));
+      if (!status.persona) setShowPersonaModal(true);
+    } catch {}
   };
 
-  useEffect(() => { loadProgress(); }, [user]);
+  useEffect(() => { loadData(); }, [user]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadProgress();
+    await loadData();
     setRefreshing(false);
   };
 
-  const firstName = user?.name?.split(" ")[0] ?? "there";
-  const xpLevel   = progress ? Math.floor(progress.xp / 500) + 1 : null;
-  const xpPct     = progress ? ((progress.xp % 500) / 500) * 100 : 0;
+  const firstName    = user?.name?.split(" ")[0] ?? "there";
+  const XP_PER_LEVEL = 500;
+  const totalXp      = progress?.xp ?? 0;
+  const level        = Math.floor(totalXp / XP_PER_LEVEL) + 1;
+  const xpInLvl      = totalXp % XP_PER_LEVEL;
+  const xpPct        = (xpInLvl / XP_PER_LEVEL) * 100;
+  const streak       = progress?.streak ?? 0;
+  const firstSubject = subjects[0] ?? null;
+  const persona      = profileStatus?.persona;
+
+  // ── Is the user "new" — no activity yet ──────────────────────────
+  const isNewUser = subjects.length === 0 && totalXp === 0 && streak === 0;
+
+  // ── CTA navigation based on persona ──────────────────────────────
+  const handleCTA = () => {
+    if (persona === 'graduate') {
+      navigation.navigate('BankReady');
+    } else {
+      navigation.navigate('MainTabs', { screen: 'LearnPad' } as any);
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={s.safe}>
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={s.scroll}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.brand} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.brand} />
+        }
       >
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
 
-          {/* ── Top bar ── */}
-          <View style={styles.topBar}>
+          {/* ── TOP BAR ─────────────────────────────────────────── */}
+          <View style={s.topBar}>
             <View>
-              <Text style={styles.greetingLine}>
-                {getLagosEmoji()} {getLagosGreeting()}
-              </Text>
-              <Text style={styles.nameLine}>{firstName}</Text>
+              <Text style={s.greeting}>{getLagosEmoji()} {getLagosGreeting()}</Text>
+              <Text style={s.name}>{firstName}</Text>
             </View>
             <TouchableOpacity
-              style={styles.avatarBtn}
+              style={s.avatarWrap}
               onPress={() => navigation.navigate("Profile" as any)}
               activeOpacity={0.8}
             >
-              <Text style={styles.avatarLetter}>{user?.name?.charAt(0).toUpperCase()}</Text>
-              {progress && progress.streak > 0 && (
-                <View style={styles.streakDot}>
-                  <Text style={styles.streakDotText}>🔥</Text>
+              <View style={s.avatar}>
+                <Text style={s.avatarLetter}>{user?.name?.charAt(0).toUpperCase() ?? "?"}</Text>
+              </View>
+              {streak > 0 && (
+                <View style={s.streakDot}>
+                  <Text style={s.streakDotText}>🔥</Text>
                 </View>
               )}
             </TouchableOpacity>
           </View>
 
-          {/* ── Hero stats bar ── */}
-          {progress ? (
-            <View style={styles.statsBar}>
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>{progress.streak}</Text>
-                <Text style={styles.statLabel}>day streak</Text>
+          {/* ── STREAK HERO ─────────────────────────────────────── */}
+          <View style={s.streakHero}>
+            <View style={s.glow1} />
+            <View style={s.glow2} />
+            <View style={s.streakRow}>
+              <View style={s.streakLeft}>
+                <Text style={s.streakFire}>🔥</Text>
+                <View>
+                  <Text style={s.streakNum}>{streak}</Text>
+                  <Text style={s.streakLabel}>day streak</Text>
+                </View>
               </View>
-              <View style={styles.statDivider} />
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>{progress.xp}</Text>
-                <Text style={styles.statLabel}>total XP</Text>
+              <View style={s.streakRight}>
+                <Text style={s.xpLabel}>TOTAL XP</Text>
+                <Text style={s.xpVal}>{totalXp}</Text>
+                <Text style={s.xpSub}>Lv {level} · {XP_PER_LEVEL - xpInLvl} to next</Text>
               </View>
-              <View style={styles.statDivider} />
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>Lv {xpLevel}</Text>
-                <Text style={styles.statLabel}>level</Text>
-              </View>
-              {progress.badges.length > 0 && (
-                <>
-                  <View style={styles.statDivider} />
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{progress.badges.length}</Text>
-                    <Text style={styles.statLabel}>badges</Text>
-                  </View>
-                </>
-              )}
             </View>
-          ) : (
-            <View style={styles.statsBarEmpty}>
-              <Text style={styles.statsBarEmptyText}>Complete a test to start tracking progress 📊</Text>
+            <View style={s.streakBarWrap}>
+              <View style={s.streakBarTrack}>
+                <View style={[s.streakBarFill, { width: `${xpPct}%` as any }]} />
+              </View>
+              <Text style={s.streakBarLabel}>{xpInLvl} / {XP_PER_LEVEL} XP to Level {level + 1}</Text>
             </View>
+            <View style={s.streakMsgBox}>
+              <Text style={s.streakMsg}>
+                {streak > 0
+                  ? <>{streak} {streak === 1 ? "day" : "days"} straight. <Text style={s.streakMsgAccent}>Don't break the chain</Text> — study something today.</>
+                  : <>Start your first session today. <Text style={s.streakMsgAccent}>Day 1 begins now.</Text></>
+                }
+              </Text>
+            </View>
+          </View>
+
+          {/* ── NEW USER HOOK ────────────────────────────────────── */}
+          {isNewUser && (
+            <HookSection persona={persona} onCTA={handleCTA} />
           )}
 
-          {/* ── XP bar ── */}
-          {progress && (
-            <View style={styles.xpBarWrap}>
-              <View style={styles.xpBarTrack}>
-                <Animated.View style={[styles.xpBarFill, { width: `${xpPct}%` }]} />
-              </View>
-              <Text style={styles.xpBarLabel}>{progress.xp % 500} / 500 XP to Level {(xpLevel ?? 1) + 1}</Text>
-            </View>
+          {/* ── RETURNING USER — CONTINUE STUDYING ──────────────── */}
+          {!isNewUser && firstSubject && (
+            <>
+              <Text style={s.sec}>CONTINUE STUDYING</Text>
+              <TouchableOpacity
+                style={s.continueCard}
+                onPress={() => navigation.navigate("DrillSubject", {
+                  subjectId: firstSubject._id,
+                  subjectName: firstSubject.name,
+                })}
+                activeOpacity={0.85}
+              >
+                <View style={[s.continueIcon, { backgroundColor: accentFor(0).bg }]}>
+                  <Text style={{ fontSize: 24 }}>{emojiFor(0)}</Text>
+                </View>
+                <View style={s.continueBody}>
+                  <Text style={s.continueEyebrow}>DRILLPAD COURSE</Text>
+                  <Text style={s.continueName} numberOfLines={1}>{firstSubject.name}</Text>
+                  <Text style={s.continueMeta}>
+                    {firstSubject.totalQuestions} question{firstSubject.totalQuestions !== 1 ? "s" : ""}
+                    {firstSubject.weakCount > 0 ? ` · ⚠️ ${firstSubject.weakCount} weak` : ""}
+                  </Text>
+                </View>
+                <View style={s.continueBtn}>
+                  <Text style={s.continueBtnText}>Resume →</Text>
+                </View>
+              </TouchableOpacity>
+            </>
           )}
 
-          {/* ── Section: Active modules ── */}
-          <Text style={styles.sectionLabel}>YOUR MODULES</Text>
+          {/* ── MY COURSES (returning users only) ───────────────── */}
+          {!isNewUser && subjects.length > 0 && (
+            <>
+              <Text style={s.sec}>MY COURSES</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.coursesRow}>
+                {subjects.map((sub, index) => {
+                  const accent = accentFor(index);
+                  const emoji  = emojiFor(index);
+                  const pct    = sub.bestScore !== null ? Math.round((sub.bestScore / 10) * 100) : 0;
+                  return (
+                    <TouchableOpacity
+                      key={sub._id}
+                      style={s.courseChip}
+                      activeOpacity={0.8}
+                      onPress={() => navigation.navigate("DrillSubject", {
+                        subjectId: sub._id, subjectName: sub.name,
+                      })}
+                    >
+                      <Text style={s.courseChipIcon}>{emoji}</Text>
+                      <Text style={s.courseChipName} numberOfLines={1}>{sub.name}</Text>
+                      <View style={s.courseTrack}>
+                        <View style={[s.courseTrackFill, { width: `${pct}%` as any, backgroundColor: accent.fill }]} />
+                      </View>
+                      <Text style={s.courseChipPct}>{pct === 0 ? "not started" : `${pct}%`}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+                <TouchableOpacity style={s.seeAllChip} activeOpacity={0.8} onPress={() => navigation.navigate("LearnPad" as any)}>
+                  <Text style={s.seeAllArrow}>›</Text>
+                  <Text style={s.seeAllText}>See all</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </>
+          )}
 
-          {/* BankReady card */}
+          {/* ── DRILLPAD CARD — visible to ALL ──────────────────── */}
+          <Text style={s.sec}>YOUR STUDY COACH</Text>
           <TouchableOpacity
-            style={styles.bankReadyCard}
-            onPress={() => navigation.navigate("BankReady")}
+            style={s.drillCard}
+            onPress={() => navigation.navigate('MainTabs', { screen: 'LearnPad' } as any)}
             activeOpacity={0.9}
           >
-            <View style={styles.cardGlow} />
-            <View style={styles.bankReadyTop}>
-              <View style={styles.bankReadyIconCircle}>
-                <Text style={{ fontSize: 26 }}>🏦</Text>
-              </View>
-              <View style={styles.activeBadge}>
-                <View style={styles.activeDot} />
-                <Text style={styles.activeBadgeText}>ACTIVE</Text>
-              </View>
-            </View>
-            <Text style={styles.bankReadyName}>BankReady</Text>
-            <Text style={styles.bankReadyDesc}>
-              Ace the aptitude test for GTBank, Access, Stanbic & more
-            </Text>
-            <View style={styles.bankReadyFooter}>
-              <Text style={styles.bankReadyMeta}>📚 639+ questions  ·  🎯 4 modules</Text>
-              <Text style={styles.bankReadyCta}>Start →</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* DrillPad card */}
-          <TouchableOpacity
-            style={styles.drillPadCard}
-            onPress={() => navigation.navigate("DrillPad")}
-            activeOpacity={0.9}
-          >
-            <View style={styles.drillPadTop}>
-              <View style={styles.drillPadIconCircle}>
+            <View style={s.drillCardTop}>
+              <View style={s.drillIconCircle}>
                 <Text style={{ fontSize: 26 }}>📖</Text>
               </View>
-              <View style={[styles.activeBadge, { backgroundColor: '#EDE9FE' }]}>
-                <View style={[styles.activeDot, { backgroundColor: '#7C3AED' }]} />
-                <Text style={[styles.activeBadgeText, { color: '#7C3AED' }]}>ACTIVE</Text>
+              <View style={s.activeBadge}>
+                <View style={s.activeDot} />
+                <Text style={s.activeBadgeText}>ACTIVE</Text>
               </View>
             </View>
-            <Text style={styles.drillPadName}>DrillPad</Text>
-            <Text style={styles.drillPadDesc}>
-              Upload your questions from any AI tool and drill them until you pass
+            <Text style={s.drillName}>DrillPad</Text>
+            <Text style={s.drillDesc}>
+              Upload your notes. AI turns them into questions, audio lessons, and whiteboard videos.
             </Text>
-            <View style={styles.bankReadyFooter}>
-              <Text style={styles.drillPadMeta}>📂 CSV upload  ·  ⚡ Any exam</Text>
-              <Text style={styles.drillPadCta}>Open →</Text>
+            <View style={s.drillFooter}>
+              <Text style={s.drillMeta}>📂 Any subject  ·  ⚡ Any exam</Text>
+              <Text style={s.drillCta}>Open →</Text>
             </View>
           </TouchableOpacity>
 
-          {/* ── Badges ── */}
+          {/* ── SPECIALIST TRACKS — graduate only ─────────────────
+          {persona === 'graduate' && (
+            <>
+              <Text style={s.sec}>SPECIALIST TRACKS</Text>
+              <View style={s.tracksRow}>
+              
+
+                <TouchableOpacity
+                  style={[s.trackCard, s.trackLight]}
+                  onPress={() => navigation.navigate("CompanyTracks")}
+                  activeOpacity={0.88}
+                >
+                  <View style={s.trackTopRow}>
+                    <View style={[s.trackIcon, s.trackIconLight]}>
+                      <Text style={{ fontSize: 18 }}>🏢</Text>
+                    </View>
+                    <View style={[s.trackBadge, s.trackBadgeNew]}>
+                      <Text style={s.trackBadgeNewText}>NEW</Text>
+                    </View>
+                  </View>
+                  <Text style={[s.trackName, { color: "#0F172A" }]}>Company Tracks</Text>
+                  <Text style={[s.trackDesc, { color: "#64748B" }]}>Shell, KPMG, PwC simulations</Text>
+                  <Text style={[s.trackCta, { color: "#4F46E5" }]}>Explore →</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )} */}
+
+          {/* ── SPECIALIST TRACKS — graduate only ───────────────── */}
+{persona === 'graduate' && (
+  <>
+    <Text style={s.sec}>SPECIALIST TRACKS</Text>
+    <View style={s.tracksRow}>
+
+      <TouchableOpacity
+        style={[s.trackCard, s.trackLight]}
+        onPress={() => navigation.navigate('MainTabs', { screen: 'Graduate' } as any)}
+        activeOpacity={0.88}
+      >
+        <View style={s.trackTopRow}>
+          <View style={[s.trackIcon, s.trackIconLight]}>
+            <Text style={{ fontSize: 18 }}>🏢</Text>
+          </View>
+          <View style={[s.trackBadge, s.trackBadgeNew]}>
+            <Text style={s.trackBadgeNewText}>NEW</Text>
+          </View>
+        </View>
+        <Text style={[s.trackName, { color: "#0F172A" }]}>Company Tracks</Text>
+        <Text style={[s.trackDesc, { color: "#64748B" }]}>Shell, KPMG, PwC simulations</Text>
+        <Text style={[s.trackCta, { color: "#4F46E5" }]}>Explore →</Text>
+      </TouchableOpacity>
+    </View>
+  </>
+)}
+
+          {/* ── COMING SOON — graduate only ─────────────────────── */}
+          {persona === 'graduate' && (
+            <>
+              <Text style={s.sec}>COMING SOON</Text>
+              <View style={s.comingGrid}>
+                {GRADUATE_COMING_SOON.map((m) => (
+                  <View key={m.id} style={s.comingCard}>
+                    <Text style={s.comingIcon}>{m.icon}</Text>
+                    <Text style={s.comingName}>{m.label}</Text>
+                    <Text style={s.comingDesc}>{m.desc}</Text>
+                    <View style={s.soonPill}>
+                      <Text style={s.soonPillText}>Soon</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </>
+          )}
+
+          {/* ── BADGES ──────────────────────────────────────────── */}
           {progress && progress.badges.length > 0 && (
             <>
-              <Text style={styles.sectionLabel}>RECENT BADGES</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.badgesScroll}>
+              <Text style={s.sec}>RECENT BADGES</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.badgesRow}>
                 {progress.badges.slice(0, 6).map((b) => (
-                  <View key={b.id} style={styles.badgeCard}>
-                    <Text style={{ fontSize: 30 }}>{b.icon}</Text>
-                    <Text style={styles.badgeCardName}>{b.name}</Text>
+                  <View key={b.id} style={s.badgeCard}>
+                    <Text style={{ fontSize: 28 }}>{b.icon}</Text>
+                    <Text style={s.badgeName}>{b.name}</Text>
                   </View>
                 ))}
               </ScrollView>
             </>
           )}
 
-          {/* ── Coming soon ── */}
-          <Text style={styles.sectionLabel}>COMING SOON</Text>
-          <View style={styles.comingGrid}>
-            {COMING_SOON.map((m) => (
-              <View key={m.id} style={styles.comingCard}>
-                <View style={[styles.comingIconWrap, { backgroundColor: m.color + '15' }]}>
-                  <Text style={{ fontSize: 20 }}>{m.icon}</Text>
-                </View>
-                <Text style={styles.comingLabel}>{m.label}</Text>
-                <View style={styles.soonPill}>
-                  <Text style={styles.soonPillText}>Soon</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-
-          {/* ── Freeze banner ── */}
+          {/* ── STREAK FREEZE ───────────────────────────────────── */}
           {progress?.streakFreezeAvailable && (
-            <View style={styles.freezeBanner}>
-              <Text style={styles.freezeEmoji}>🧊</Text>
+            <View style={s.freezeBanner}>
+              <Text style={{ fontSize: 26 }}>🧊</Text>
               <View style={{ flex: 1 }}>
-                <Text style={styles.freezeTitle}>Streak Freeze Available</Text>
-                <Text style={styles.freezeSub}>Use it to protect your streak on a rest day</Text>
+                <Text style={s.freezeTitle}>Streak Freeze Available</Text>
+                <Text style={s.freezeSub}>Use it to protect your streak on a rest day</Text>
               </View>
             </View>
           )}
 
+          <View style={{ height: 16 }} />
         </Animated.View>
       </ScrollView>
+
+      <PersonaModal
+        visible={showPersonaModal}
+        onComplete={() => setShowPersonaModal(false)}
+      />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safe:   { flex: 1, backgroundColor: '#F8FAFC' },
-  scroll: { padding: 20, paddingBottom: 60 },
+// ─── Styles ───────────────────────────────────────────────────────
+const s = StyleSheet.create({
+  safe:   { flex: 1, backgroundColor: "#F8FAFC" },
+  scroll: { paddingBottom: 60 },
 
-  // Top bar
-  topBar:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-  greetingLine: { fontSize: 13, color: '#64748B', fontWeight: '500', marginBottom: 2 },
-  nameLine:     { fontSize: 30, fontWeight: '800', color: '#0F172A', letterSpacing: -0.5 },
-  avatarBtn:    { width: 48, height: 48, borderRadius: 24, backgroundColor: '#DBEAFE', alignItems: 'center', justifyContent: 'center' },
-  avatarLetter: { fontSize: 18, fontWeight: '800', color: '#1D4ED8' },
-  streakDot:    { position: 'absolute', top: -2, right: -2, width: 18, height: 18, borderRadius: 9, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
-  streakDotText:{ fontSize: 10 },
+  topBar:       { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", paddingHorizontal: 22, paddingTop: 20 },
+  greeting:     { fontSize: 13, color: "#64748B", fontWeight: "500", marginBottom: 3 },
+  name:         { fontSize: 32, fontWeight: "800", color: "#0F172A", letterSpacing: -1, lineHeight: 34 },
+  avatarWrap:   { position: "relative" },
+  avatar:       { width: 48, height: 48, borderRadius: 24, backgroundColor: "#DBEAFE", alignItems: "center", justifyContent: "center" },
+  avatarLetter: { fontSize: 18, fontWeight: "800", color: "#1D4ED8" },
+  streakDot:    { position: "absolute", top: -3, right: -3, width: 20, height: 20, borderRadius: 10, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" },
+  streakDotText:{ fontSize: 11 },
 
-  // Stats bar
-  statsBar:      { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#E2E8F0', alignItems: 'center', justifyContent: 'space-around' },
-  statsBarEmpty: { backgroundColor: '#F1F5F9', borderRadius: 16, padding: 14, marginBottom: 12, alignItems: 'center' },
-  statsBarEmptyText: { fontSize: 12, color: '#94A3B8', fontWeight: '500' },
-  statItem:      { alignItems: 'center' },
-  statValue:     { fontSize: 18, fontWeight: '800', color: '#0F172A' },
-  statLabel:     { fontSize: 11, color: '#94A3B8', fontWeight: '500', marginTop: 1 },
-  statDivider:   { width: 1, height: 32, backgroundColor: '#E2E8F0' },
+  streakHero:     { margin: 22, marginTop: 20, backgroundColor: "#0F172A", borderRadius: 24, padding: 20, overflow: "hidden" },
+  glow1:          { position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: "rgba(251,191,36,0.15)" },
+  glow2:          { position: "absolute", bottom: -40, left: -20, width: 100, height: 100, borderRadius: 50, backgroundColor: "rgba(251,191,36,0.06)" },
+  streakRow:      { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  streakLeft:     { flexDirection: "row", alignItems: "center", gap: 14 },
+  streakFire:     { fontSize: 42, lineHeight: 50 },
+  streakNum:      { fontSize: 48, fontWeight: "800", color: "#fff", lineHeight: 50, letterSpacing: -2 },
+  streakLabel:    { fontSize: 13, color: "rgba(255,255,255,0.5)", fontWeight: "500", marginTop: 2 },
+  streakRight:    { alignItems: "flex-end" },
+  xpLabel:        { fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: "600", marginBottom: 4, letterSpacing: 0.5 },
+  xpVal:          { fontSize: 22, fontWeight: "800", color: "#FCD34D" },
+  xpSub:          { fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: "500" },
+  streakBarWrap:  { marginTop: 14 },
+  streakBarTrack: { height: 4, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 2, overflow: "hidden", marginBottom: 5 },
+  streakBarFill:  { height: 4, backgroundColor: "#FCD34D", borderRadius: 2 },
+  streakBarLabel: { fontSize: 11, color: "rgba(255,255,255,0.35)", fontWeight: "500" },
+  streakMsgBox:   { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.08)" },
+  streakMsg:      { fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 18 },
+  streakMsgAccent:{ color: "#FCD34D", fontWeight: "600" },
 
-  // XP bar
-  xpBarWrap:  { marginBottom: 28 },
-  xpBarTrack: { height: 6, backgroundColor: '#E2E8F0', borderRadius: 3, overflow: 'hidden', marginBottom: 5 },
-  xpBarFill:  { height: 6, backgroundColor: '#F59E0B', borderRadius: 3 },
-  xpBarLabel: { fontSize: 11, color: '#94A3B8', fontWeight: '500' },
+  sec: { fontSize: 11, fontWeight: "700", color: "#94A3B8", letterSpacing: 1.2, paddingHorizontal: 22, paddingTop: 20, paddingBottom: 10 },
 
-  // Section label
-  sectionLabel: { fontSize: 11, fontWeight: '700', color: '#94A3B8', letterSpacing: 1.2, marginBottom: 12, marginTop: 4 },
+  continueCard:    { flexDirection: "row", alignItems: "center", marginHorizontal: 22, backgroundColor: "#fff", borderRadius: 20, padding: 16, borderWidth: 1, borderColor: "#E2E8F0", gap: 14 },
+  continueIcon:    { width: 52, height: 52, borderRadius: 16, alignItems: "center", justifyContent: "center" },
+  continueBody:    { flex: 1, minWidth: 0 },
+  continueEyebrow: { fontSize: 10, fontWeight: "700", color: "#7C3AED", letterSpacing: 0.8, marginBottom: 3 },
+  continueName:    { fontSize: 16, fontWeight: "700", color: "#0F172A", marginBottom: 4 },
+  continueMeta:    { fontSize: 12, color: "#94A3B8" },
+  continueBtn:     { backgroundColor: "#0F172A", borderRadius: 999, paddingVertical: 9, paddingHorizontal: 16 },
+  continueBtnText: { fontSize: 13, fontWeight: "700", color: "#fff" },
 
-  // BankReady card
-  bankReadyCard:       { backgroundColor: '#1D4ED8', borderRadius: 20, padding: 20, marginBottom: 12, overflow: 'hidden' },
-  cardGlow:            { position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,255,255,0.08)' },
-  bankReadyTop:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  bankReadyIconCircle: { width: 52, height: 52, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  activeBadge:         { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
-  activeDot:           { width: 6, height: 6, borderRadius: 3, backgroundColor: '#4ADE80' },
-  activeBadgeText:     { fontSize: 10, fontWeight: '700', color: '#fff', letterSpacing: 0.5 },
-  bankReadyName:       { fontSize: 24, fontWeight: '800', color: '#fff', marginBottom: 6, letterSpacing: -0.3 },
-  bankReadyDesc:       { fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 20, marginBottom: 16 },
-  bankReadyFooter:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  bankReadyMeta:       { fontSize: 12, color: 'rgba(255,255,255,0.65)' },
-  bankReadyCta:        { fontSize: 14, fontWeight: '700', color: '#fff', backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20 },
+  coursesRow:      { paddingHorizontal: 22, gap: 10 },
+  courseChip:      { backgroundColor: "#fff", borderWidth: 1, borderColor: "#E2E8F0", borderRadius: 18, padding: 14, minWidth: 140 },
+  courseChipIcon:  { fontSize: 22, marginBottom: 8 },
+  courseChipName:  { fontSize: 13, fontWeight: "700", color: "#0F172A", marginBottom: 6 },
+  courseTrack:     { height: 3, backgroundColor: "#F1F5F9", borderRadius: 2, overflow: "hidden", marginBottom: 4 },
+  courseTrackFill: { height: 3, borderRadius: 2 },
+  courseChipPct:   { fontSize: 10, fontWeight: "600", color: "#94A3B8" },
+  seeAllChip:      { backgroundColor: "#F8FAFC", borderWidth: 1, borderColor: "#CBD5E1", borderStyle: "dashed", borderRadius: 18, minWidth: 80, alignItems: "center", justifyContent: "center", paddingVertical: 14, paddingHorizontal: 12, gap: 6 },
+  seeAllArrow:     { fontSize: 20, color: "#94A3B8" },
+  seeAllText:      { fontSize: 11, fontWeight: "600", color: "#94A3B8" },
 
-  // DrillPad card
-  drillPadCard:       { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 24, borderWidth: 1.5, borderColor: '#EDE9FE' },
-  drillPadTop:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  drillPadIconCircle: { width: 52, height: 52, borderRadius: 14, backgroundColor: '#EDE9FE', alignItems: 'center', justifyContent: 'center' },
-  drillPadName:       { fontSize: 24, fontWeight: '800', color: '#0F172A', marginBottom: 6, letterSpacing: -0.3 },
-  drillPadDesc:       { fontSize: 13, color: '#64748B', lineHeight: 20, marginBottom: 16 },
-  drillPadMeta:       { fontSize: 12, color: '#94A3B8' },
-  drillPadCta:        { fontSize: 14, fontWeight: '700', color: '#7C3AED', backgroundColor: '#EDE9FE', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20 },
+  // DrillPad card — all users
+  drillCard:       { marginHorizontal: 22, backgroundColor: "#fff", borderRadius: 20, padding: 20, borderWidth: 1.5, borderColor: "#EDE9FE" },
+  drillCardTop:    { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 14 },
+  drillIconCircle: { width: 52, height: 52, borderRadius: 14, backgroundColor: "#EDE9FE", alignItems: "center", justifyContent: "center" },
+  activeBadge:     { flexDirection: "row", alignItems: "center", gap: 5, backgroundColor: "#EDE9FE", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
+  activeDot:       { width: 6, height: 6, borderRadius: 3, backgroundColor: "#7C3AED" },
+  activeBadgeText: { fontSize: 10, fontWeight: "700", color: "#7C3AED", letterSpacing: 0.5 },
+  drillName:       { fontSize: 24, fontWeight: "800", color: "#0F172A", marginBottom: 6, letterSpacing: -0.3 },
+  drillDesc:       { fontSize: 13, color: "#64748B", lineHeight: 20, marginBottom: 16 },
+  drillFooter:     { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  drillMeta:       { fontSize: 12, color: "#94A3B8" },
+  drillCta:        { fontSize: 14, fontWeight: "700", color: "#7C3AED", backgroundColor: "#EDE9FE", paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20 },
 
-  // Badges
-  badgesScroll: { marginBottom: 24 },
-  badgeCard:    { alignItems: 'center', backgroundColor: '#fff', borderRadius: 14, padding: 12, marginRight: 10, borderWidth: 1, borderColor: '#E2E8F0', minWidth: 72 },
-  badgeCardName:{ fontSize: 10, color: '#64748B', fontWeight: '600', marginTop: 6, textAlign: 'center' },
+  // Specialist tracks
+  tracksRow:            { flexDirection: "row", gap: 10, paddingHorizontal: 22 },
+  trackCard:            { flex: 1, borderRadius: 20, padding: 16 },
+  trackDark:            { backgroundColor: "#1D4ED8" },
+  trackLight:           { backgroundColor: "#fff", borderWidth: 1, borderColor: "#E0E7FF" },
+  trackTopRow:          { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 },
+  trackIcon:            { width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
+  trackIconDark:        { backgroundColor: "rgba(255,255,255,0.15)" },
+  trackIconLight:       { backgroundColor: "#EEF2FF" },
+  trackBadge:           { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 10 },
+  trackBadgeActive:     { backgroundColor: "rgba(255,255,255,0.2)" },
+  trackBadgeActiveText: { fontSize: 9, fontWeight: "700", color: "#fff", letterSpacing: 0.4 },
+  trackBadgeNew:        { backgroundColor: "#FEF3C7" },
+  trackBadgeNewText:    { fontSize: 9, fontWeight: "700", color: "#D97706", letterSpacing: 0.4 },
+  trackName:            { fontSize: 15, fontWeight: "800", letterSpacing: -0.3, marginBottom: 3 },
+  trackDesc:            { fontSize: 11, lineHeight: 16, marginBottom: 10 },
+  trackCta:             { fontSize: 12, fontWeight: "700" },
 
   // Coming soon
-  comingGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 24 },
-  comingCard: { width: '47.5%', backgroundColor: '#fff', borderRadius: 14, padding: 14, borderWidth: 1, borderColor: '#E2E8F0' },
-  comingIconWrap: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
-  comingLabel:{ fontSize: 13, fontWeight: '700', color: '#0F172A', marginBottom: 6 },
-  soonPill:   { backgroundColor: '#F1F5F9', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, alignSelf: 'flex-start' },
-  soonPillText:{ fontSize: 10, color: '#94A3B8', fontWeight: '600' },
+  comingGrid:   { flexDirection: "row", flexWrap: "wrap", gap: 10, paddingHorizontal: 22 },
+  comingCard:   { width: "47.5%", backgroundColor: "#fff", borderRadius: 16, padding: 14, borderWidth: 1, borderColor: "#E2E8F0" },
+  comingIcon:   { fontSize: 22, marginBottom: 8 },
+  comingName:   { fontSize: 13, fontWeight: "700", color: "#0F172A", marginBottom: 2 },
+  comingDesc:   { fontSize: 10, color: "#94A3B8", lineHeight: 14, marginBottom: 8 },
+  soonPill:     { backgroundColor: "#F1F5F9", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 20, alignSelf: "flex-start" },
+  soonPillText: { fontSize: 10, color: "#94A3B8", fontWeight: "600" },
 
-  // Freeze banner
-  freezeBanner: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#EFF6FF', borderRadius: 14, padding: 16, borderWidth: 1, borderColor: '#BFDBFE' },
-  freezeEmoji:  { fontSize: 28 },
-  freezeTitle:  { fontSize: 14, fontWeight: '700', color: '#1D4ED8', marginBottom: 2 },
-  freezeSub:    { fontSize: 12, color: '#3B82F6' },
+  badgesRow:  { paddingHorizontal: 22, paddingBottom: 4 },
+  badgeCard:  { alignItems: "center", backgroundColor: "#fff", borderRadius: 14, padding: 12, marginRight: 10, borderWidth: 1, borderColor: "#E2E8F0", minWidth: 72 },
+  badgeName:  { fontSize: 10, color: "#64748B", fontWeight: "600", marginTop: 6, textAlign: "center" },
+
+  freezeBanner: { flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: "#EFF6FF", borderRadius: 14, padding: 16, marginHorizontal: 22, marginTop: 20, borderWidth: 1, borderColor: "#BFDBFE" },
+  freezeTitle:  { fontSize: 14, fontWeight: "700", color: "#1D4ED8", marginBottom: 2 },
+  freezeSub:    { fontSize: 12, color: "#3B82F6" },
 });
