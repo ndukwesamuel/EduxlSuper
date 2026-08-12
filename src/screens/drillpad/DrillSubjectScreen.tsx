@@ -892,7 +892,7 @@ import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, FontSize, Radius, Spacing, Shadows } from '../../theme';
 import CCLoader from '../../components/CCLoader';
-import { getSubject, getDrillStats } from '../../../config/client';
+import { getSubject, getDrillStats, sendSubjectChat } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'DrillSubject'>;
@@ -972,6 +972,8 @@ export default function DrillSubjectScreen() {
   const [stats, setStats]           = useState<any>(null);
   const [loading, setLoading]       = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [fileCount, setFileCount]   = useState(0);
+  const [linkCount, setLinkCount]   = useState(0);
 
   // Chat state
   const [chatOpen, setChatOpen]     = useState(false);
@@ -988,6 +990,8 @@ export default function DrillSubjectScreen() {
       ]);
       setSubject(s);
       setStats(st);
+      setFileCount(s?.fileCount ?? 0);
+      setLinkCount(s?.linkCount ?? 0);
     } catch {
       Alert.alert('Error', 'Could not load course');
     }
@@ -1033,25 +1037,14 @@ export default function DrillSubjectScreen() {
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: `You are a helpful study tutor for the course "${subjectName}". 
-The student is studying this subject and may ask you to explain concepts, 
-quiz them, or help them understand questions they got wrong. 
-Be concise, clear, and encouraging. Use simple language.`,
-          messages: [
-            ...messages.map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })),
-            { role: 'user', content: text },
-          ],
-        }),
-      });
+      const response = await sendSubjectChat(
+        subjectId,
+        subjectName,
+        text,
+        messages.map((m) => ({ role: m.role === 'user' ? 'user' : 'model', content: m.text })),
+      );
 
-      const data = await response.json();
-      const aiText = data?.content?.[0]?.text ?? 'Sorry, I could not respond. Try again.';
+      const aiText = response?.reply ?? 'Sorry, I could not respond. Try again.';
 
       const aiMsg: ChatMessage = { id: (Date.now() + 1).toString(), role: 'ai', text: aiText };
       setMessages((prev) => [...prev, aiMsg]);
@@ -1096,8 +1089,6 @@ Be concise, clear, and encouraging. Use simple language.`,
           </TouchableOpacity>
         </View>
 
-
-        <Text>kaka</Text>
 
         {/* ── Course name ── */}
         <View style={styles.heroWrap}>
@@ -1197,7 +1188,9 @@ Be concise, clear, and encouraging. Use simple language.`,
                       onPress={() => navigation.navigate('SubjectChat', {
   subjectId,
   subjectName,
-  documentCount: subject?.materialCount ?? 0,
+  documentCount: fileCount + linkCount,
+  fileCount,
+  linkCount,
 })}
             activeOpacity={0.75}
           >
@@ -1216,7 +1209,9 @@ Be concise, clear, and encouraging. Use simple language.`,
           onPress={() => navigation.navigate('SubjectChat', {
   subjectId,
   subjectName,
-  documentCount: subject?.materialCount ?? 0,
+  documentCount: fileCount + linkCount,
+  fileCount,
+  linkCount,
 })}
           activeOpacity={0.85}
         >

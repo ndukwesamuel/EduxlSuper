@@ -64,6 +64,12 @@ import WhiteboardCreateScreen     from '../screens/drillpad/WhiteboardCreateScre
 import WhiteboardPlayerScreen     from '../screens/drillpad/WhiteboardPlayerScreen';
 import WhiteboardGeneratingScreen from '../screens/drillpad/WhiteboardGeneratingScreen';
 import SubjectMaterialsScreen from '../screens/drillpad/SubjectMaterialsScreen';
+
+// ── AI File/Link Quiz ─────────────────────────────────────────────
+import AiQuizSetupScreen   from '../screens/drillpad/AiQuizSetupScreen';
+import AiQuizSessionScreen from '../screens/drillpad/AiQuizSessionScreen';
+import AiQuizResultsScreen from '../screens/drillpad/AiQuizResultsScreen';
+
 import SubjectChatScreen from '../screens/drillpad/SubjectChatScreen';
 import CompanyTrackHomeScreen from '../screens/companytrack/CompanyTrackHomeScreen';
 
@@ -154,6 +160,11 @@ function AppNavigator() {
       <AppStack.Screen name="WhiteboardCreate"     component={WhiteboardCreateScreen} />
       <AppStack.Screen name="WhiteboardGenerating" component={WhiteboardGeneratingScreen} options={{ gestureEnabled: false }} />
       <AppStack.Screen name="WhiteboardPlayer"     component={WhiteboardPlayerScreen} />
+
+      {/* ── AI File/Link Quiz ── */}
+      <AppStack.Screen name="AiQuizSetup"   component={AiQuizSetupScreen} />
+      <AppStack.Screen name="AiQuizSession" component={AiQuizSessionScreen} options={{ gestureEnabled: false }} />
+      <AppStack.Screen name="AiQuizResults" component={AiQuizResultsScreen} options={{ gestureEnabled: false }} />
 
     </AppStack.Navigator>
   );

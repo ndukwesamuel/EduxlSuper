@@ -225,6 +225,15 @@ export default function LearnScreen() {
           </View>
         )}
 
+        {/* ── AI Quiz Feature ── */}
+        <View style={styles.aiQuizCard}>
+          <Text style={styles.aiQuizTitle}>✨ AI Quiz Generator</Text>
+          <Text style={styles.aiQuizDesc}>Upload a PDF or paste a link to instantly generate up to 50 practice questions.</Text>
+          <TouchableOpacity style={styles.aiQuizBtn} onPress={() => navigation.navigate('AiQuizSetup')}>
+            <Text style={styles.aiQuizBtnText}>Generate Quiz</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* ── Course list ── */}
         {filtered.length > 0 && (
           <>
@@ -476,4 +485,11 @@ const styles = StyleSheet.create({
   cancelText: { fontSize: 14, fontWeight: '600', color: '#64748B' },
   createBtn:  { flex: 2, padding: 15, borderRadius: 12, backgroundColor: Colors.brand, alignItems: 'center' },
   createText: { fontSize: 14, fontWeight: '700', color: '#fff' },
+
+  // AI Quiz Card
+  aiQuizCard: { backgroundColor: '#EEF2FF', marginHorizontal: 20, padding: 20, borderRadius: 20, marginBottom: 20, borderWidth: 1, borderColor: '#C7D2FE' },
+  aiQuizTitle: { fontSize: 16, fontWeight: '800', color: '#3730A3', marginBottom: 6 },
+  aiQuizDesc: { fontSize: 13, color: '#4338CA', lineHeight: 20, marginBottom: 16 },
+  aiQuizBtn: { backgroundColor: '#4F46E5', alignSelf: 'flex-start', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 999 },
+  aiQuizBtnText: { color: '#fff', fontSize: 13, fontWeight: '700' },
 });

@@ -13,7 +13,8 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-const BASE_URL = "https://eduxl2.up.railway.app/api/v1/"
+// export const BASE_URL = "https://eduxl2.up.railway.app/api/v1"
+export const BASE_URL = "http://10.0.2.2:7071/api/v1"
 
 
 // "eduxl2-production-0b8e.up.railway.app/api/v1"  
@@ -595,9 +596,11 @@ export interface SubjectMaterial {
   userId: string;
   filename: string;
   mimeType: string;
-  fileSize: number;
-  fileUrl: string;
-  filePublicId: string;
+  sourceType: 'file' | 'link';
+  sourceUrl?: string;      // link uploads only
+  fileSize?: number;       // file uploads only
+  fileUrl?: string;        // file uploads only
+  filePublicId?: string;   // file uploads only
   status: 'ready' | 'processing' | 'failed';
   createdAt: string;
   updatedAt: string;
@@ -800,7 +803,6 @@ export const submitCompanyTest = (
     })
     .then(unwrap);
 
-// ── Get history for a company ──────────────────────────────────────
 export const getCompanyHistory = (companyId?: string, stageType?: StageType): Promise<CompanyHistoryResponse> => {
   const params: Record<string, string> = {};
   if (companyId) params.companyId = companyId;
@@ -809,5 +811,12 @@ export const getCompanyHistory = (companyId?: string, stageType?: StageType): Pr
     .get<{ success: boolean; data: CompanyHistoryResponse }>("/companytrack/history", { params })
     .then(unwrap);
 };
+
+// ── Notification Token APIs ─────────────────────────────────────────
+export const registerNotificationToken = (token: string): Promise<any> =>
+  api.post<{ success: boolean; data: any }>("/notification/token", { token }).then(unwrap);
+
+export const removeNotificationToken = (): Promise<any> =>
+  api.delete<{ success: boolean; data: any }>("/notification/token").then(unwrap);
 
 export default api;

@@ -10,42 +10,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, Spacing } from '../../theme';
+import { getSubjectMaterials, deleteMaterial, SubjectMaterial } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'SubjectMaterials'>;
-
-// ── API calls ─────────────────────────────────────────────────────
-// Add these to your config/client.ts
-
-export interface SubjectMaterial {
-  _id: string;
-  filename: string;
-  mimeType: string;
-  fileSize: number;
-  fileUrl: string;
-  status: 'ready' | 'processing' | 'failed';
-  createdAt: string;
-}
-
-async function getMaterials(subjectId: string): Promise<SubjectMaterial[]> {
-  const { store } = require('../../../src/store/store');
-  const token = store.getState().auth?.token ?? '';
-  const res = await fetch(
-    `https://eduxl2-production.up.railway.app/api/v1/drillpad/subjects/${subjectId}/materials`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  const json = await res.json();
-  return json?.data ?? [];
-}
-
-async function deleteMaterialApi(materialId: string): Promise<void> {
-  const { store } = require('../../../src/store/store');
-  const token = store.getState().auth?.token ?? '';
-  await fetch(
-    `https://eduxl2-production.up.railway.app/api/v1/drillpad/materials/${materialId}`,
-    { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }
-  );
-}
 
 // ── SVG Icons ─────────────────────────────────────────────────────
 function BackIcon() {
@@ -101,9 +69,10 @@ function formatDate(iso: string): string {
   });
 }
 
-function fileIcon(mimeType: string): string {
-  if (mimeType === 'application/pdf') return '📄';
-  if (mimeType.startsWith('image/')) return '🖼️';
+function materialIcon(material: SubjectMaterial): string {
+  if (material.sourceType === 'link') return '🔗';
+  if (material.mimeType === 'application/pdf') return '📄';
+  if (material.mimeType.startsWith('image/')) return '🖼️';
   return '📁';
 }
 
@@ -118,9 +87,12 @@ export default function SubjectMaterialsScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [deleting, setDeleting]     = useState<string | null>(null);
 
+  const linkCount = materials.filter((m) => m.sourceType === 'link').length;
+  const fileCount = materials.length - linkCount;
+
   const load = async () => {
     try {
-      const data = await getMaterials(subjectId);
+      const data = await getSubjectMaterials(subjectId);
       setMaterials(data);
     } catch {
       Alert.alert('Error', 'Could not load materials.');
@@ -149,7 +121,7 @@ export default function SubjectMaterialsScreen() {
           onPress: async () => {
             setDeleting(material._id);
             try {
-              await deleteMaterialApi(material._id);
+              await deleteMaterial(material._id);
               setMaterials((prev) => prev.filter((m) => m._id !== material._id));
             } catch {
               Alert.alert('Error', 'Could not delete material.');
@@ -163,8 +135,10 @@ export default function SubjectMaterialsScreen() {
   };
 
   const handleOpen = (material: SubjectMaterial) => {
-    Linking.openURL(material.fileUrl).catch(() => {
-      Alert.alert('Error', 'Could not open file.');
+    const url = material.sourceType === 'link' ? material.sourceUrl : material.fileUrl;
+    if (!url) return;
+    Linking.openURL(url).catch(() => {
+      Alert.alert('Error', 'Could not open link.');
     });
   };
 
@@ -205,7 +179,7 @@ export default function SubjectMaterialsScreen() {
         {/* ── Title ── */}
         <Text style={styles.title}>Materials</Text>
         <Text style={styles.subtitle}>
-          {materials.length} document{materials.length !== 1 ? 's' : ''} · used as AI chat context
+          {fileCount} file{fileCount !== 1 ? 's' : ''} · {linkCount} link{linkCount !== 1 ? 's' : ''} · used as AI chat context
         </Text>
 
         {/* ── Info banner ── */}
@@ -244,14 +218,16 @@ export default function SubjectMaterialsScreen() {
                 <View style={styles.materialLeft}>
                   <View style={[
                     styles.materialIcon,
-                    { backgroundColor: material.mimeType === 'application/pdf' ? '#FEF2F2' : '#EFF6FF' },
+                    { backgroundColor: material.sourceType === 'link' ? '#F5F3FF' : material.mimeType === 'application/pdf' ? '#FEF2F2' : '#EFF6FF' },
                   ]}>
-                    <Text style={styles.materialIconText}>{fileIcon(material.mimeType)}</Text>
+                    <Text style={styles.materialIconText}>{materialIcon(material)}</Text>
                   </View>
                   <View style={styles.materialBody}>
                     <Text style={styles.materialName} numberOfLines={2}>{material.filename}</Text>
                     <View style={styles.materialMeta}>
-                      <Text style={styles.materialMetaText}>{formatFileSize(material.fileSize)}</Text>
+                      <Text style={styles.materialMetaText}>
+                        {material.sourceType === 'link' ? 'Link' : formatFileSize(material.fileSize ?? 0)}
+                      </Text>
                       <Text style={styles.materialMetaDot}>·</Text>
                       <Text style={styles.materialMetaText}>{formatDate(material.createdAt)}</Text>
                     </View>

@@ -20,6 +20,7 @@ export default function WalletScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
   const [balanceVisible, setBalanceVisible] = useState(false);
 
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.navy} />

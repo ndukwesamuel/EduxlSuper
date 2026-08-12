@@ -50,7 +50,7 @@ CompanyTestResults: {
 };
 CompanyHistory: { companyId: string };
 
-  SubjectChat: { subjectId: string; subjectName: string; documentCount?: number };
+  SubjectChat: { subjectId: string; subjectName: string; documentCount?: number; fileCount?: number; linkCount?: number };
   // ── BankReady ─────────────────────────────────────────────────────
   BankReady: undefined;
   Test:      BankReadyStackParamList['Test'];
@@ -116,6 +116,11 @@ CompanyHistory: { companyId: string };
     topic?:      string;
     style?:      string;
   };
+
+  // ── AI File/Link Quiz ─────────────────────────────────────────────
+  AiQuizSetup: undefined;
+  AiQuizSession: { questions: any[] };
+  AiQuizResults: { score: number; results: any[]; total: number };
 };
 
 
