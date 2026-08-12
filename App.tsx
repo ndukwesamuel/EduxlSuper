@@ -1,79 +1,14 @@
-
-
-// import React, { useEffect } from "react";
-// import { Platform, Alert } from "react-native";
-// import { SafeAreaProvider } from "react-native-safe-area-context";
-// import { Provider } from "react-redux";
-// import { PersistGate } from "redux-persist/integration/react";
-// import { store, persistor } from "./src/store/store";
-// import RootNavigator from "./src/navigation/RootNavigator";
-
-// function useInAppUpdates() {
-//   useEffect(() => {
-//     if (__DEV__ || Platform.OS !== "android") return;
-
-//     const checkForUpdates = async () => {
-//       try {
-//         // Import lazily, only when we actually need it, and only in prod Android
-//         const ExpoInAppUpdates = require("expo-in-app-updates");
-
-//         const { updateAvailable, storeVersion } =
-//           await ExpoInAppUpdates.checkForUpdate();
-
-//         if (!updateAvailable) return;
-
-//         Alert.alert(
-//           "🚀 New Update Available",
-//           `Version ${storeVersion} is ready. Update now for the latest features and improvements.`,
-//           [
-//             { text: "Later", style: "cancel" },
-//             {
-//               text: "Update Now",
-//               isPreferred: true,
-//               onPress: async () => {
-//                 try {
-//                   await ExpoInAppUpdates.startUpdate();
-//                 } catch (err) {
-//                   console.log("Failed to start update:", err);
-//                 }
-//               },
-//             },
-//           ]
-//         );
-//       } catch (err) {
-//         console.log("Update check failed:", err);
-//       }
-//     };
-
-//     checkForUpdates();
-//   }, []);
-// }
-
-// export default function App() {
-//   useInAppUpdates();
-
-//   return (
-//     <Provider store={store}>
-//       <PersistGate loading={null} persistor={persistor}>
-//         <SafeAreaProvider>
-//           <RootNavigator />
-//         </SafeAreaProvider>
-//       </PersistGate>
-//     </Provider>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./src/store/store";
 import RootNavigator from "./src/navigation/RootNavigator";
-import UpdateModal from "./src/updateApp/UpdateModal"
-
+import UpdateModal from "./src/updateApp/UpdateModal";
 
 import { useUpdateChecker } from "./src/updateApp/useUpdateChecker";
 import { requestUserPermissionAndGetToken, getFcm } from "./src/utils/fcm";
+import { displayIncomingNotification, setupNotifeeForegroundListener } from "./src/utils/notifee";
 
 function AppContent() {
   const { visible, force, message, dismiss } = useUpdateChecker();
@@ -89,8 +24,7 @@ function AppContent() {
 }
 
 export default function App() {
-  const [phoneToken, setPhoneToken] = useState<any>(null)
-  let token: any;
+  const [phoneToken, setPhoneToken] = useState<any>(null);
 
   const getNewFCMToken = async () => {
     try {
@@ -104,57 +38,45 @@ export default function App() {
   };
 
   useEffect(() => {
-    let unsubscribeForeground: any;
+    let unsubscribeFCM: (() => void) | undefined;
+    let unsubscribeNotifee: (() => void) | undefined;
 
     const setupMessaging = async () => {
       try {
         await getNewFCMToken();
 
-        // // Foreground notifications
-        // unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-        //   const channelId = await notifee.createChannel({
-        //     id: "default",
-        //     name: "Default Channel",
-        //     sound: "default",
-        //     importance: AndroidImportance.HIGH,
-        //   });
+        // 1. Foreground FCM Message listener -> Display Notifee local banner
+        unsubscribeFCM = getFcm().onMessage(async (remoteMessage: any) => {
+          console.log("📱 Foreground FCM Message received:", remoteMessage);
+          await displayIncomingNotification(remoteMessage);
+        });
 
-        //   await notifee.requestPermission();
+        // 2. Notifee Foreground interaction listener
+        unsubscribeNotifee = setupNotifeeForegroundListener();
 
-        //   await notifee.displayNotification({
-        //     id: "1234",
-        //     title: remoteMessage?.notification?.title ?? "Notification",
-        //     body: remoteMessage?.notification?.body ?? "",
-        //     android: {
-        //       channelId,
-        //       color: "#6495ed",
-        //       timestamp: Date.now() - 800,
-        //       showTimestamp: true,
-        //     },
-        //   });
-        // });
+        // 3. Handle Notification opened when app was running in background
+        getFcm().onNotificationOpenedApp((remoteMessage: any) => {
+          if (remoteMessage) {
+            console.log("📱 App opened from background notification:", remoteMessage);
+          }
+        });
 
-        // // Handle background and quit state notifications
-        // messaging().onNotificationOpenedApp(async remoteMessage => {
-        //   if (remoteMessage) {
-        //     // Handle navigation or alert if needed
-        //   }
-        // });
-
-        // // Handle notification when the app is opened from a quit state
-        // const initialNotification = await messaging().getInitialNotification();
-        // if (initialNotification) {
-        // }
+        // 4. Handle Notification opened when app was killed / quit
+        const initialNotification = await getFcm().getInitialNotification();
+        if (initialNotification) {
+          console.log("📱 App opened from quit state notification:", initialNotification);
+        }
       } catch (error) {
-        console.error("Error setting up FCM:", error);
+        console.error("Error setting up FCM/Notifee:", error);
       }
     };
 
     setupMessaging();
 
-    // ✅ Clean up listeners on unmount
+    // Clean up listeners on unmount
     return () => {
-      unsubscribeForeground?.();
+      unsubscribeFCM?.();
+      unsubscribeNotifee?.();
     };
   }, []);
 
