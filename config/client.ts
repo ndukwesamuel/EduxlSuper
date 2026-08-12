@@ -803,7 +803,6 @@ export const submitCompanyTest = (
     })
     .then(unwrap);
 
-// ── Get history for a company ──────────────────────────────────────
 export const getCompanyHistory = (companyId?: string, stageType?: StageType): Promise<CompanyHistoryResponse> => {
   const params: Record<string, string> = {};
   if (companyId) params.companyId = companyId;
@@ -812,5 +811,12 @@ export const getCompanyHistory = (companyId?: string, stageType?: StageType): Pr
     .get<{ success: boolean; data: CompanyHistoryResponse }>("/companytrack/history", { params })
     .then(unwrap);
 };
+
+// ── Notification Token APIs ─────────────────────────────────────────
+export const registerNotificationToken = (token: string): Promise<any> =>
+  api.post<{ success: boolean; data: any }>("/notification/token", { token }).then(unwrap);
+
+export const removeNotificationToken = (): Promise<any> =>
+  api.delete<{ success: boolean; data: any }>("/notification/token").then(unwrap);
 
 export default api;

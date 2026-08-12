@@ -73,15 +73,7 @@ import UpdateModal from "./src/updateApp/UpdateModal"
 
 
 import { useUpdateChecker } from "./src/updateApp/useUpdateChecker";
-import { PermissionsAndroid, Platform, Alert } from "react-native";
-import messagingModule, { getMessaging, AuthorizationStatus } from "@react-native-firebase/messaging";
-
-const getFcm = () => {
-  if (typeof messagingModule === "function") {
-    return (messagingModule as any)();
-  }
-  return getMessaging();
-};
+import { requestUserPermissionAndGetToken, getFcm } from "./src/utils/fcm";
 
 function AppContent() {
   const { visible, force, message, dismiss } = useUpdateChecker();
@@ -100,44 +92,12 @@ export default function App() {
   const [phoneToken, setPhoneToken] = useState<any>(null)
   let token: any;
 
-  const requestUserPermission = async () => {
-    try {
-      let hasPermission = false;
-
-      if (Platform.OS === 'android') {
-        if (Platform.Version >= 33) {
-          const status = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-          );
-          hasPermission = status === PermissionsAndroid.RESULTS.GRANTED;
-        } else {
-          hasPermission = true;
-        }
-      } else if (Platform.OS === 'ios') {
-        await getFcm().registerDeviceForRemoteMessages();
-        const authStatus = await getFcm().requestPermission();
-        hasPermission =
-          authStatus === AuthorizationStatus.AUTHORIZED ||
-          authStatus === AuthorizationStatus.PROVISIONAL;
-      }
-
-      if (hasPermission) {
-        const fetchedToken = await getFcm().getToken();
-        console.log("FCM Token retrieved successfully:", fetchedToken);
-        setPhoneToken(fetchedToken);
-        return fetchedToken;
-      } else {
-        console.warn("Notification permission was not granted.");
-      }
-    } catch (error: any) {
-      console.error('Error in requestUserPermission:', error?.message || error);
-      throw error;
-    }
-  };
-
   const getNewFCMToken = async () => {
     try {
-      await requestUserPermission();
+      const fetchedToken = await requestUserPermissionAndGetToken();
+      if (fetchedToken) {
+        setPhoneToken(fetchedToken);
+      }
     } catch (error: any) {
       console.error('Error getting new FCM token:', error?.message || error, error?.code ? `[code: ${error.code}]` : '');
     }

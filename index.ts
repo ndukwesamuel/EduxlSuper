@@ -1,14 +1,15 @@
 import { registerRootComponent } from "expo";
-import messagingModule, { getMessaging } from "@react-native-firebase/messaging";
+import * as messagingPkg from "@react-native-firebase/messaging";
 
 import App from "./App";
 
 // Helper function to safely retrieve messaging instance in v26+
 const getFcm = () => {
+  const messagingModule = (messagingPkg as any).default || messagingPkg;
   if (typeof messagingModule === "function") {
-    return (messagingModule as any)();
+    return messagingModule();
   }
-  return getMessaging();
+  return messagingPkg.getMessaging();
 };
 
 // Register Firebase background handler

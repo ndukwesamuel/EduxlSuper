@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../navigation/types";
 import { setUser } from "../../store/authSlice";
 import { loginUser, registerUser } from "../../../config/client";
+import { registerFcmTokenToBackend } from "../../utils/fcm";
 
 type Props = {
   navigation: NativeStackNavigationProp<AuthStackParamList, "Login">;
@@ -127,7 +128,16 @@ export default function LoginScreen({ navigation }: Props) {
       const data = mode === "login"
         ? await loginUser(email.trim(), password)
         : await registerUser(name.trim(), email.trim(), password);
+
+      console.log("\n==========================================");
+      console.log(`📥 ${mode.toUpperCase()} SUCCESSFUL RESPONSE:`);
+      console.log(JSON.stringify(data, null, 2));
+      console.log("==========================================\n");
+
       dispatch(setUser({ user: data.user, token: data.token }));
+      
+      // Register push notification token with backend upon successful login/register
+      await registerFcmTokenToBackend();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? "Request failed. Check your connection.";
       setError(msg);
