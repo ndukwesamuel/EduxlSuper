@@ -118,9 +118,9 @@ CompanyHistory: { companyId: string };
   };
 
   // ── AI File/Link Quiz ─────────────────────────────────────────────
-  AiQuizSetup: undefined;
-  AiQuizSession: { questions: any[] };
-  AiQuizResults: { score: number; results: any[]; total: number };
+  AiQuizSetup: { subjectId?: string; subjectName?: string } | undefined;
+  AiQuizSession: { questions: any[]; subjectId?: string; subjectName?: string };
+  AiQuizResults: { score: number; results: any[]; total: number; subjectId?: string; subjectName?: string };
 };
 
 

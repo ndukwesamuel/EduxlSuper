@@ -4,19 +4,24 @@ import {
   ActivityIndicator, Alert, KeyboardAvoidingView, Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as DocumentPicker from 'expo-document-picker';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors } from '../../theme';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { BASE_URL } from '../../../config/client';
+import { BASE_URL, uploadSubjectMaterial, generateCourseQuiz } from '../../../config/client';
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
+type Route = RouteProp<AppStackParamList, 'AiQuizSetup'>;
 
 export default function AiQuizSetupScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<Route>();
+  const subjectId = route.params?.subjectId;
+  const subjectName = route.params?.subjectName;
+
   const token = useSelector((s: RootState) => s.auth.token);
 
   const [url, setUrl] = useState('');
@@ -46,43 +51,71 @@ export default function AiQuizSetupScreen() {
 
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('count', '50');
+      if (subjectId) {
+        // 1. Upload Material to Course
+        const formData = new FormData();
+        if (file) {
+          formData.append('file', {
+            uri: file.uri,
+            name: file.name,
+            type: file.mimeType || 'application/pdf',
+          } as any);
+        } else if (url.trim()) {
+          formData.append('url', url.trim());
+        }
 
-      if (file) {
-        formData.append('file', {
-          uri: file.uri,
-          name: file.name,
-          type: file.mimeType || 'application/pdf',
-        } as any);
-      } else if (url.trim()) {
-        formData.append('url', url.trim());
+        await uploadSubjectMaterial(subjectId, formData);
+
+        // 2. Generate 50-Q Course Quiz
+        const quizRes = await generateCourseQuiz(subjectId, 50);
+        const questions = quizRes?.questions || [];
+        if (!questions || questions.length === 0) {
+          throw new Error('No questions generated for this course.');
+        }
+
+        navigation.replace('AiQuizSession', {
+          questions,
+          subjectId,
+          subjectName,
+        });
+      } else {
+        // Fallback for standalone quiz generation
+        const formData = new FormData();
+        formData.append('count', '50');
+
+        if (file) {
+          formData.append('file', {
+            uri: file.uri,
+            name: file.name,
+            type: file.mimeType || 'application/pdf',
+          } as any);
+        } else if (url.trim()) {
+          formData.append('url', url.trim());
+        }
+        const res = await fetch(`${BASE_URL}/ai/generate-quiz`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to generate quiz');
+        }
+
+        const questions = data.data.questions;
+        if (!questions || questions.length === 0) {
+          throw new Error('No questions generated');
+        }
+
+        navigation.replace('AiQuizSession', { questions });
       }
-      const res = await fetch(`${BASE_URL}/ai/generate-quiz`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-      console.log("res data: ", res);
-
-      const data = await res.json();
-      console.log("data: ", data);
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to generate quiz');
-      }
-
-      const questions = data.data.questions;
-      if (!questions || questions.length === 0) {
-        throw new Error('No questions generated');
-      }
-
-      navigation.replace('AiQuizSession', { questions });
 
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'An error occurred during generation.');
+      Alert.alert('Error', err?.response?.data?.message || err.message || 'An error occurred during generation.');
     } finally {
       setLoading(false);
     }
@@ -95,20 +128,25 @@ export default function AiQuizSetupScreen() {
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
             <Text style={styles.backText}>← Back</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>AI Quiz Setup</Text>
+          <View style={{ alignItems: 'center' }}>
+            <Text style={styles.title}>AI Quiz Setup</Text>
+            {subjectName ? <Text style={styles.subjectSub}>{subjectName}</Text> : null}
+          </View>
           <View style={{ width: 60 }} />
         </View>
 
         <View style={styles.body}>
           <Text style={styles.desc}>
-            Upload a PDF or paste a link, and our AI will instantly generate up to 50 multiple-choice questions with detailed explanations for you to test your knowledge!
+            {subjectName
+              ? `Upload a PDF or link for ${subjectName}. The file will be attached to this course, and our AI will generate a 50-question quiz with detailed solutions.`
+              : 'Upload a PDF or paste a link, and our AI will instantly generate up to 50 multiple-choice questions with detailed explanations for you to test your knowledge!'}
           </Text>
 
           {/* Option 1: URL */}
           <Text style={styles.label}>1. Paste a Link</Text>
           <TextInput
             style={styles.input}
-            placeholder="https://example.com/article"
+            placeholder="https://example.com/past-questions"
             value={url}
             onChangeText={(t) => { setUrl(t); setFile(null); }}
             autoCapitalize="none"
@@ -118,7 +156,7 @@ export default function AiQuizSetupScreen() {
           <Text style={styles.or}>— OR —</Text>
 
           {/* Option 2: File */}
-          <Text style={styles.label}>2. Upload a File</Text>
+          <Text style={styles.label}>2. Upload a PDF or Document</Text>
           <TouchableOpacity style={styles.uploadBtn} onPress={pickFile}>
             <Text style={styles.uploadBtnText}>
               {file ? `File: ${file.name}` : 'Pick PDF or Image'}
@@ -135,7 +173,7 @@ export default function AiQuizSetupScreen() {
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.generateBtnText}>Generate Quiz ✨</Text>
+              <Text style={styles.generateBtnText}>Upload & Generate Course Quiz ✨</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -150,7 +188,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderBottomColor: '#E2E8F0', backgroundColor: '#fff' },
   backBtn: { padding: 8, width: 60 },
   backText: { color: Colors.brand, fontWeight: '600' },
-  title: { fontSize: 18, fontWeight: '700', color: '#0F172A' },
+  title: { fontSize: 17, fontWeight: '800', color: '#0F172A' },
+  subjectSub: { fontSize: 12, fontWeight: '700', color: Colors.brand },
   body: { flex: 1, padding: 20 },
   desc: { fontSize: 14, color: '#64748B', lineHeight: 22, marginBottom: 30 },
   label: { fontSize: 14, fontWeight: '600', color: '#0F172A', marginBottom: 8 },

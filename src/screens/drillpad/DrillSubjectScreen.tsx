@@ -892,7 +892,7 @@ import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, FontSize, Radius, Spacing, Shadows } from '../../theme';
 import CCLoader from '../../components/CCLoader';
-import { getSubject, getDrillStats, sendSubjectChat } from '../../../config/client';
+import { getSubject, getDrillStats, sendSubjectChat, generateCourseQuiz } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'DrillSubject'>;
@@ -974,6 +974,7 @@ export default function DrillSubjectScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [fileCount, setFileCount]   = useState(0);
   const [linkCount, setLinkCount]   = useState(0);
+  const [generatingQuiz, setGeneratingQuiz] = useState(false);
 
   // Chat state
   const [chatOpen, setChatOpen]     = useState(false);
@@ -981,6 +982,38 @@ export default function DrillSubjectScreen() {
   const [inputText, setInputText]   = useState('');
   const [aiLoading, setAiLoading]   = useState(false);
   const flatListRef                 = useRef<FlatList>(null);
+
+  const handleGenerateQuiz = async () => {
+    if (fileCount === 0 && linkCount === 0) {
+      Alert.alert(
+        'Upload Material First',
+        'Please upload PDFs or links for this course first so the AI can analyze your materials and generate the 50-question quiz.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Upload Material', onPress: () => navigation.navigate('SubjectMaterials', { subjectId, subjectName }) }
+        ]
+      );
+      return;
+    }
+
+    setGeneratingQuiz(true);
+    try {
+      const data = await generateCourseQuiz(subjectId, 50);
+      const questions = data?.questions || [];
+      if (!questions || questions.length === 0) {
+        throw new Error('No questions could be generated. Please ensure your uploaded materials contain readable study content.');
+      }
+      navigation.navigate('AiQuizSession', {
+        questions,
+        subjectId,
+        subjectName,
+      });
+    } catch (err: any) {
+      Alert.alert('Quiz Generation Error', err?.response?.data?.message || err?.message || 'Could not generate quiz');
+    } finally {
+      setGeneratingQuiz(false);
+    }
+  };
 
   const load = async () => {
     try {

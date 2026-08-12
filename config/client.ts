@@ -14,7 +14,7 @@ import type {
 } from "../src/store/testSlice" //"../store/testSlice";
 
 // export const BASE_URL = "https://eduxl2.up.railway.app/api/v1"
-export const BASE_URL = "http://10.0.2.2:7071/api/v1"
+export const BASE_URL = "https://eduxl2-production-daa2.up.railway.app/api/v1"
 
 
 // "eduxl2-production-0b8e.up.railway.app/api/v1"  
@@ -42,7 +42,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.request.use(
   (config) => {
     const method = config.method?.toUpperCase() ?? "?";
-    const url    = (config.baseURL ?? "") + (config.url ?? "");
+    const url = (config.baseURL ?? "") + (config.url ?? "");
     const params = config.params ? "?" + new URLSearchParams(config.params).toString() : "";
     console.log(`\n╔══ 📤 REQUEST\n║  ${method} ${url}${params}`);
     if (config.data) console.log("║  Body:", JSON.stringify(config.data, null, 2));
@@ -55,7 +55,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     const method = response.config.method?.toUpperCase() ?? "?";
-    const url    = (response.config.baseURL ?? "") + (response.config.url ?? "");
+    const url = (response.config.baseURL ?? "") + (response.config.url ?? "");
     console.log(`\n╔══ 📥 RESPONSE\n║  ${method} ${url}\n║  Status: ${response.status}`);
     console.log("║  Body:", JSON.stringify(response.data, null, 2));
     console.log("╚════════════════════════════════════════\n");
@@ -77,7 +77,7 @@ api.interceptors.response.use(
 
   (error) => {
     const method = error.config?.method?.toUpperCase() ?? "?";
-    const url    = (error.config?.baseURL ?? "") + (error.config?.url ?? "");
+    const url = (error.config?.baseURL ?? "") + (error.config?.url ?? "");
     console.error(`\n╔══ ❌ RESPONSE ERROR\n║  ${method} ${url}`);
     if (error.response) {
       console.error(`║  Status: ${error.response.status}`);
@@ -93,7 +93,7 @@ api.interceptors.response.use(
       // const { clearUser } = require("./src/store/authSlice");
 
       const { store } = require("../src/store/store");
-const { clearUser } = require("../src/store/authSlice");
+      const { clearUser } = require("../src/store/authSlice");
       store.dispatch(clearUser());
     }
 
@@ -121,19 +121,19 @@ export const registerUser = (name: string, email: string, password: string): Pro
 // ── Questions  →  /api/v1/bankready/questions ─────────────────────
 export interface QuestionsResponse {
   questions: Question[];
-  total:     number;
+  total: number;
 }
 
 export const fetchQuestions = (
-  module:     ModuleCategory = "numerical",
-  limit       = 10,
+  module: ModuleCategory = "numerical",
+  limit = 10,
   difficulty?: Difficulty | "mixed",
-  tag?:        string,
-  mode?:       TestMode,
+  tag?: string,
+  mode?: TestMode,
 ): Promise<QuestionsResponse> => {
   const params: Record<string, string | number> = { type: module, limit };
   if (difficulty && difficulty !== "mixed") params.difficulty = difficulty;
-  if (tag)  params.tag  = tag;
+  if (tag) params.tag = tag;
   if (mode) params.mode = mode;
   return api
     .get<{ success: boolean; data: QuestionsResponse }>("/bankready/questions", { params })
@@ -142,16 +142,16 @@ export const fetchQuestions = (
 
 // ── Submit test  →  /api/v1/bankready/submit ──────────────────────
 export interface SubmitTestResponse {
-  result:             TestResultSummary;
+  result: TestResultSummary;
   wrongAnswerDetails: WrongAnswerDetail[];
-  progress?:          ProgressUpdate;
+  progress?: ProgressUpdate;
 }
 
 export const submitTest = (
-  answers:   { questionId: string; selectedOption: OptionKey }[],
+  answers: { questionId: string; selectedOption: OptionKey }[],
   timeTaken: number,
-  module:    ModuleCategory = "numerical",
-  mode:      TestMode = "exam",
+  module: ModuleCategory = "numerical",
+  mode: TestMode = "exam",
 ): Promise<SubmitTestResponse> =>
   api
     .post<{ success: boolean; data: SubmitTestResponse }>("/bankready/submit", {
@@ -162,24 +162,24 @@ export const submitTest = (
 // ── History  →  /api/v1/bankready/history ────────────────────────
 export interface HistoryAttempt {
   attemptNumber: number;
-  _id:           string;
-  module:        ModuleCategory;
-  score:         number;
-  totalQuestions:number;
-  accuracy:      number;
-  timeTaken:     number;
-  weakAreas:     string[];
-  createdAt:     string;
+  _id: string;
+  module: ModuleCategory;
+  score: number;
+  totalQuestions: number;
+  accuracy: number;
+  timeTaken: number;
+  weakAreas: string[];
+  createdAt: string;
 }
 export interface HistoryResponse {
-  userId:        string;
-  module:        string;
+  userId: string;
+  module: string;
   totalAttempts: number;
   trend: {
-    firstAttemptAccuracy:  number;
+    firstAttemptAccuracy: number;
     latestAttemptAccuracy: number;
-    change:                number;
-    improving:             boolean;
+    change: number;
+    improving: boolean;
   } | null;
   history: HistoryAttempt[];
 }
@@ -193,19 +193,19 @@ export const fetchHistory = (module: ModuleCategory | null = null): Promise<Hist
 
 // ── Progress  →  /api/v1/progress ────────────────────────────────
 export interface Badge {
-  id:   string;
+  id: string;
   name: string;
   icon: string;
   desc: string;
 }
 export interface UserProgress {
-  userId:                string;
-  xp:                    number;
-  streak:                number;
+  userId: string;
+  xp: number;
+  streak: number;
   streakFreezeAvailable: boolean;
-  badges:                Badge[];
-  lastPracticeDate:      string;
-  allBadges:             Badge[];
+  badges: Badge[];
+  lastPracticeDate: string;
+  allBadges: Badge[];
 }
 
 export const fetchProgress = async (): Promise<UserProgress | null> => {
@@ -364,7 +364,7 @@ export const getDrillStats = (subjectId: string): Promise<DrillStats> =>
 
 // Client.podcast.patch · TS
 // ─── ADD THESE TO config/client.ts ────────────────────────────────
- 
+
 // ── Podcast / AI Lesson types ──────────────────────────────────────
 export interface SubjectPodcast {
   _id: string;
@@ -375,11 +375,11 @@ export interface SubjectPodcast {
   podcastDurationSeconds?: number;
   podcastGeneratedAt?: string;
 }
- 
+
 // ── Get existing podcast for a subject ─────────────────────────────
 export const getSubjectPodcast = (subjectId: string): Promise<SubjectPodcast> =>
   api.get<{ success: boolean; data: SubjectPodcast }>(`/drillpad/subjects/${subjectId}/podcast`).then(unwrap);
- 
+
 // ── Generate/regenerate podcast — multipart form-data ──────────────
 // formData must contain: file (PDF/image), topic (optional)
 export const generateSubjectPodcast = (subjectId: string, formData: FormData): Promise<SubjectPodcast> =>
@@ -387,11 +387,11 @@ export const generateSubjectPodcast = (subjectId: string, formData: FormData): P
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 60_000, // podcast generation takes 20-40s
   }).then(unwrap);
- 
 
 
 
-  // ─── ADD/REPLACE THESE IN config/client.ts ─────────────────────────
+
+// ─── ADD/REPLACE THESE IN config/client.ts ─────────────────────────
 
 export interface Podcast {
   _id: string;
@@ -560,7 +560,7 @@ export const getProfileStatus = (): Promise<ProfileStatus> =>
     .then(unwrap);
 
 
-    export const getProfile = (): Promise<ProfileStatus> =>
+export const getProfile = (): Promise<ProfileStatus> =>
   api
     .get<{ success: boolean; data: ProfileStatus }>('/user')
     .then(unwrap);
@@ -578,7 +578,7 @@ export const updateProfile = (data: {
     .then(unwrap);
 
 
-    export const forgotPassword = (email: string) =>
+export const forgotPassword = (email: string) =>
   api.post('/auth/forgot-password', { email }).then(r => r.data);
 
 export const resetPassword = (email: string, otp: string, newPassword: string) =>
@@ -654,7 +654,7 @@ export const sendSubjectChat = (
 
 
 
-    // ─── ADD THESE TO config/client.ts ────────────────────────────────
+// ─── ADD THESE TO config/client.ts ────────────────────────────────
 // Place after the whiteboard/material sections, before export default api
 
 // ── Company Track Types ────────────────────────────────────────────
@@ -818,5 +818,15 @@ export const registerNotificationToken = (token: string): Promise<any> =>
 
 export const removeNotificationToken = (): Promise<any> =>
   api.delete<{ success: boolean; data: any }>("/notification/token").then(unwrap);
+
+// ── Course Quiz APIs ────────────────────────────────────────────────
+export const generateCourseQuiz = (subjectId: string, count: number = 50): Promise<any> =>
+  api.post<{ success: boolean; data: any }>(`/subjects/${subjectId}/generate-quiz`, { count }).then(unwrap);
+
+export const getCourseQuestions = (subjectId: string, limit: number = 50, shuffle: boolean = true): Promise<any> =>
+  api.get<{ success: boolean; data: any }>(`/subjects/${subjectId}/questions?limit=${limit}&shuffle=${shuffle}`).then(unwrap);
+
+export const submitCourseQuizSession = (subjectId: string, sessionData: { score: number; totalQuestions: number; answers?: any[] }): Promise<any> =>
+  api.post<{ success: boolean; data: any }>(`/subjects/${subjectId}/sessions`, sessionData).then(unwrap);
 
 export default api;

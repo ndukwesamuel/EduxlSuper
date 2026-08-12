@@ -177,16 +177,16 @@ export default function SubjectMaterialsScreen() {
         </View>
 
         {/* ── Title ── */}
-        <Text style={styles.title}>Materials</Text>
+        <Text style={styles.title}>Course Materials</Text>
         <Text style={styles.subtitle}>
-          {fileCount} file{fileCount !== 1 ? 's' : ''} · {linkCount} link{linkCount !== 1 ? 's' : ''} · used as AI chat context
+          {fileCount} file{fileCount !== 1 ? 's' : ''} · {linkCount} link{linkCount !== 1 ? 's' : ''} · attached to {subjectName}
         </Text>
 
         {/* ── Info banner ── */}
         <View style={styles.infoBanner}>
           <Text style={styles.infoBannerIcon}>💬</Text>
           <Text style={styles.infoBannerText}>
-            When you chat with AI in this course, it references all your uploaded documents to give grounded answers.
+            When you chat in this course, AI references all these uploaded documents to provide grounded answers.
           </Text>
         </View>
 
@@ -307,6 +307,18 @@ const styles = StyleSheet.create({
   // Title
   title:    { fontSize: 28, fontWeight: '800', color: '#0F172A', letterSpacing: -0.5, paddingHorizontal: 20, marginBottom: 4 },
   subtitle: { fontSize: 13, color: '#94A3B8', fontWeight: '500', paddingHorizontal: 20, marginBottom: 16 },
+
+  // Quiz Banner
+  quizBanner: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    backgroundColor: '#EEF2FF', borderRadius: 16, padding: 14,
+    marginHorizontal: 20, marginBottom: 14,
+    borderWidth: 1, borderColor: '#C7D2FE',
+  },
+  quizBannerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  quizBannerTitle: { fontSize: 14, fontWeight: '800', color: '#1E1B4B' },
+  quizBannerDesc: { fontSize: 11, color: '#4338CA', marginTop: 2 },
+  quizBannerBtnText: { fontSize: 13, fontWeight: '800', color: Colors.brand, marginLeft: 8 },
 
   // Info banner
   infoBanner: {

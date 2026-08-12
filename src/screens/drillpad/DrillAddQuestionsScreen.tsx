@@ -1790,6 +1790,8 @@ export default function DrillAddQuestionsScreen() {
   const [pdfQuestions, setPdfQuestions] = useState<any[]>([]);
   const [pdfSubmitting, setPdfSubmitting] = useState(false);
   const [showPdfReview, setShowPdfReview] = useState(false);
+  const [questionLinkModalVisible, setQuestionLinkModalVisible] = useState(false);
+  const [questionLinkUrl, setQuestionLinkUrl]      = useState('');
 
   // ── Materials tab state — save documents for chat context, no question generation ──
   const [materialUploading, setMaterialUploading] = useState(false);
@@ -1919,6 +1921,54 @@ export default function DrillAddQuestionsScreen() {
       Alert.alert('Error', err?.message ?? 'Could not generate questions. Check your connection and try again.');
     } finally {
       setPdfGenerating(false);
+    }
+  };
+
+  const handleGenerateFromLink = async () => {
+    const url = questionLinkUrl.trim();
+    if (!url) return;
+    if (!/^https?:\/\//i.test(url)) {
+      Alert.alert('Invalid link', 'Please enter a valid URL starting with http:// or https://');
+      return;
+    }
+
+    setQuestionLinkModalVisible(false);
+    setPdfFileName(url);
+    setPdfGenerating(true);
+    setPdfQuestions([]);
+    setShowPdfReview(false);
+
+    try {
+      const { store } = require('../../../src/store/store');
+      const token = store.getState().auth?.token ?? '';
+
+      const fetchResponse = await fetch(`${BASE_URL}/ai/generate-quiz`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          url,
+          topic: subjectName,
+          count: 20,
+        }),
+      });
+
+      const json = await fetchResponse.json();
+      const questions = json?.data?.questions ?? [];
+
+      if (!fetchResponse.ok || questions.length === 0) {
+        throw new Error(json?.message || 'No questions were generated from this link.');
+      }
+
+      setPdfQuestions(questions);
+      setShowPdfReview(true);
+    } catch (err: any) {
+      Alert.alert('Error', err?.message ?? 'Could not generate questions from link. Check your connection and try again.');
+    } finally {
+      setPdfGenerating(false);
+      setQuestionLinkUrl('');
     }
   };
 
@@ -2156,18 +2206,28 @@ export default function DrillAddQuestionsScreen() {
               <View style={styles.pdfInfoCard}>
                 <Text style={styles.pdfInfoTitle}>🤖 AI Question Generator</Text>
                 <Text style={styles.pdfInfoText}>
-                  Upload your lecture notes or textbook PDF. Our AI will read it and automatically generate
+                  Upload a PDF or paste a link to your study content. Our AI will read it and generate
                   multiple-choice questions about <Text style={{ fontWeight: '700' }}>{subjectName}</Text>.
                 </Text>
-                <Text style={styles.pdfStep}>1. Pick your PDF (max 50MB)</Text>
+                <Text style={styles.pdfStep}>1. Pick a PDF or paste a web link</Text>
                 <Text style={styles.pdfStep}>2. AI reads and generates questions</Text>
                 <Text style={styles.pdfStep}>3. Review questions, then upload</Text>
               </View>
 
               {!pdfGenerating && !showPdfReview && (
-                <TouchableOpacity style={styles.primaryBtn} onPress={handlePickPDF} activeOpacity={0.8}>
-                  <Text style={styles.primaryBtnText}>📄 Pick PDF file</Text>
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity style={styles.primaryBtn} onPress={handlePickPDF} activeOpacity={0.8}>
+                    <Text style={styles.primaryBtnText}>📄 Pick PDF or Image file</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.materialLinkBtn}
+                    onPress={() => setQuestionLinkModalVisible(true)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.materialLinkBtnText}>🔗 Paste Web or Document Link</Text>
+                  </TouchableOpacity>
+                </>
               )}
 
               {pdfGenerating && (
@@ -2318,6 +2378,52 @@ export default function DrillAddQuestionsScreen() {
                   activeOpacity={0.8}
                 >
                   <Text style={styles.linkModalSaveBtnText}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* ── Generate questions from link modal ── */}
+        <Modal
+          visible={questionLinkModalVisible}
+          animationType="fade"
+          transparent
+          onRequestClose={() => setQuestionLinkModalVisible(false)}
+        >
+          <View style={styles.linkModalOverlay}>
+            <View style={styles.linkModalCard}>
+              <Text style={styles.linkModalTitle}>🔗 Paste Question Link</Text>
+              <Text style={styles.linkModalSubtitle}>
+                Paste a link to an online article, past questions, or web page. Our AI will read it and generate questions for {subjectName}.
+              </Text>
+              <TextInput
+                style={styles.linkModalInput}
+                placeholder="https://example.com/past-questions"
+                placeholderTextColor={Colors.textMuted}
+                value={questionLinkUrl}
+                onChangeText={setQuestionLinkUrl}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+                returnKeyType="done"
+                onSubmitEditing={handleGenerateFromLink}
+              />
+              <View style={styles.linkModalActions}>
+                <TouchableOpacity
+                  style={styles.linkModalCancelBtn}
+                  onPress={() => { setQuestionLinkModalVisible(false); setQuestionLinkUrl(''); }}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.linkModalCancelBtnText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.linkModalSaveBtn, !questionLinkUrl.trim() && { opacity: 0.5 }]}
+                  onPress={handleGenerateFromLink}
+                  disabled={!questionLinkUrl.trim()}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.linkModalSaveBtnText}>Read & Generate</Text>
                 </TouchableOpacity>
               </View>
             </View>
