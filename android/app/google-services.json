@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "251335630252",
+    "project_id": "eduxl-a2ee0",
+    "storage_bucket": "eduxl-a2ee0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251335630252:android:cb7b7d3450bf67cfdf6e09",
+        "android_client_info": {
+          "package_name": "com.samheart.eduxl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3GRNakPOnPtgH__1cM7xOVJCYuUM9AWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

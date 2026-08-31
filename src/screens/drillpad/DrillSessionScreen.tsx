@@ -47,10 +47,15 @@ export default function DrillSessionScreen() {
     try {
       const pool = mode === 'weak' ? 'weak' : 'all';
       const qs   = await getDrillQuestions(subjectId, pool, 10, true);
-      if (qs.length === 0) {
-        Alert.alert('No questions', 'No questions available for this mode.', [
-          { text: 'OK', onPress: () => navigation.goBack() },
-        ]);
+      if (!qs || !Array.isArray(qs) || qs.length === 0) {
+        Alert.alert(
+          'No Questions Available',
+          mode === 'weak'
+            ? 'You do not have any weak questions recorded for this course yet. Keep practicing to track weak areas.'
+            : 'No questions available for this course.',
+          [{ text: 'OK', onPress: () => navigation.goBack() }]
+        );
+        setQuestions([]);
         return;
       }
       setQuestions(qs);
@@ -95,9 +100,10 @@ export default function DrillSessionScreen() {
   };
 
   const handleNext = () => {
-    if (!selected) return Alert.alert('Select an answer', 'Pick an option before continuing');
+    const currentQ = questions[currentIdx];
+    if (!currentQ) return;
 
-    const newAnswers = [...answers, { questionId: questions[currentIdx]._id, selectedOption: selected }];
+    const newAnswers = [...answers, { questionId: currentQ._id, selectedOption: selected }];
     setAnswers(newAnswers);
 
     if (currentIdx < questions.length - 1) {
@@ -134,7 +140,30 @@ export default function DrillSessionScreen() {
 
   if (loading || submitting) return <CCLoader />;
 
-  const q       = questions[currentIdx];
+  const q = questions && questions.length > 0 && currentIdx < questions.length ? questions[currentIdx] : null;
+
+  if (!q) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#0F172A', marginBottom: 8 }}>
+            No Questions Available
+          </Text>
+          <Text style={{ fontSize: 14, color: '#64748B', textAlign: 'center', marginBottom: 24, lineHeight: 20 }}>
+            {mode === 'weak'
+              ? 'You do not have any weak questions recorded for this course yet. Practice more questions to track weak areas.'
+              : 'There are no questions available for this session.'}
+          </Text>
+          <TouchableOpacity
+            style={{ backgroundColor: Colors.brand, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12 }}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
   const isLast  = currentIdx === questions.length - 1;
   const isPractice = mode === 'practice';
 
