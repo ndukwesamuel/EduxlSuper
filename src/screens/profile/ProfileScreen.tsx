@@ -1,11 +1,12 @@
 // ─── ProfileScreen.tsx ────────────────────────────────────────────
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,10 +14,39 @@ import { RootState } from "../../store/store";
 import { clearUser } from "../../store/authSlice";
 import { Colors, FontSize, Radius, Spacing, Shadows } from "../../theme";
 import CCCard from "../../components/CCCard";
+import { deleteAccount } from "../../../config/client";
 // import { CCCard } from '../../components';
 export default function ProfileScreen() {
   const user = useSelector((s: RootState) => s.auth.user);
   const dispatch = useDispatch();
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "This permanently deletes your account and all your progress. This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setDeleting(true);
+            try {
+              await deleteAccount();
+              dispatch(clearUser());
+            } catch (e: any) {
+              setDeleting(false);
+              Alert.alert(
+                "Couldn't delete account",
+                e?.response?.data?.message ?? "Please try again."
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -66,6 +96,18 @@ export default function ProfileScreen() {
           activeOpacity={0.8}
         >
           <Text style={styles.logoutText}>Sign Out</Text>
+        </TouchableOpacity>
+
+        {/* Delete account */}
+        <TouchableOpacity
+          style={[styles.deleteBtn, deleting && styles.deleteBtnDisabled]}
+          onPress={handleDeleteAccount}
+          activeOpacity={0.8}
+          disabled={deleting}
+        >
+          <Text style={styles.deleteText}>
+            {deleting ? "Deleting…" : "Delete Account"}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -145,5 +187,20 @@ const styles = StyleSheet.create({
     color: Colors.danger,
     fontWeight: "600",
     fontSize: FontSize.body,
+  },
+
+  deleteBtn: {
+    marginTop: Spacing.sm,
+    height: 52,
+    borderRadius: Radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  deleteBtnDisabled: { opacity: 0.5 },
+  deleteText: {
+    color: Colors.textSecondary,
+    fontWeight: "600",
+    fontSize: FontSize.bodySmall,
+    textDecorationLine: "underline",
   },
 });
