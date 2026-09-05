@@ -17,6 +17,8 @@ import {
   deletePodcast,
   renamePodcast,
   Podcast,
+  getSubjectMaterials,
+  SubjectMaterial,
 } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
@@ -35,6 +37,12 @@ export default function AILessonScreen() {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [pendingFile, setPendingFile] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
   const [titleInput, setTitleInput]   = useState('');
+
+  // Material picker state (for "Use Existing Notes")
+  const [showMaterialPicker, setShowMaterialPicker] = useState(false);
+  const [materials, setMaterials] = useState<SubjectMaterial[]>([]);
+  const [loadingMaterials, setLoadingMaterials] = useState(false);
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
 
   // Rename modal state
   const [renamingPodcast, setRenamingPodcast] = useState<Podcast | null>(null);
@@ -64,7 +72,7 @@ export default function AILessonScreen() {
 
   useFocusEffect(useCallback(() => { load(); }, [subjectId]));
 
-  // ── Step 1: pick file ────────────────────────────────────────
+  // ── Step 1a: pick a new file to upload ─────────────────────────
   const pickFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -82,20 +90,60 @@ export default function AILessonScreen() {
     }
   };
 
+  // ── Step 1b: show the list of documents already uploaded to this
+  // subject, so the student picks the exact one to generate from ──
+  const generateFromExisting = async () => {
+    setShowMaterialPicker(true);
+    setLoadingMaterials(true);
+    try {
+      const data = await getSubjectMaterials(subjectId);
+      setMaterials(Array.isArray(data) ? data.filter(m => m.status === 'ready') : []);
+    } catch {
+      setMaterials([]);
+    } finally {
+      setLoadingMaterials(false);
+    }
+  };
+
+  // ── Step 1c: student picked one specific document from the list ──
+  const selectMaterial = (material: SubjectMaterial) => {
+    setSelectedMaterialId(material._id);
+    setPendingFile(null);
+    setTitleInput('');
+    setShowMaterialPicker(false);
+    setShowGenerateModal(true);
+  };
+
+  // ── "+ New" entry point — choose upload vs. reuse existing notes ──
+  const handleNewPress = () => {
+    Alert.alert(
+      'New AI Lesson',
+      'Upload a new document, or generate from notes already uploaded to this subject.',
+      [
+        { text: 'Upload New Notes', onPress: pickFile },
+        { text: 'Use Existing Notes', onPress: generateFromExisting },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
+
   // ── Step 2: confirm generate ─────────────────────────────────
   const confirmGenerate = async () => {
-    if (!pendingFile) return;
-
     setShowGenerateModal(false);
     setGenerating(true);
 
     try {
       const formData = new FormData();
-      formData.append('file', {
-        uri: pendingFile.uri,
-        name: pendingFile.name,
-        type: pendingFile.mimeType || 'application/pdf',
-      } as any);
+
+      if (pendingFile) {
+        formData.append('file', {
+          uri: pendingFile.uri,
+          name: pendingFile.name,
+          type: pendingFile.mimeType || 'application/pdf',
+        } as any);
+      } else if (selectedMaterialId) {
+        formData.append('materialId', selectedMaterialId);
+      }
 
       const title = titleInput.trim() || subjectName;
       formData.append('title', title);
@@ -109,6 +157,7 @@ export default function AILessonScreen() {
     } finally {
       setGenerating(false);
       setPendingFile(null);
+      setSelectedMaterialId(null);
     }
   };
 
@@ -228,7 +277,7 @@ export default function AILessonScreen() {
           </View>
           <TouchableOpacity
             style={styles.addBtn}
-            onPress={pickFile}
+            onPress={handleNewPress}
             activeOpacity={0.85}
             disabled={generating}
           >
@@ -255,7 +304,7 @@ export default function AILessonScreen() {
               Upload your lecture notes (PDF or image) and we'll turn them into
               short audio lessons you can listen to anytime — even on your commute.
             </Text>
-            <TouchableOpacity style={styles.btnPrimary} onPress={pickFile} activeOpacity={0.85}>
+            <TouchableOpacity style={styles.btnPrimary} onPress={handleNewPress} activeOpacity={0.85}>
               <Text style={styles.btnPrimaryText}>📂 Upload Notes & Generate</Text>
             </TouchableOpacity>
           </View>
@@ -287,7 +336,13 @@ export default function AILessonScreen() {
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Name this lesson</Text>
             <Text style={styles.modalDesc}>
-              Give your AI lesson a title, or leave blank to use "{subjectName}".
+              {pendingFile ? (
+                `Give your AI lesson a title, or leave blank to use "${subjectName}".`
+              ) : selectedMaterialId ? (
+                `Generating from "${materials.find(m => m._id === selectedMaterialId)?.filename || 'selected document'}". Give it a title, or leave blank.`
+              ) : (
+                `Give your AI lesson a title, or leave blank to use "${subjectName}".`
+              )}
             </Text>
             <TextInput
               style={styles.modalInput}
@@ -300,13 +355,62 @@ export default function AILessonScreen() {
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
-                onPress={() => { setShowGenerateModal(false); setPendingFile(null); }}
+                onPress={() => { setShowGenerateModal(false); setPendingFile(null); setSelectedMaterialId(null); }}
               >
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalConfirmBtn} onPress={confirmGenerate}>
                 <Text style={styles.modalConfirmText}>Generate</Text>
               </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* ── Material picker modal ── */}
+      {showMaterialPicker && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Choose a document</Text>
+            <Text style={styles.modalDesc}>
+              Pick which uploaded document to generate this lesson from.
+            </Text>
+
+            {loadingMaterials ? (
+              <ActivityIndicator size="small" color="#1D4ED8" style={{ marginVertical: 20 }} />
+            ) : materials.length === 0 ? (
+              <Text style={[styles.modalDesc, { marginVertical: 12 }]}>
+                No documents uploaded yet for this subject.
+              </Text>
+            ) : (
+              <FlatList
+                data={materials}
+                keyExtractor={(item) => item._id}
+                style={{ maxHeight: 260, marginBottom: 8 }}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.materialRow} onPress={() => selectMaterial(item)}>
+                    <Text style={styles.materialIcon}>📄</Text>
+                    <Text style={styles.materialName} numberOfLines={1}>{item.filename}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setShowMaterialPicker(false)}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              {!loadingMaterials && materials.length === 0 && (
+                <TouchableOpacity
+                  style={styles.modalConfirmBtn}
+                  onPress={() => { setShowMaterialPicker(false); pickFile(); }}
+                >
+                  <Text style={styles.modalConfirmText}>Upload Instead</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -501,4 +605,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#1D4ED8',
   },
   modalConfirmText: { fontSize: 13, fontWeight: '700', color: '#fff' },
+
+  // ── Material picker ──
+  materialRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+  },
+  materialIcon: { fontSize: 16 },
+  materialName: { fontSize: 13, fontWeight: '600', color: '#0F172A', flex: 1 },
 });

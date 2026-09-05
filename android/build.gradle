@@ -35,5 +35,15 @@ allprojects {
   }
 }
 
+// Google Play now requires apps to target API 36 (Android 16). Expo SDK 53's
+// default is API 35, so override it here before expo-root-project sets its
+// fallback — see node_modules/expo-modules-autolinking's ExpoRootProjectPlugin,
+// which only applies its default when these ext values aren't already set.
+ext {
+  buildToolsVersion = "36.0.0"
+  compileSdkVersion = 36
+  targetSdkVersion = 36
+}
+
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
