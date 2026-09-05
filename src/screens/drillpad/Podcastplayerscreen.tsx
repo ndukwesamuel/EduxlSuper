@@ -7,7 +7,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
+import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
 import { AppStackParamList } from '../../navigation/types';
 import { getPodcast, Podcast } from '../../../config/client';
 
@@ -32,6 +32,16 @@ export default function PodcastPlayerScreen() {
   const isPlaying = status.playing;
   const position  = status.currentTime ?? 0;
   const duration  = status.duration ?? 0;
+
+  // Without this, iOS keeps the default "ambient" session category, which
+  // plays back noticeably quieter than "playback" mode.
+  useEffect(() => {
+    setAudioModeAsync({ playsInSilentMode: true, interruptionMode: 'duckOthers' });
+  }, []);
+
+  useEffect(() => {
+    player.volume = 1;
+  }, [player]);
 
   // ── Entrance animation ───────────────────────────────────────
   const fadeAnim  = useRef(new Animated.Value(0)).current;
@@ -182,7 +192,16 @@ export default function PodcastPlayerScreen() {
           {/* Script transcript */}
           <View style={styles.scriptCard}>
             <Text style={styles.scriptTitle}>📝 Lesson Transcript</Text>
-            <Text style={styles.scriptText}>{podcast.script}</Text>
+            {Array.isArray(podcast.script) ? (
+              podcast.script.map((turn, i) => (
+                <View key={i} style={styles.scriptTurn}>
+                  <Text style={styles.scriptSpeaker}>{turn.speaker}</Text>
+                  <Text style={styles.scriptText}>{turn.text}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.scriptText}>{podcast.script}</Text>
+            )}
           </View>
 
         </Animated.View>
@@ -309,5 +328,7 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   scriptTitle: { fontSize: 13, fontWeight: '700', color: '#0F172A', marginBottom: 6 },
+  scriptTurn: { marginBottom: 10 },
+  scriptSpeaker: { fontSize: 11, fontWeight: '700', color: '#1D4ED8', marginBottom: 2 },
   scriptText: { fontSize: 13, color: '#475569', lineHeight: 20 },
 });

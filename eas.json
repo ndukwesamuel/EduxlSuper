@@ -6,16 +6,27 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "node": "20.19.4"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "node": "20.19.4"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "node": "20.19.4",
+      "ios": {
+        "credentialsSource": "remote"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "niniolaolabisis@gmail.com",
+        "appleTeamId": "D5V62T2GCF"
+      }
+    }
   }
 }

@@ -1,903 +1,3 @@
-// // // ─── AILessonScreen.tsx ────────────────────────────────────────────
-// // import React, { useState, useRef, useEffect, useCallback } from 'react';
-// // import {
-// //   View, Text, TouchableOpacity, StyleSheet,
-// //   Animated, Alert, ScrollView, ActivityIndicator,
-// // } from 'react-native';
-// // import { SafeAreaView } from 'react-native-safe-area-context';
-// // import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
-// // import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// // import * as DocumentPicker from 'expo-document-picker';
-// // import { Audio } from 'expo-av';
-// // import { AppStackParamList } from '../../navigation/types';
-// // import {
-// //   getSubjectPodcast,
-// //   generateSubjectPodcast,
-// // } from '../../../config/client';
-
-// // type Nav   = NativeStackNavigationProp<AppStackParamList>;
-// // type Route = RouteProp<AppStackParamList, 'AILesson'>;
-
-// // const SPEEDS = [0.75, 1, 1.25, 1.5];
-
-// // export default function AILessonScreen() {
-// //   const navigation = useNavigation<Nav>();
-// //   const route      = useRoute<Route>();
-// //   const { subjectId, subjectName } = route.params;
-
-// //   const [loading, setLoading]       = useState(true);
-// //   const [generating, setGenerating] = useState(false);
-// //   const [podcast, setPodcast]       = useState<any>(null);
-
-// //   const [sound, setSound]           = useState<Audio.Sound | null>(null);
-// //   const [isPlaying, setIsPlaying]   = useState(false);
-// //   const [position, setPosition]     = useState(0);
-// //   const [duration, setDuration]     = useState(0);
-// //   const [speed, setSpeed]           = useState(1);
-
-// //   // ── Entrance animation ───────────────────────────────────────
-// //   const fadeAnim  = useRef(new Animated.Value(0)).current;
-// //   const slideAnim = useRef(new Animated.Value(30)).current;
-
-// //   useEffect(() => {
-// //     Animated.parallel([
-// //       Animated.timing(fadeAnim,  { toValue: 1, duration: 400, useNativeDriver: true }),
-// //       Animated.spring(slideAnim, { toValue: 0, tension: 65, friction: 10, useNativeDriver: true }),
-// //     ]).start();
-// //   }, []);
-
-// //   const load = async () => {
-// //     try {
-// //       const data = await getSubjectPodcast(subjectId);
-// //       if (data?.podcastAudioUrl) {
-// //         setPodcast(data);
-// //       }
-// //     } catch {
-// //       // no podcast yet — fine
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   };
-
-// //   useFocusEffect(useCallback(() => { load(); }, [subjectId]));
-
-// //   // ── Cleanup sound on unmount ────────────────────────────────
-// //   useEffect(() => {
-// //     return () => {
-// //       sound?.unloadAsync();
-// //     };
-// //   }, [sound]);
-
-// //   // ── Pick file + generate ─────────────────────────────────────
-// //   const pickFileAndGenerate = async () => {
-// //     try {
-// //       const result = await DocumentPicker.getDocumentAsync({
-// //         type: ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'],
-// //         copyToCacheDirectory: true,
-// //       });
-
-// //       if (result.canceled || !result.assets?.[0]) return;
-// //       const file = result.assets[0];
-
-// //       setGenerating(true);
-
-// //       const formData = new FormData();
-// //       formData.append('file', {
-// //         uri: file.uri,
-// //         name: file.name,
-// //         type: file.mimeType || 'application/pdf',
-// //       } as any);
-// //       formData.append('topic', subjectName);
-
-// //       const data = await generateSubjectPodcast(subjectId, formData);
-// //       setPodcast(data);
-
-// //       Alert.alert('AI Lesson ready!', 'Your audio lesson has been generated.');
-// //     } catch (err: any) {
-// //       Alert.alert('Generation failed', err?.message || 'Could not generate AI lesson. Try again.');
-// //     } finally {
-// //       setGenerating(false);
-// //     }
-// //   };
-
-// //   // ── Audio controls ───────────────────────────────────────────
-// //   const togglePlay = async () => {
-// //     if (!podcast?.podcastAudioUrl) return;
-
-// //     if (sound) {
-// //       if (isPlaying) {
-// //         await sound.pauseAsync();
-// //         setIsPlaying(false);
-// //       } else {
-// //         await sound.playAsync();
-// //         setIsPlaying(true);
-// //       }
-// //       return;
-// //     }
-
-// //     // Load fresh
-// //     const { sound: newSound } = await Audio.Sound.createAsync(
-// //       { uri: podcast.podcastAudioUrl },
-// //       { shouldPlay: true, rate: speed, shouldCorrectPitch: true }
-// //     );
-
-// //     setSound(newSound);
-// //     setIsPlaying(true);
-
-// //     newSound.setOnPlaybackStatusUpdate((status) => {
-// //       if (status.isLoaded) {
-// //         setPosition(status.positionMillis / 1000);
-// //         setDuration((status.durationMillis ?? 0) / 1000);
-// //         if (status.didJustFinish) {
-// //           setIsPlaying(false);
-// //           setPosition(0);
-// //           newSound.setPositionAsync(0);
-// //         }
-// //       }
-// //     });
-// //   };
-
-// //   const changeSpeed = async () => {
-// //     const currentIdx = SPEEDS.indexOf(speed);
-// //     const nextSpeed = SPEEDS[(currentIdx + 1) % SPEEDS.length];
-// //     setSpeed(nextSpeed);
-// //     if (sound) {
-// //       await sound.setRateAsync(nextSpeed, true);
-// //     }
-// //   };
-
-// //   const skip = async (seconds: number) => {
-// //     if (!sound) return;
-// //     const newPos = Math.max(0, Math.min(duration, position + seconds));
-// //     await sound.setPositionAsync(newPos * 1000);
-// //     setPosition(newPos);
-// //   };
-
-// //   const formatTime = (secs: number) => {
-// //     const m = Math.floor(secs / 60);
-// //     const s = Math.floor(secs % 60);
-// //     return `${m}:${s.toString().padStart(2, '0')}`;
-// //   };
-
-// //   const progressPct = duration > 0 ? (position / duration) * 100 : 0;
-
-// //   if (loading) {
-// //     return (
-// //       <SafeAreaView style={styles.safe}>
-// //         <View style={styles.center}>
-// //           <ActivityIndicator size="large" color="#1D4ED8" />
-// //         </View>
-// //       </SafeAreaView>
-// //     );
-// //   }
-
-// //   return (
-// //     <SafeAreaView style={styles.safe}>
-// //       <ScrollView
-// //         contentContainerStyle={styles.scroll}
-// //         showsVerticalScrollIndicator={false}
-// //       >
-// //         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-
-// //           {/* ── Header ── */}
-// //           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backRow}>
-// //             <Text style={styles.backText}>← Back</Text>
-// //           </TouchableOpacity>
-
-// //           <Text style={styles.title}>AI Lesson</Text>
-// //           <Text style={styles.subjectLabel}>{subjectName}</Text>
-
-// //           {/* ── No podcast yet ── */}
-// //           {!podcast && !generating && (
-// //             <View style={styles.emptyState}>
-// //               <Text style={styles.emptyEmoji}>🎧</Text>
-// //               <Text style={styles.emptyTitle}>No AI lesson yet</Text>
-// //               <Text style={styles.emptyDesc}>
-// //                 Upload your lecture notes (PDF or image) and we'll turn them into
-// //                 a short audio lesson you can listen to anytime — even on your commute.
-// //               </Text>
-// //               <TouchableOpacity style={styles.btnPrimary} onPress={pickFileAndGenerate} activeOpacity={0.85}>
-// //                 <Text style={styles.btnPrimaryText}>📂 Upload Notes & Generate</Text>
-// //               </TouchableOpacity>
-// //             </View>
-// //           )}
-
-// //           {/* ── Generating ── */}
-// //           {generating && (
-// //             <View style={styles.emptyState}>
-// //               <ActivityIndicator size="large" color="#1D4ED8" />
-// //               <Text style={styles.generatingTitle}>Generating your lesson...</Text>
-// //               <Text style={styles.emptyDesc}>
-// //                 This usually takes 20-40 seconds. We're turning your notes into
-// //                 a spoken lesson.
-// //               </Text>
-// //             </View>
-// //           )}
-
-// //           {/* ── Podcast player ── */}
-// //           {podcast && !generating && (
-// //             <>
-// //               <View style={styles.playerCard}>
-// //                 <View style={styles.glowCircle} />
-
-// //                 <View style={styles.playerBadge}>
-// //                   <Text style={styles.playerBadgeText}>🎧 AI LESSON</Text>
-// //                 </View>
-
-// //                 <Text style={styles.playerTitle}>{subjectName}</Text>
-// //                 <Text style={styles.playerDuration}>
-// //                   {podcast.podcastDurationSeconds
-// //                     ? `~${Math.round(podcast.podcastDurationSeconds / 60)} min lesson`
-// //                     : 'Audio lesson'}
-// //                 </Text>
-
-// //                 {/* Progress bar */}
-// //                 <View style={styles.progressTrack}>
-// //                   <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
-// //                 </View>
-// //                 <View style={styles.timeRow}>
-// //                   <Text style={styles.timeText}>{formatTime(position)}</Text>
-// //                   <Text style={styles.timeText}>{formatTime(duration)}</Text>
-// //                 </View>
-
-// //                 {/* Controls */}
-// //                 <View style={styles.controlsRow}>
-// //                   <TouchableOpacity onPress={() => skip(-10)} style={styles.skipBtn}>
-// //                     <Text style={styles.skipText}>⏮ 10s</Text>
-// //                   </TouchableOpacity>
-
-// //                   <TouchableOpacity onPress={togglePlay} style={styles.playBtn} activeOpacity={0.85}>
-// //                     <Text style={styles.playIcon}>{isPlaying ? '⏸' : '▶️'}</Text>
-// //                   </TouchableOpacity>
-
-// //                   <TouchableOpacity onPress={() => skip(10)} style={styles.skipBtn}>
-// //                     <Text style={styles.skipText}>10s ⏭</Text>
-// //                   </TouchableOpacity>
-// //                 </View>
-
-// //                 {/* Speed */}
-// //                 <TouchableOpacity onPress={changeSpeed} style={styles.speedBtn}>
-// //                   <Text style={styles.speedText}>{speed}x speed</Text>
-// //                 </TouchableOpacity>
-// //               </View>
-
-// //               {/* Commute tip */}
-// //               <View style={styles.commuteTip}>
-// //                 <Text style={styles.commuteTipTitle}>🎧 Great for commuting</Text>
-// //                 <Text style={styles.commuteTipText}>
-// //                   Listen to this lesson on your way to school. Your notes,
-// //                   read aloud — no need to look at your phone.
-// //                 </Text>
-// //               </View>
-
-// //               {/* Script preview */}
-// //               {podcast.podcastScript && (
-// //                 <View style={styles.scriptCard}>
-// //                   <Text style={styles.scriptTitle}>📝 Lesson Transcript</Text>
-// //                   <Text style={styles.scriptText} numberOfLines={8}>
-// //                     {podcast.podcastScript}
-// //                   </Text>
-// //                 </View>
-// //               )}
-
-// //               {/* Regenerate */}
-// //               <TouchableOpacity
-// //                 style={styles.regenerateBtn}
-// //                 onPress={pickFileAndGenerate}
-// //                 activeOpacity={0.8}
-// //               >
-// //                 <Text style={styles.regenerateText}>🔄 Generate from new notes</Text>
-// //               </TouchableOpacity>
-// //             </>
-// //           )}
-
-// //         </Animated.View>
-// //       </ScrollView>
-// //     </SafeAreaView>
-// //   );
-// // }
-
-// // const styles = StyleSheet.create({
-// //   safe:   { flex: 1, backgroundColor: '#F8FAFC' },
-// //   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-// //   scroll: { padding: 16, paddingBottom: 48 },
-
-// //   backRow:  { marginBottom: 8 },
-// //   backText: { fontSize: 14, color: '#1D4ED8', fontWeight: '600' },
-
-// //   title: {
-// //     fontSize: 28,
-// //     fontWeight: '800',
-// //     color: '#0F172A',
-// //     letterSpacing: -0.5,
-// //     marginBottom: 2,
-// //   },
-// //   subjectLabel: {
-// //     fontSize: 13,
-// //     color: '#94A3B8',
-// //     fontWeight: '600',
-// //     textTransform: 'uppercase',
-// //     letterSpacing: 0.5,
-// //     marginBottom: 20,
-// //   },
-
-// //   // ── Empty state ──
-// //   emptyState: {
-// //     alignItems: 'center',
-// //     paddingVertical: 32,
-// //     gap: 12,
-// //   },
-// //   emptyEmoji: { fontSize: 48 },
-// //   emptyTitle: { fontSize: 18, fontWeight: '800', color: '#0F172A' },
-// //   generatingTitle: { fontSize: 16, fontWeight: '700', color: '#0F172A', marginTop: 4 },
-// //   emptyDesc: {
-// //     fontSize: 13,
-// //     color: '#475569',
-// //     textAlign: 'center',
-// //     lineHeight: 20,
-// //     paddingHorizontal: 8,
-// //   },
-// //   btnPrimary: {
-// //     backgroundColor: '#1D4ED8',
-// //     borderRadius: 9999,
-// //     paddingHorizontal: 24,
-// //     paddingVertical: 14,
-// //     marginTop: 8,
-// //     shadowColor: '#1D4ED8',
-// //     shadowOffset: { width: 0, height: 6 },
-// //     shadowOpacity: 0.3,
-// //     shadowRadius: 14,
-// //     elevation: 6,
-// //   },
-// //   btnPrimaryText: { fontSize: 14, fontWeight: '700', color: '#fff' },
-
-// //   // ── Player card ──
-// //   playerCard: {
-// //     backgroundColor: '#1D4ED8',
-// //     borderRadius: 20,
-// //     padding: 20,
-// //     marginBottom: 16,
-// //     overflow: 'hidden',
-// //     shadowColor: '#1D4ED8',
-// //     shadowOffset: { width: 0, height: 8 },
-// //     shadowOpacity: 0.3,
-// //     shadowRadius: 16,
-// //     elevation: 8,
-// //   },
-// //   glowCircle: {
-// //     position: 'absolute',
-// //     top: -40,
-// //     right: -40,
-// //     width: 140,
-// //     height: 140,
-// //     borderRadius: 70,
-// //     backgroundColor: 'rgba(255,255,255,0.08)',
-// //   },
-// //   playerBadge: {
-// //     backgroundColor: 'rgba(255,255,255,0.15)',
-// //     borderRadius: 9999,
-// //     paddingHorizontal: 12,
-// //     paddingVertical: 4,
-// //     alignSelf: 'flex-start',
-// //     marginBottom: 10,
-// //   },
-// //   playerBadgeText: { fontSize: 11, fontWeight: '700', color: '#fff' },
-// //   playerTitle: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 2 },
-// //   playerDuration: { fontSize: 12, color: 'rgba(255,255,255,0.7)', marginBottom: 16 },
-
-// //   progressTrack: {
-// //     height: 4,
-// //     backgroundColor: 'rgba(255,255,255,0.2)',
-// //     borderRadius: 2,
-// //     overflow: 'hidden',
-// //     marginBottom: 6,
-// //   },
-// //   progressFill: { height: 4, backgroundColor: '#fff', borderRadius: 2 },
-// //   timeRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-// //   timeText: { fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: '600' },
-
-// //   controlsRow: {
-// //     flexDirection: 'row',
-// //     alignItems: 'center',
-// //     justifyContent: 'center',
-// //     gap: 24,
-// //     marginBottom: 14,
-// //   },
-// //   skipBtn: {
-// //     paddingHorizontal: 10,
-// //     paddingVertical: 6,
-// //   },
-// //   skipText: { fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: '700' },
-// //   playBtn: {
-// //     width: 56,
-// //     height: 56,
-// //     borderRadius: 28,
-// //     backgroundColor: '#fff',
-// //     alignItems: 'center',
-// //     justifyContent: 'center',
-// //   },
-// //   playIcon: { fontSize: 22 },
-
-// //   speedBtn: {
-// //     alignSelf: 'center',
-// //     backgroundColor: 'rgba(255,255,255,0.15)',
-// //     borderRadius: 9999,
-// //     paddingHorizontal: 16,
-// //     paddingVertical: 6,
-// //   },
-// //   speedText: { fontSize: 12, fontWeight: '700', color: '#fff' },
-
-// //   // ── Commute tip ──
-// //   commuteTip: {
-// //     backgroundColor: '#FFF7ED',
-// //     borderRadius: 12,
-// //     padding: 12,
-// //     borderLeftWidth: 3,
-// //     borderLeftColor: '#F97316',
-// //     marginBottom: 16,
-// //   },
-// //   commuteTipTitle: { fontSize: 12, fontWeight: '700', color: '#9A3412', marginBottom: 2 },
-// //   commuteTipText: { fontSize: 12, color: '#C2410C', lineHeight: 18 },
-
-// //   // ── Script ──
-// //   scriptCard: {
-// //     backgroundColor: '#FFFFFF',
-// //     borderRadius: 14,
-// //     borderWidth: 1,
-// //     borderColor: '#E2E8F0',
-// //     padding: 14,
-// //     marginBottom: 16,
-// //   },
-// //   scriptTitle: { fontSize: 13, fontWeight: '700', color: '#0F172A', marginBottom: 6 },
-// //   scriptText: { fontSize: 13, color: '#475569', lineHeight: 20 },
-
-// //   // ── Regenerate ──
-// //   regenerateBtn: {
-// //     borderWidth: 1.5,
-// //     borderColor: '#1D4ED8',
-// //     borderRadius: 9999,
-// //     paddingVertical: 13,
-// //     alignItems: 'center',
-// //   },
-// //   regenerateText: { fontSize: 13, fontWeight: '700', color: '#1D4ED8' },
-// // });
-
-
-
-// // ─── AILessonScreen.tsx ────────────────────────────────────────────
-// import React, { useState, useRef, useEffect, useCallback } from 'react';
-// import {
-//   View, Text, TouchableOpacity, StyleSheet,
-//   Animated, Alert, ScrollView, ActivityIndicator,
-// } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
-// import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import * as DocumentPicker from 'expo-document-picker';
-// import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
-// import { AppStackParamList } from '../../navigation/types';
-// import {
-//   getSubjectPodcast,
-//   generateSubjectPodcast,
-// } from '../../../config/client';
-
-// type Nav   = NativeStackNavigationProp<AppStackParamList>;
-// type Route = RouteProp<AppStackParamList, 'AILesson'>;
-
-// const SPEEDS = [0.75, 1, 1.25, 1.5];
-
-// export default function AILessonScreen() {
-//   const navigation = useNavigation<Nav>();
-//   const route      = useRoute<Route>();
-//   const { subjectId, subjectName } = route.params;
-
-//   const [loading, setLoading]       = useState(true);
-//   const [generating, setGenerating] = useState(false);
-//   const [podcast, setPodcast]       = useState<any>(null);
-
-//   const [speed, setSpeed]           = useState(1);
-
-//   // expo-audio player — source is the podcast URL once available
-//   const player = useAudioPlayer(podcast?.podcastAudioUrl ?? null);
-//   const status = useAudioPlayerStatus(player);
-
-//   const isPlaying = status.playing;
-//   const position  = status.currentTime ?? 0;
-//   const duration  = status.duration ?? 0;
-
-//   // ── Entrance animation ───────────────────────────────────────
-//   const fadeAnim  = useRef(new Animated.Value(0)).current;
-//   const slideAnim = useRef(new Animated.Value(30)).current;
-
-//   useEffect(() => {
-//     Animated.parallel([
-//       Animated.timing(fadeAnim,  { toValue: 1, duration: 400, useNativeDriver: true }),
-//       Animated.spring(slideAnim, { toValue: 0, tension: 65, friction: 10, useNativeDriver: true }),
-//     ]).start();
-//   }, []);
-
-//   const load = async () => {
-//     try {
-//       const data = await getSubjectPodcast(subjectId);
-//       if (data?.podcastAudioUrl) {
-//         setPodcast(data);
-//       }
-//     } catch {
-//       // no podcast yet — fine
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useFocusEffect(useCallback(() => { load(); }, [subjectId]));
-
-//   // ── Pick file + generate ─────────────────────────────────────
-//   const pickFileAndGenerate = async () => {
-//     try {
-//       const result = await DocumentPicker.getDocumentAsync({
-//         type: ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'],
-//         copyToCacheDirectory: true,
-//       });
-
-//       if (result.canceled || !result.assets?.[0]) return;
-//       const file = result.assets[0];
-
-//       setGenerating(true);
-
-//       const formData = new FormData();
-//       formData.append('file', {
-//         uri: file.uri,
-//         name: file.name,
-//         type: file.mimeType || 'application/pdf',
-//       } as any);
-//       formData.append('topic', subjectName);
-
-//       const data = await generateSubjectPodcast(subjectId, formData);
-//       setPodcast(data);
-
-//       Alert.alert('AI Lesson ready!', 'Your audio lesson has been generated.');
-//     } catch (err: any) {
-//       Alert.alert('Generation failed', err?.message || 'Could not generate AI lesson. Try again.');
-//     } finally {
-//       setGenerating(false);
-//     }
-//   };
-
-//   // ── Audio controls ───────────────────────────────────────────
-//   const togglePlay = () => {
-//     if (!podcast?.podcastAudioUrl) return;
-
-//     if (isPlaying) {
-//       player.pause();
-//     } else {
-//       // If finished, restart from beginning
-//       if (status.didJustFinish || position >= duration - 0.5) {
-//         player.seekTo(0);
-//       }
-//       player.play();
-//     }
-//   };
-
-//   const changeSpeed = () => {
-//     const currentIdx = SPEEDS.indexOf(speed);
-//     const nextSpeed = SPEEDS[(currentIdx + 1) % SPEEDS.length];
-//     setSpeed(nextSpeed);
-//     player.setPlaybackRate(nextSpeed, 'high');
-//   };
-
-//   const skip = (seconds: number) => {
-//     const newPos = Math.max(0, Math.min(duration, position + seconds));
-//     player.seekTo(newPos);
-//   };
-
-//   const formatTime = (secs: number) => {
-//     const m = Math.floor(secs / 60);
-//     const s = Math.floor(secs % 60);
-//     return `${m}:${s.toString().padStart(2, '0')}`;
-//   };
-
-//   const progressPct = duration > 0 ? (position / duration) * 100 : 0;
-
-//   if (loading) {
-//     return (
-//       <SafeAreaView style={styles.safe}>
-//         <View style={styles.center}>
-//           <ActivityIndicator size="large" color="#1D4ED8" />
-//         </View>
-//       </SafeAreaView>
-//     );
-//   }
-
-//   return (
-//     <SafeAreaView style={styles.safe}>
-//       <ScrollView
-//         contentContainerStyle={styles.scroll}
-//         showsVerticalScrollIndicator={false}
-//       >
-//         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-
-//           {/* ── Header ── */}
-//           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backRow}>
-//             <Text style={styles.backText}>← Back</Text>
-//           </TouchableOpacity>
-
-//           <Text style={styles.title}>AI Lesson</Text>
-//           <Text style={styles.subjectLabel}>{subjectName}</Text>
-
-//           {/* ── No podcast yet ── */}
-//           {!podcast && !generating && (
-//             <View style={styles.emptyState}>
-//               <Text style={styles.emptyEmoji}>🎧</Text>
-//               <Text style={styles.emptyTitle}>No AI lesson yet</Text>
-//               <Text style={styles.emptyDesc}>
-//                 Upload your lecture notes (PDF or image) and we'll turn them into
-//                 a short audio lesson you can listen to anytime — even on your commute.
-//               </Text>
-//               <TouchableOpacity style={styles.btnPrimary} onPress={pickFileAndGenerate} activeOpacity={0.85}>
-//                 <Text style={styles.btnPrimaryText}>📂 Upload Notes & Generate</Text>
-//               </TouchableOpacity>
-//             </View>
-//           )}
-
-//           {/* ── Generating ── */}
-//           {generating && (
-//             <View style={styles.emptyState}>
-//               <ActivityIndicator size="large" color="#1D4ED8" />
-//               <Text style={styles.generatingTitle}>Generating your lesson...</Text>
-//               <Text style={styles.emptyDesc}>
-//                 This usually takes 20-40 seconds. We're turning your notes into
-//                 a spoken lesson.
-//               </Text>
-//             </View>
-//           )}
-
-//           {/* ── Podcast player ── */}
-//           {podcast && !generating && (
-//             <>
-//               <View style={styles.playerCard}>
-//                 <View style={styles.glowCircle} />
-
-//                 <View style={styles.playerBadge}>
-//                   <Text style={styles.playerBadgeText}>🎧 AI LESSON</Text>
-//                 </View>
-
-//                 <Text style={styles.playerTitle}>{subjectName}</Text>
-//                 <Text style={styles.playerDuration}>
-//                   {podcast.podcastDurationSeconds
-//                     ? `~${Math.round(podcast.podcastDurationSeconds / 60)} min lesson`
-//                     : 'Audio lesson'}
-//                 </Text>
-
-//                 {/* Progress bar */}
-//                 <View style={styles.progressTrack}>
-//                   <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
-//                 </View>
-//                 <View style={styles.timeRow}>
-//                   <Text style={styles.timeText}>{formatTime(position)}</Text>
-//                   <Text style={styles.timeText}>{formatTime(duration)}</Text>
-//                 </View>
-
-//                 {/* Controls */}
-//                 <View style={styles.controlsRow}>
-//                   <TouchableOpacity onPress={() => skip(-10)} style={styles.skipBtn}>
-//                     <Text style={styles.skipText}>⏮ 10s</Text>
-//                   </TouchableOpacity>
-
-//                   <TouchableOpacity onPress={togglePlay} style={styles.playBtn} activeOpacity={0.85}>
-//                     <Text style={styles.playIcon}>{isPlaying ? '⏸' : '▶️'}</Text>
-//                   </TouchableOpacity>
-
-//                   <TouchableOpacity onPress={() => skip(10)} style={styles.skipBtn}>
-//                     <Text style={styles.skipText}>10s ⏭</Text>
-//                   </TouchableOpacity>
-//                 </View>
-
-//                 {/* Speed */}
-//                 <TouchableOpacity onPress={changeSpeed} style={styles.speedBtn}>
-//                   <Text style={styles.speedText}>{speed}x speed</Text>
-//                 </TouchableOpacity>
-//               </View>
-
-//               {/* Commute tip */}
-//               <View style={styles.commuteTip}>
-//                 <Text style={styles.commuteTipTitle}>🎧 Great for commuting</Text>
-//                 <Text style={styles.commuteTipText}>
-//                   Listen to this lesson on your way to school. Your notes,
-//                   read aloud — no need to look at your phone.
-//                 </Text>
-//               </View>
-
-//               {/* Script preview */}
-//               {podcast.podcastScript && (
-//                 <View style={styles.scriptCard}>
-//                   <Text style={styles.scriptTitle}>📝 Lesson Transcript</Text>
-//                   <Text style={styles.scriptText} numberOfLines={8}>
-//                     {podcast.podcastScript}
-//                   </Text>
-//                 </View>
-//               )}
-
-//               {/* Regenerate */}
-//               <TouchableOpacity
-//                 style={styles.regenerateBtn}
-//                 onPress={pickFileAndGenerate}
-//                 activeOpacity={0.8}
-//               >
-//                 <Text style={styles.regenerateText}>🔄 Generate from new notes</Text>
-//               </TouchableOpacity>
-//             </>
-//           )}
-
-//         </Animated.View>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   safe:   { flex: 1, backgroundColor: '#F8FAFC' },
-//   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-//   scroll: { padding: 16, paddingBottom: 48 },
-
-//   backRow:  { marginBottom: 8 },
-//   backText: { fontSize: 14, color: '#1D4ED8', fontWeight: '600' },
-
-//   title: {
-//     fontSize: 28,
-//     fontWeight: '800',
-//     color: '#0F172A',
-//     letterSpacing: -0.5,
-//     marginBottom: 2,
-//   },
-//   subjectLabel: {
-//     fontSize: 13,
-//     color: '#94A3B8',
-//     fontWeight: '600',
-//     textTransform: 'uppercase',
-//     letterSpacing: 0.5,
-//     marginBottom: 20,
-//   },
-
-//   // ── Empty state ──
-//   emptyState: {
-//     alignItems: 'center',
-//     paddingVertical: 32,
-//     gap: 12,
-//   },
-//   emptyEmoji: { fontSize: 48 },
-//   emptyTitle: { fontSize: 18, fontWeight: '800', color: '#0F172A' },
-//   generatingTitle: { fontSize: 16, fontWeight: '700', color: '#0F172A', marginTop: 4 },
-//   emptyDesc: {
-//     fontSize: 13,
-//     color: '#475569',
-//     textAlign: 'center',
-//     lineHeight: 20,
-//     paddingHorizontal: 8,
-//   },
-//   btnPrimary: {
-//     backgroundColor: '#1D4ED8',
-//     borderRadius: 9999,
-//     paddingHorizontal: 24,
-//     paddingVertical: 14,
-//     marginTop: 8,
-//     shadowColor: '#1D4ED8',
-//     shadowOffset: { width: 0, height: 6 },
-//     shadowOpacity: 0.3,
-//     shadowRadius: 14,
-//     elevation: 6,
-//   },
-//   btnPrimaryText: { fontSize: 14, fontWeight: '700', color: '#fff' },
-
-//   // ── Player card ──
-//   playerCard: {
-//     backgroundColor: '#1D4ED8',
-//     borderRadius: 20,
-//     padding: 20,
-//     marginBottom: 16,
-//     overflow: 'hidden',
-//     shadowColor: '#1D4ED8',
-//     shadowOffset: { width: 0, height: 8 },
-//     shadowOpacity: 0.3,
-//     shadowRadius: 16,
-//     elevation: 8,
-//   },
-//   glowCircle: {
-//     position: 'absolute',
-//     top: -40,
-//     right: -40,
-//     width: 140,
-//     height: 140,
-//     borderRadius: 70,
-//     backgroundColor: 'rgba(255,255,255,0.08)',
-//   },
-//   playerBadge: {
-//     backgroundColor: 'rgba(255,255,255,0.15)',
-//     borderRadius: 9999,
-//     paddingHorizontal: 12,
-//     paddingVertical: 4,
-//     alignSelf: 'flex-start',
-//     marginBottom: 10,
-//   },
-//   playerBadgeText: { fontSize: 11, fontWeight: '700', color: '#fff' },
-//   playerTitle: { fontSize: 20, fontWeight: '800', color: '#fff', marginBottom: 2 },
-//   playerDuration: { fontSize: 12, color: 'rgba(255,255,255,0.7)', marginBottom: 16 },
-
-//   progressTrack: {
-//     height: 4,
-//     backgroundColor: 'rgba(255,255,255,0.2)',
-//     borderRadius: 2,
-//     overflow: 'hidden',
-//     marginBottom: 6,
-//   },
-//   progressFill: { height: 4, backgroundColor: '#fff', borderRadius: 2 },
-//   timeRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-//   timeText: { fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: '600' },
-
-//   controlsRow: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     gap: 24,
-//     marginBottom: 14,
-//   },
-//   skipBtn: {
-//     paddingHorizontal: 10,
-//     paddingVertical: 6,
-//   },
-//   skipText: { fontSize: 13, color: 'rgba(255,255,255,0.85)', fontWeight: '700' },
-//   playBtn: {
-//     width: 56,
-//     height: 56,
-//     borderRadius: 28,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   playIcon: { fontSize: 22 },
-
-//   speedBtn: {
-//     alignSelf: 'center',
-//     backgroundColor: 'rgba(255,255,255,0.15)',
-//     borderRadius: 9999,
-//     paddingHorizontal: 16,
-//     paddingVertical: 6,
-//   },
-//   speedText: { fontSize: 12, fontWeight: '700', color: '#fff' },
-
-//   // ── Commute tip ──
-//   commuteTip: {
-//     backgroundColor: '#FFF7ED',
-//     borderRadius: 12,
-//     padding: 12,
-//     borderLeftWidth: 3,
-//     borderLeftColor: '#F97316',
-//     marginBottom: 16,
-//   },
-//   commuteTipTitle: { fontSize: 12, fontWeight: '700', color: '#9A3412', marginBottom: 2 },
-//   commuteTipText: { fontSize: 12, color: '#C2410C', lineHeight: 18 },
-
-//   // ── Script ──
-//   scriptCard: {
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 14,
-//     borderWidth: 1,
-//     borderColor: '#E2E8F0',
-//     padding: 14,
-//     marginBottom: 16,
-//   },
-//   scriptTitle: { fontSize: 13, fontWeight: '700', color: '#0F172A', marginBottom: 6 },
-//   scriptText: { fontSize: 13, color: '#475569', lineHeight: 20 },
-
-//   // ── Regenerate ──
-//   regenerateBtn: {
-//     borderWidth: 1.5,
-//     borderColor: '#1D4ED8',
-//     borderRadius: 9999,
-//     paddingVertical: 13,
-//     alignItems: 'center',
-//   },
-//   regenerateText: { fontSize: 13, fontWeight: '700', color: '#1D4ED8' },
-// });
 
 // ─── AILessonScreen.tsx ────────────────────────────────────────────
 // Library view: lists all AI Lessons (podcasts) generated for a subject.
@@ -917,6 +17,8 @@ import {
   deletePodcast,
   renamePodcast,
   Podcast,
+  getSubjectMaterials,
+  SubjectMaterial,
 } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
@@ -935,6 +37,12 @@ export default function AILessonScreen() {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [pendingFile, setPendingFile] = useState<DocumentPicker.DocumentPickerAsset | null>(null);
   const [titleInput, setTitleInput]   = useState('');
+
+  // Material picker state (for "Use Existing Notes")
+  const [showMaterialPicker, setShowMaterialPicker] = useState(false);
+  const [materials, setMaterials] = useState<SubjectMaterial[]>([]);
+  const [loadingMaterials, setLoadingMaterials] = useState(false);
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
 
   // Rename modal state
   const [renamingPodcast, setRenamingPodcast] = useState<Podcast | null>(null);
@@ -964,7 +72,7 @@ export default function AILessonScreen() {
 
   useFocusEffect(useCallback(() => { load(); }, [subjectId]));
 
-  // ── Step 1: pick file ────────────────────────────────────────
+  // ── Step 1a: pick a new file to upload ─────────────────────────
   const pickFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -982,20 +90,60 @@ export default function AILessonScreen() {
     }
   };
 
+  // ── Step 1b: show the list of documents already uploaded to this
+  // subject, so the student picks the exact one to generate from ──
+  const generateFromExisting = async () => {
+    setShowMaterialPicker(true);
+    setLoadingMaterials(true);
+    try {
+      const data = await getSubjectMaterials(subjectId);
+      setMaterials(Array.isArray(data) ? data.filter(m => m.status === 'ready') : []);
+    } catch {
+      setMaterials([]);
+    } finally {
+      setLoadingMaterials(false);
+    }
+  };
+
+  // ── Step 1c: student picked one specific document from the list ──
+  const selectMaterial = (material: SubjectMaterial) => {
+    setSelectedMaterialId(material._id);
+    setPendingFile(null);
+    setTitleInput('');
+    setShowMaterialPicker(false);
+    setShowGenerateModal(true);
+  };
+
+  // ── "+ New" entry point — choose upload vs. reuse existing notes ──
+  const handleNewPress = () => {
+    Alert.alert(
+      'New AI Lesson',
+      'Upload a new document, or generate from notes already uploaded to this subject.',
+      [
+        { text: 'Upload New Notes', onPress: pickFile },
+        { text: 'Use Existing Notes', onPress: generateFromExisting },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
+  };
+
   // ── Step 2: confirm generate ─────────────────────────────────
   const confirmGenerate = async () => {
-    if (!pendingFile) return;
-
     setShowGenerateModal(false);
     setGenerating(true);
 
     try {
       const formData = new FormData();
-      formData.append('file', {
-        uri: pendingFile.uri,
-        name: pendingFile.name,
-        type: pendingFile.mimeType || 'application/pdf',
-      } as any);
+
+      if (pendingFile) {
+        formData.append('file', {
+          uri: pendingFile.uri,
+          name: pendingFile.name,
+          type: pendingFile.mimeType || 'application/pdf',
+        } as any);
+      } else if (selectedMaterialId) {
+        formData.append('materialId', selectedMaterialId);
+      }
 
       const title = titleInput.trim() || subjectName;
       formData.append('title', title);
@@ -1009,6 +157,7 @@ export default function AILessonScreen() {
     } finally {
       setGenerating(false);
       setPendingFile(null);
+      setSelectedMaterialId(null);
     }
   };
 
@@ -1128,7 +277,7 @@ export default function AILessonScreen() {
           </View>
           <TouchableOpacity
             style={styles.addBtn}
-            onPress={pickFile}
+            onPress={handleNewPress}
             activeOpacity={0.85}
             disabled={generating}
           >
@@ -1155,7 +304,7 @@ export default function AILessonScreen() {
               Upload your lecture notes (PDF or image) and we'll turn them into
               short audio lessons you can listen to anytime — even on your commute.
             </Text>
-            <TouchableOpacity style={styles.btnPrimary} onPress={pickFile} activeOpacity={0.85}>
+            <TouchableOpacity style={styles.btnPrimary} onPress={handleNewPress} activeOpacity={0.85}>
               <Text style={styles.btnPrimaryText}>📂 Upload Notes & Generate</Text>
             </TouchableOpacity>
           </View>
@@ -1187,7 +336,13 @@ export default function AILessonScreen() {
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Name this lesson</Text>
             <Text style={styles.modalDesc}>
-              Give your AI lesson a title, or leave blank to use "{subjectName}".
+              {pendingFile ? (
+                `Give your AI lesson a title, or leave blank to use "${subjectName}".`
+              ) : selectedMaterialId ? (
+                `Generating from "${materials.find(m => m._id === selectedMaterialId)?.filename || 'selected document'}". Give it a title, or leave blank.`
+              ) : (
+                `Give your AI lesson a title, or leave blank to use "${subjectName}".`
+              )}
             </Text>
             <TextInput
               style={styles.modalInput}
@@ -1200,13 +355,62 @@ export default function AILessonScreen() {
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
-                onPress={() => { setShowGenerateModal(false); setPendingFile(null); }}
+                onPress={() => { setShowGenerateModal(false); setPendingFile(null); setSelectedMaterialId(null); }}
               >
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalConfirmBtn} onPress={confirmGenerate}>
                 <Text style={styles.modalConfirmText}>Generate</Text>
               </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* ── Material picker modal ── */}
+      {showMaterialPicker && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Choose a document</Text>
+            <Text style={styles.modalDesc}>
+              Pick which uploaded document to generate this lesson from.
+            </Text>
+
+            {loadingMaterials ? (
+              <ActivityIndicator size="small" color="#1D4ED8" style={{ marginVertical: 20 }} />
+            ) : materials.length === 0 ? (
+              <Text style={[styles.modalDesc, { marginVertical: 12 }]}>
+                No documents uploaded yet for this subject.
+              </Text>
+            ) : (
+              <FlatList
+                data={materials}
+                keyExtractor={(item) => item._id}
+                style={{ maxHeight: 260, marginBottom: 8 }}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.materialRow} onPress={() => selectMaterial(item)}>
+                    <Text style={styles.materialIcon}>📄</Text>
+                    <Text style={styles.materialName} numberOfLines={1}>{item.filename}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setShowMaterialPicker(false)}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              {!loadingMaterials && materials.length === 0 && (
+                <TouchableOpacity
+                  style={styles.modalConfirmBtn}
+                  onPress={() => { setShowMaterialPicker(false); pickFile(); }}
+                >
+                  <Text style={styles.modalConfirmText}>Upload Instead</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </View>
@@ -1401,4 +605,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#1D4ED8',
   },
   modalConfirmText: { fontSize: 13, fontWeight: '700', color: '#fff' },
+
+  // ── Material picker ──
+  materialRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+  },
+  materialIcon: { fontSize: 16 },
+  materialName: { fontSize: 13, fontWeight: '600', color: '#0F172A', flex: 1 },
 });

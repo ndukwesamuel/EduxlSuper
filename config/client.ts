@@ -393,12 +393,17 @@ export const generateSubjectPodcast = (subjectId: string, formData: FormData): P
 
 // ─── ADD/REPLACE THESE IN config/client.ts ─────────────────────────
 
+export interface PodcastScriptTurn {
+  speaker: string;
+  text: string;
+}
+
 export interface Podcast {
   _id: string;
   subjectId: string | { _id: string; name: string };
   userId: string;
   title: string;
-  script: string;
+  script: PodcastScriptTurn[] | string;
   audioUrl: string;
   audioPublicId: string;
   durationSeconds: number;
@@ -577,6 +582,9 @@ export const updateProfile = (data: {
     .put<{ success: boolean; data: any }>('/user', data)
     .then(unwrap);
 
+
+export const deleteAccount = (): Promise<{ message: string }> =>
+  api.delete('/user').then((r) => r.data);
 
 export const forgotPassword = (email: string) =>
   api.post('/auth/forgot-password', { email }).then(r => r.data);
