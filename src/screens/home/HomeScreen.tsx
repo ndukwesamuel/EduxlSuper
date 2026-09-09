@@ -1,12 +1,12 @@
 // ─── HomeScreen.tsx ───────────────────────────────────────────────
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, RefreshControl, Animated, Easing,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootState, AppDispatch } from "../../store/store";
 import { setProfile, setProfileStatus } from "../../store/profileSlice";
@@ -15,6 +15,7 @@ import {
   getSubjects, DrillSubject,
   getProfileStatus, getProfile,
 } from "../../../config/client";
+import { fetchTodos, TodoItem } from "../../services/todoService";
 import { Colors } from "../../theme";
 import { AppStackParamList } from "../../navigation/types";
 import PersonaModal from "./PersonaModal";
@@ -186,6 +187,7 @@ export default function HomeScreen() {
 
   const [progress,         setProgress]         = useState<UserProgress | null>(null);
   const [subjects,         setSubjects]         = useState<DrillSubject[]>([]);
+  const [homeTodos,        setHomeTodos]        = useState<TodoItem[]>([]);
   const [refreshing,       setRefreshing]       = useState(false);
   const [showPersonaModal, setShowPersonaModal] = useState(false);
 
@@ -202,14 +204,16 @@ export default function HomeScreen() {
   const loadData = async () => {
     if (!user?._id) return;
     try {
-      const [prog, subs, status, prof] = await Promise.all([
+      const [prog, subs, status, prof, todos] = await Promise.all([
         fetchProgress(),
         getSubjects(),
         getProfileStatus(),
         getProfile(),
+        fetchTodos(),
       ]);
       setProgress(prog);
       setSubjects(subs);
+      setHomeTodos(todos);
       dispatch(setProfileStatus(status));
       dispatch(setProfile(prof));
       if (!status.persona) setShowPersonaModal(true);
@@ -217,6 +221,12 @@ export default function HomeScreen() {
   };
 
   useEffect(() => { loadData(); }, [user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTodos().then(setHomeTodos);
+    }, [])
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -312,6 +322,80 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
+
+          {/* ── MY TASKS & TO-DO LIST (Matching Image 2 Dashboard) ────── */}
+          {(() => {
+            const pendingTasks = homeTodos.filter(t => !t.completed);
+            const priorityTask = homeTodos.find(t => t.priority === "high" || t.category === "Priority") || homeTodos[0];
+            const groceryTasks = homeTodos.filter(t => t.category === "Groceries");
+            const completedGroceries = groceryTasks.filter(t => t.completed).length;
+
+            return (
+              <>
+                <View style={s.todoHeaderRow}>
+                  <View>
+                    <Text style={s.secTitleNoPad}>MY TASKS</Text>
+                    <Text style={s.todoCountSub}>
+                      📝 {pendingTasks.length} task{pendingTasks.length !== 1 ? "s" : ""} to do today
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={s.todoListBtn}
+                    onPress={() => navigation.navigate("TodoList" as any)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={s.todoListBtnText}>To-Do List →</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Priority Task Grid Cards */}
+                <View style={s.todoGrid}>
+                  {/* Priority Card */}
+                  <TouchableOpacity
+                    style={s.priorityCardDark}
+                    onPress={() =>
+                      priorityTask
+                        ? navigation.navigate("TaskDetail" as any, { taskId: priorityTask._id, title: priorityTask.title })
+                        : navigation.navigate("TodoList" as any)
+                    }
+                    activeOpacity={0.88}
+                  >
+                    <Text style={s.priorityTag}>Priority</Text>
+                    <Text style={s.priorityTitle} numberOfLines={1}>
+                      {priorityTask ? priorityTask.title : "Bill Payment"}
+                    </Text>
+                    <Text style={s.priorityDesc} numberOfLines={2}>
+                      {priorityTask ? (priorityTask.description || "pay credit card bill amount $450") : "pay credit card bill amount $450"}
+                    </Text>
+                    <View style={s.priorityFooter}>
+                      <Text style={s.priorityTime}>
+                        ⏰ {priorityTask?.dueTimeString || "2:35pm"}
+                      </Text>
+                      <View style={s.redDot} />
+                    </View>
+                  </TouchableOpacity>
+
+                  {/* Grocery List Card */}
+                  <TouchableOpacity
+                    style={s.groceryCardLight}
+                    onPress={() => navigation.navigate("TodoList" as any, { category: "Groceries" })}
+                    activeOpacity={0.88}
+                  >
+                    <Text style={s.groceryTag}>Groceries</Text>
+                    <Text style={s.groceryTitle}>
+                      Grocery List ({completedGroceries}/{groceryTasks.length || 9})
+                    </Text>
+                    <Text style={s.groceryPreview} numberOfLines={3}>
+                      {groceryTasks.length > 0
+                        ? groceryTasks.slice(0, 4).map(t => `• ${t.title}`).join("\n")
+                        : "• Manuka honey\n• Peanut butter\n• Olive oil"}
+                    </Text>
+                    <Text style={s.groceryCta}>Open list →</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            );
+          })()}
 
           {/* ── NEW USER HOOK ────────────────────────────────────── */}
           {isNewUser && (
@@ -556,6 +640,28 @@ const s = StyleSheet.create({
   streakMsgAccent:{ color: "#FCD34D", fontWeight: "600" },
 
   sec: { fontSize: 11, fontWeight: "700", color: "#94A3B8", letterSpacing: 1.2, paddingHorizontal: 22, paddingTop: 20, paddingBottom: 10 },
+  secTitleNoPad: { fontSize: 11, fontWeight: "700", color: "#94A3B8", letterSpacing: 1.2 },
+
+  // To-Do Section matching Image 2
+  todoHeaderRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 22, paddingTop: 18, paddingBottom: 10 },
+  todoCountSub: { fontSize: 12, color: "#64748B", marginTop: 2, fontWeight: "600" },
+  todoListBtn: { backgroundColor: "#EDE9FE", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
+  todoListBtnText: { fontSize: 13, fontWeight: "700", color: "#7C3AED" },
+
+  todoGrid: { flexDirection: "row", gap: 12, paddingHorizontal: 22, marginTop: 4, marginBottom: 12 },
+  priorityCardDark: { flex: 1, backgroundColor: "#1E1B4B", borderRadius: 20, padding: 16, minHeight: 140, justifyContent: "space-between" },
+  priorityTag: { fontSize: 10, fontWeight: "700", color: "#A78BFA", textTransform: "uppercase" },
+  priorityTitle: { fontSize: 16, fontWeight: "800", color: "#FFFFFF", marginTop: 4 },
+  priorityDesc: { fontSize: 12, color: "#C7D2FE", marginTop: 4, lineHeight: 16 },
+  priorityFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10 },
+  priorityTime: { fontSize: 11, color: "#93C5FD", fontWeight: "600" },
+  redDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#EF4444" },
+
+  groceryCardLight: { flex: 1, backgroundColor: "#FFFFFF", borderRadius: 20, padding: 16, borderWidth: 1, borderColor: "#E2E8F0", minHeight: 140, justifyContent: "space-between" },
+  groceryTag: { fontSize: 10, fontWeight: "700", color: "#64748B", textTransform: "uppercase" },
+  groceryTitle: { fontSize: 15, fontWeight: "700", color: "#0F172A", marginTop: 4 },
+  groceryPreview: { fontSize: 11, color: "#64748B", marginTop: 4, lineHeight: 15 },
+  groceryCta: { fontSize: 11, fontWeight: "700", color: "#7C3AED", marginTop: 8 },
 
   continueCard:    { flexDirection: "row", alignItems: "center", marginHorizontal: 22, backgroundColor: "#fff", borderRadius: 20, padding: 16, borderWidth: 1, borderColor: "#E2E8F0", gap: 14 },
   continueIcon:    { width: 52, height: 52, borderRadius: 16, alignItems: "center", justifyContent: "center" },

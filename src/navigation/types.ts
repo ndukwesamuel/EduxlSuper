@@ -121,6 +121,10 @@ CompanyHistory: { companyId: string };
   AiQuizSetup: { subjectId?: string; subjectName?: string } | undefined;
   AiQuizSession: { questions: any[]; subjectId?: string; subjectName?: string };
   AiQuizResults: { score: number; results: any[]; total: number; subjectId?: string; subjectName?: string };
+
+  // ── To-Do List & Task Details ────────────────────────────────────
+  TodoList: { category?: string } | undefined;
+  TaskDetail: { taskId?: string; title?: string; category?: string } | undefined;
 };
 
 
