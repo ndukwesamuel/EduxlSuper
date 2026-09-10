@@ -9,10 +9,39 @@
       "Bash(~/Library/Android/sdk/emulator/emulator -list-avds)",
       "Bash(nohup ~/Library/Android/sdk/emulator/emulator -avd Pixel_10 -no-snapshot-load >/tmp/emu.log 2>&1 & sleep 3; echo started)",
       "Bash(xargs -r kill)",
-      "Bash(pkill -f \"expo start\")"
+      "Bash(pkill -f \"expo start\")",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && ls modules/drillpad/ && echo \"=== routes ===\" && ls routes/ && echo \"=== grep generate-quiz ===\" && grep -rn \"generate-quiz\\\\|generateQuiz\\\\|generate-quiz\\\\|/questions\\\\|materials\" routes/ modules/drillpad/ --include=\"*.ts\" | grep -i \"route\\\\|router\\\\|\\\\.get\\\\|\\\\.post\" | head -40)",
+      "Read(//Users/macbook/Eduxl/Eduxl2/src/**)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && grep -rn \"DrillPadRouter\\\\|drillpad\\\\|DrillPad\" routes/index.ts && echo \"=== full drillpad routes ===\" && cat modules/drillpad/drillpad.routes.ts)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && grep -rn \"drillpad\\\\|DrillPad\\\\|generate-quiz\\\\|generateCourseQuiz\" routes/index.ts app.ts index.ts server.ts main.ts 2>/dev/null; echo \"=== search app entry ===\"; grep -rln \"DrillPadRouter\\\\|drillpad.routes\" . --include=\"*.ts\" | grep -v node_modules)",
+      "Bash(grep -n \"baseURL\\\\|BASE_URL\\\\|API_URL\\\\|const api =\\\\|axios.create\" config/client.ts | head -20; echo \"=== backend: any /subjects router NOT under drillpad ===\"; cd /Users/macbook/Eduxl/Eduxl2/src && grep -rn \"\\\\\"/subjects\\\\|'/subjects\\\\|/api/v1/subjects\\\\|generate-quiz\\\\|generateCourseQuiz\" index.ts routes/index.ts modules/**/*.routes.ts 2>/dev/null)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && sed -n '270,400p' modules/drillpad/drillpad.controller.ts)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && grep -n \"extractedText\\\\|extractText\\\\|ocr\\\\|OCR\\\\|pdf-parse\\\\|pdfParse\\\\|vision\\\\|extractTextFrom\\\\|mammoth\\\\|tesseract\" modules/drillpad/material.crud.service.ts)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && grep -n \"extractTextFromFile\\\\|extractTextFromUrl\\\\|image\\\\|jpeg\\\\|png\\\\|vision\\\\|gemini\\\\|claude\\\\|gpt-4\\\\|mimeType\" modules/ai/*.ts | grep -i \"extract\\\\|image\\\\|jpeg\\\\|vision\\\\|mime\" | head -30)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && grep -n \"app.use\\\\|\\\\.use\\(\\\\\"/\" index.ts | head -40)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && sed -n '224,340p' modules/ai/ai.service.ts)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && echo \"=== errorHandler ===\" && cat middleware/errorHandler.ts 2>/dev/null | head -60 && echo \"=== ai client init ===\" && grep -n \"new GoogleGenAI\\\\|GoogleGenerativeAI\\\\|apiKey\\\\|GEMINI\\\\|API_KEY\\\\|const ai \" modules/ai/ai.service.ts | head)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2/src && echo \"=== ApiError ===\" && grep -n \"class ApiError\\\\|static \\\\|constructor\" utils/responseHandler.ts | head -30 && echo \"=== ai imports in ai.service ===\" && sed -n '1,10p' modules/ai/ai.service.ts)",
+      "Read(//Users/macbook/Eduxl/Eduxl2/src/modules/drillpad/**)",
+      "Bash(ls -la /Users/macbook/Eduxl/)",
+      "Read(//Users/macbook/Eduxl/**)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && ls -la && echo \"---PACKAGE---\" && cat package.json 2>/dev/null | head -50)",
+      "Read(//Users/macbook/Eduxl/Eduxl2/**)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -rn \"generate-quiz\" src/ && echo \"---\" && ls src/)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -rn \"generateQuizFromCourseTexts\" src/ )",
+      "Read(//Users/macbook/Eduxl/Eduxl2/src/modules/ai/**)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -rn \"Internal server error\" src/ && echo \"---ENV KEYS---\" && grep -oE \"^[A-Z_]+=\" .env)",
+      "Read(//Users/macbook/Eduxl/Eduxl2/src/middleware/**)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -rn \"logError\\\\|errorLog\\\\|errors\" src/modules/admin/ | head -30)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -rn \"addBulkQuestions\" src/ && echo \"===\" && find src -name \"*.ts\" | xargs grep -ln \"questionSchema\\\\|QuestionSchema\\\\|new Schema\" 2>/dev/null | grep -i question)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -E \"GEMINI_API_KEY|GOOGLE_TTS|OPENROUTER\" .env | sed -E 's/=\\(.{6}\\).*/=\\\\1...[REDACTED]/')",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -n \"static \\\\|serviceUnavailable\\\\|badRequest\\\\|notFound\\\\|tooManyRequests\" src/utils/responseHandler.ts && echo \"---retry helpers---\" && grep -rn \"retry\\\\|backoff\\\\|UNAVAILABLE\\\\|503\" src/modules/ai/ src/utils/ 2>/dev/null)",
+      "Bash(cd /Users/macbook/Eduxl/Eduxl2 && grep -n \"generateContent\\\\|Retry\\\\|retry\\\\|catch\\\\|model:\" src/modules/ai/ai.service.ts)",
+      "Read(//Users/macbook/Eduxl/Eduxl2/src/utils/**)"
     ],
     "additionalDirectories": [
-      "/tmp"
+      "/tmp",
+      "/Users/macbook/Eduxl/Eduxl2/src/modules/ai"
     ]
   }
 }

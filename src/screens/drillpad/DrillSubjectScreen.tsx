@@ -14,7 +14,7 @@ import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, FontSize, Radius, Spacing, Shadows } from '../../theme';
 import CCLoader from '../../components/CCLoader';
-import { getSubject, getDrillStats, sendSubjectChat, generateCourseQuiz } from '../../../config/client';
+import { getSubject, getDrillStats, sendSubjectChat, generateCourseQuiz, getSubjectMaterials } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'DrillSubject'>;
@@ -139,14 +139,16 @@ export default function DrillSubjectScreen() {
 
   const load = async () => {
     try {
-      const [s, st] = await Promise.all([
+      const [s, st, materials] = await Promise.all([
         getSubject(subjectId),
         getDrillStats(subjectId),
+        getSubjectMaterials(subjectId).catch(() => [] as Awaited<ReturnType<typeof getSubjectMaterials>>),
       ]);
       setSubject(s);
       setStats(st);
-      setFileCount(s?.fileCount ?? 0);
-      setLinkCount(s?.linkCount ?? 0);
+      const links = materials.filter((m) => m.sourceType === 'link').length;
+      setFileCount(materials.length - links);
+      setLinkCount(links);
     } catch {
       Alert.alert('Error', 'Could not load course');
     }
@@ -162,21 +164,63 @@ export default function DrillSubjectScreen() {
     setRefreshing(false);
   };
 
+  const hasMaterials = fileCount + linkCount > 0;
+
+  const generateFromMaterials = async (proceed: () => void) => {
+    setGeneratingQuiz(true);
+    try {
+      const data = await generateCourseQuiz(subjectId, 50);
+      const generated = data?.questions ?? [];
+      if (generated.length === 0) {
+        throw new Error('No questions could be generated. Make sure your uploaded material has readable study content.');
+      }
+      await load();
+      proceed();
+    } catch (err: any) {
+      Alert.alert(
+        'Could not generate questions',
+        err?.response?.data?.message || err?.message || 'Please try again.',
+      );
+    } finally {
+      setGeneratingQuiz(false);
+    }
+  };
+
+  const requireQuestions = (proceed: () => void) => {
+    if ((subject?.totalQuestions ?? 0) > 0) return proceed();
+
+    if (hasMaterials) {
+      return Alert.alert(
+        'No questions yet',
+        'Generate practice questions from the material you uploaded?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Generate', onPress: () => generateFromMaterials(proceed) },
+        ],
+      );
+    }
+
+    Alert.alert(
+      'No questions',
+      'Add study material or questions to this course first.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Add material', onPress: () => navigation.navigate('SubjectMaterials', { subjectId, subjectName }) },
+      ],
+    );
+  };
+
   const startSession = (mode: 'practice' | 'exam' | 'weak') => {
-    if ((subject?.totalQuestions ?? 0) === 0) {
-      return Alert.alert('No questions', 'Upload questions to this course first.');
-    }
-    if (mode === 'weak' && (subject?.weakCount ?? 0) === 0) {
-      return Alert.alert('No weak questions', 'Keep practicing and weak questions will appear here automatically.');
-    }
-    navigation.navigate('DrillSession', { subjectId, subjectName, mode });
+    requireQuestions(() => {
+      if (mode === 'weak' && (subject?.weakCount ?? 0) === 0) {
+        return Alert.alert('No weak questions', 'Keep practicing and weak questions will appear here automatically.');
+      }
+      navigation.navigate('DrillSession', { subjectId, subjectName, mode });
+    });
   };
 
   const startFlashcards = () => {
-    if ((subject?.totalQuestions ?? 0) === 0) {
-      return Alert.alert('No questions', 'Upload questions to this course first.');
-    }
-    navigation.navigate('Flashcard', { subjectId, subjectName });
+    requireQuestions(() => navigation.navigate('Flashcard', { subjectId, subjectName }));
   };
 
   // ── Chat ─────────────────────────────────────────────────────────
@@ -224,6 +268,12 @@ export default function DrillSubjectScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      {generatingQuiz && (
+        <View style={styles.genOverlay}>
+          <ActivityIndicator size="large" color={Colors.brand} />
+          <Text style={styles.genOverlayText}>Generating questions from your material…</Text>
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
@@ -285,9 +335,7 @@ export default function DrillSubjectScreen() {
                 >
                   <Text style={styles.docPillIcon}>📄</Text>
                   <Text style={styles.docPillText}>
-                    {subject?.documentCount ?? 0} doc{(subject?.documentCount ?? 0) !== 1 ? 's' : ''}
-
-                    uploaded material
+                    {fileCount + linkCount} uploaded material{fileCount + linkCount !== 1 ? 's' : ''}
                   </Text>
                 </TouchableOpacity>
                 <Text style={[styles.readinessPct, { color: readinessColor }]}>{readiness}%</Text>
@@ -577,6 +625,16 @@ export default function DrillSubjectScreen() {
 // ── Styles ────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   safe:   { flex: 1, backgroundColor: '#F8FAFC' },
+  genOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
+    backgroundColor: 'rgba(15,23,42,0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 14,
+    paddingHorizontal: 40,
+  },
+  genOverlayText: { color: '#fff', fontSize: 14, fontWeight: '600', textAlign: 'center' },
   scroll: { paddingBottom: 40 },
 
   // Header

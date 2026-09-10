@@ -829,12 +829,18 @@ export const removeNotificationToken = (): Promise<any> =>
 
 // ── Course Quiz APIs ────────────────────────────────────────────────
 export const generateCourseQuiz = (subjectId: string, count: number = 50): Promise<any> =>
-  api.post<{ success: boolean; data: any }>(`/subjects/${subjectId}/generate-quiz`, { count }).then(unwrap);
+  api
+    .post<{ success: boolean; data: any }>(
+      `/drillpad/subjects/${subjectId}/generate-quiz`,
+      { count },
+      { timeout: 120_000 }, // server batches the generation, takes 15-40s+
+    )
+    .then(unwrap);
 
 export const getCourseQuestions = (subjectId: string, limit: number = 50, shuffle: boolean = true): Promise<any> =>
-  api.get<{ success: boolean; data: any }>(`/subjects/${subjectId}/questions?limit=${limit}&shuffle=${shuffle}`).then(unwrap);
+  api.get<{ success: boolean; data: any }>(`/drillpad/subjects/${subjectId}/questions?limit=${limit}&shuffle=${shuffle}`).then(unwrap);
 
 export const submitCourseQuizSession = (subjectId: string, sessionData: { score: number; totalQuestions: number; answers?: any[] }): Promise<any> =>
-  api.post<{ success: boolean; data: any }>(`/subjects/${subjectId}/sessions`, sessionData).then(unwrap);
+  api.post<{ success: boolean; data: any }>(`/drillpad/subjects/${subjectId}/sessions`, sessionData).then(unwrap);
 
 export default api;
