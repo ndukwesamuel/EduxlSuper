@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./src/store/store";
@@ -84,7 +85,9 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaProvider>
-          <AppContent />
+          <KeyboardProvider>
+            <AppContent />
+          </KeyboardProvider>
         </SafeAreaProvider>
       </PersistGate>
     </Provider>

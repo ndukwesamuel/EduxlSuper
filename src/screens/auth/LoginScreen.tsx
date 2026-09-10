@@ -3,11 +3,12 @@
 // ─── LoginScreen.tsx ──────────────────────────────────────────────
 import React, { useState, useRef, useEffect } from "react";
 import {
-  View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, KeyboardAvoidingView, Platform,
+  View, Text, TextInput, TouchableOpacity,
+  StyleSheet,
   ActivityIndicator, Animated, Easing, Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useDispatch } from "react-redux";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthStackParamList } from "../../navigation/types";
@@ -153,8 +154,13 @@ export default function LoginScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={s.safe}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={s.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={s.scroll}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bottomOffset={24}
+      >
           <Animated.View style={{ opacity: fadeIn, transform: [{ translateY: slideUp }] }}>
 
             {/* ── DARK HERO ──────────────────────────────────── */}
@@ -369,8 +375,7 @@ export default function LoginScreen({ navigation }: Props) {
             <Text style={s.footer}>By continuing you agree to our Terms & Privacy Policy</Text>
 
           </Animated.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

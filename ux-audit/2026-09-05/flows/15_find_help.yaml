@@ -1,0 +1,10 @@
+appId: com.samheart.eduxl
+---
+- tapOn: "Home"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: 16_home_after_quiz
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: 17_profile_tab

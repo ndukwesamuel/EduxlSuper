@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(emulator -list-avds)",
+      "Bash(lsof -ti:8081)",
+      "Bash(xargs kill -9)",
+      "Read(//Users/macbook/Library/Android/sdk/emulator/**)",
+      "Bash(~/Library/Android/sdk/emulator/emulator -list-avds)",
+      "Bash(nohup ~/Library/Android/sdk/emulator/emulator -avd Pixel_10 -no-snapshot-load >/tmp/emu.log 2>&1 & sleep 3; echo started)",
+      "Bash(xargs -r kill)",
+      "Bash(pkill -f \"expo start\")"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+appId: com.samheart.eduxl
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 15000
+- takeScreenshot: 01_first_launch_landing

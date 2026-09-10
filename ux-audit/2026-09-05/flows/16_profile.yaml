@@ -1,0 +1,6 @@
+appId: com.samheart.eduxl
+---
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: 17_profile_screen

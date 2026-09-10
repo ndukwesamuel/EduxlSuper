@@ -1,0 +1,5 @@
+appId: com.samheart.eduxl
+---
+- launchApp:
+    clearState: true
+- takeScreenshot: 01_first_launch_01

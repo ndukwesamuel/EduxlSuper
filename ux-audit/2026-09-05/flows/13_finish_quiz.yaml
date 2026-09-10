@@ -1,0 +1,8 @@
+appId: com.samheart.eduxl
+---
+- repeat:
+    times: 8
+    commands:
+      - tapOn: "C"
+      - tapOn: "Next Question"
+- takeScreenshot: 14_quiz_finished

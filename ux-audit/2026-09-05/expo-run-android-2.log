@@ -1,0 +1,1465 @@
+› Building app...
+Configuration on demand is an incubating feature.
+> Task :gradle-plugin:settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:checkKotlinGradlePluginConfigurationErrors
+> Task :gradle-plugin:shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileKotlin UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:processResources NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:classes UP-TO-DATE
+> Task :gradle-plugin:shared:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:shared:compileJava NO-SOURCE
+> Task :gradle-plugin:shared:processResources NO-SOURCE
+> Task :gradle-plugin:shared:classes UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:checkKotlinGradlePluginConfigurationErrors
+> Task :gradle-plugin:shared:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:classes UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:jar UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:jar UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin:checkKotlinGradlePluginConfigurationErrors
+> Task :expo-module-gradle-plugin:checkKotlinGradlePluginConfigurationErrors
+> Task :expo-module-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-module-gradle-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileKotlin UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:compileJava NO-SOURCE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:processResources UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:react-native-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :expo-gradle-plugin:expo-autolinking-plugin:jar UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:jar UP-TO-DATE
+> Task :expo-module-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :expo-module-gradle-plugin:compileJava NO-SOURCE
+> Task :expo-module-gradle-plugin:classes UP-TO-DATE
+> Task :expo-module-gradle-plugin:jar UP-TO-DATE
+
+> Configure project :
+[32m[ExpoRootProject][0m Using the following versions:
+  - buildTools:  [32m36.0.0[0m
+  - minSdk:      [32m24[0m
+  - compileSdk:  [32m36[0m
+  - targetSdk:   [32m36[0m
+  - ndk:         [32m27.1.12297006[0m
+  - kotlin:      [32m2.0.21[0m
+  - ksp:         [32m2.0.21-1.0.28[0m
+WARNING: We recommend using a newer Android Gradle plugin to use compileSdk = 36
+
+This Android Gradle plugin (8.8.2) was tested up to compileSdk = 35.
+
+You are strongly encouraged to update your project to use a newer
+Android Gradle plugin that has been tested with compileSdk = 36.
+
+If you are already using the latest version of the Android Gradle plugin,
+you may need to wait until a newer version with support for compileSdk = 36 is available.
+
+For more information refer to the compatibility table:
+https://d.android.com/r/tools/api-level-support
+
+To suppress this warning, add/update
+    android.suppressUnsupportedCompileSdk=36
+to this project's gradle.properties.
+
+> Configure project :notifee_react-native
+:notifee_react-native @notifee/react-native found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native
+:notifee_react-native package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native/package.json
+:notifee_react-native:version set from package.json: 9.1.8 (9,1,8 - 9001008)
+:notifee_react-native:android.compileSdk using custom value: 36
+:notifee_react-native:android.targetSdk using custom value: 36
+:notifee_react-native:android.minSdk using custom value: 24
+:notifee_react-native:reactNativeAndroidDir /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native/android
+
+> Configure project :react-native-firebase_app
+:react-native-firebase_app package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/app/package.json
+:react-native-firebase_app:firebase.bom using default value: 34.16.0
+:react-native-firebase_app:play.play-services-auth using default value: 21.5.0
+:react-native-firebase_app package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/app/package.json
+:react-native-firebase_app:version set from package.json: 26.1.0 (26,1,0 - 26001000)
+:react-native-firebase_app:android.compileSdk using custom value: 36
+:react-native-firebase_app:android.targetSdk using custom value: 36
+:react-native-firebase_app:android.minSdk using custom value: 24
+:react-native-firebase_app:reactNativeAndroidDir /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native/android
+
+> Configure project :react-native-firebase_messaging
+:react-native-firebase_messaging package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/messaging/package.json
+:react-native-firebase_app package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/app/package.json
+:react-native-firebase_messaging:firebase.bom using default value: 34.16.0
+:react-native-firebase_messaging package.json found at /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/messaging/package.json
+:react-native-firebase_messaging:version set from package.json: 26.1.0 (26,1,0 - 26001000)
+:react-native-firebase_messaging:android.compileSdk using custom value: 36
+:react-native-firebase_messaging:android.targetSdk using custom value: 36
+:react-native-firebase_messaging:android.minSdk using custom value: 24
+:react-native-firebase_messaging:reactNativeAndroidDir /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native/android
+
+> Configure project :expo
+
+Using expo modules
+  - [32mexpo-constants[0m (17.1.8)
+  - [32mexpo-in-app-updates[0m (0.1.0)
+  - [32mexpo-modules-core[0m (2.5.0)
+  - [33m[📦][0m [32mexpo-asset[0m (11.1.7)
+  - [33m[📦][0m [32mexpo-audio[0m (0.4.9)
+  - [33m[📦][0m [32mexpo-clipboard[0m (7.1.5)
+  - [33m[📦][0m [32mexpo-document-picker[0m (13.1.6)
+  - [33m[📦][0m [32mexpo-file-system[0m (18.1.11)
+  - [33m[📦][0m [32mexpo-font[0m (13.3.2)
+  - [33m[📦][0m [32mexpo-keep-awake[0m (14.1.4)
+  - [33m[📦][0m [32mexpo-linear-gradient[0m (14.1.5)
+  - [33m[📦][0m [32mexpo-sharing[0m (13.1.5)
+  - [33m[📦][0m [32mexpo-video[0m (2.2.3)
+
+WARNING: We recommend using a newer Android Gradle plugin to use compileSdk = 36
+
+This Android Gradle plugin (8.8.2) was tested up to compileSdk = 35.
+
+You are strongly encouraged to update your project to use a newer
+Android Gradle plugin that has been tested with compileSdk = 36.
+
+If you are already using the latest version of the Android Gradle plugin,
+you may need to wait until a newer version with support for compileSdk = 36 is available.
+
+For more information refer to the compatibility table:
+https://d.android.com/r/tools/api-level-support
+
+To suppress this warning, add/update
+    android.suppressUnsupportedCompileSdk=36
+to this project's gradle.properties.
+
+> Task :app:generateAutolinkingNewArchitectureFiles UP-TO-DATE
+> Task :app:generateAutolinkingPackageList UP-TO-DATE
+> Task :app:generateCodegenSchemaFromJavaScript SKIPPED
+> Task :app:generateCodegenArtifactsFromSchema SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig
+> Task :expo:generatePackagesList UP-TO-DATE
+> Task :expo:preBuild UP-TO-DATE
+> Task :expo:preDebugBuild UP-TO-DATE
+> Task :expo:writeDebugAarMetadata
+> Task :expo-constants:createExpoConfig
+> Task :expo-constants:preBuild
+> Task :expo-constants:preDebugBuild
+> Task :expo-in-app-updates:preBuild UP-TO-DATE
+> Task :expo-in-app-updates:preDebugBuild UP-TO-DATE
+> Task :expo-constants:writeDebugAarMetadata
+> Task :expo-modules-core:preBuild UP-TO-DATE
+> Task :expo-modules-core:preDebugBuild UP-TO-DATE
+> Task :expo-in-app-updates:writeDebugAarMetadata
+> Task :notifee_react-native:preBuild UP-TO-DATE
+> Task :notifee_react-native:preDebugBuild UP-TO-DATE
+> Task :expo-modules-core:writeDebugAarMetadata
+> Task :notifee_react-native:writeDebugAarMetadata
+> Task :react-native-async-storage_async-storage:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preDebugBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:writeDebugAarMetadata
+> Task :react-native-edge-to-edge:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-edge-to-edge:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-edge-to-edge:preBuild UP-TO-DATE
+> Task :react-native-edge-to-edge:preDebugBuild UP-TO-DATE
+> Task :react-native-firebase_app:preBuild UP-TO-DATE
+> Task :react-native-firebase_app:preDebugBuild UP-TO-DATE
+> Task :react-native-edge-to-edge:writeDebugAarMetadata
+> Task :react-native-firebase_messaging:preBuild UP-TO-DATE
+> Task :react-native-firebase_messaging:preDebugBuild UP-TO-DATE
+> Task :react-native-firebase_app:writeDebugAarMetadata
+> Task :react-native-firebase_messaging:writeDebugAarMetadata
+> Task :react-native-safe-area-context:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-safe-area-context:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-safe-area-context:preBuild UP-TO-DATE
+> Task :react-native-safe-area-context:preDebugBuild UP-TO-DATE
+> Task :react-native-safe-area-context:writeDebugAarMetadata
+> Task :react-native-screens:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-screens:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-screens:preBuild UP-TO-DATE
+> Task :react-native-screens:preDebugBuild UP-TO-DATE
+> Task :react-native-screens:writeDebugAarMetadata
+> Task :react-native-svg:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-svg:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-svg:preBuild UP-TO-DATE
+> Task :react-native-svg:preDebugBuild UP-TO-DATE
+> Task :react-native-svg:writeDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
+> Task :app:injectCrashlyticsMappingFileIdDebug
+> Task :app:injectCrashlyticsVersionControlInfoDebug
+> Task :app:processDebugGoogleServices
+> Task :expo:generateDebugResValues
+> Task :expo:generateDebugResources
+> Task :expo:packageDebugResources
+> Task :expo-constants:generateDebugResValues FROM-CACHE
+> Task :expo-constants:generateDebugResources FROM-CACHE
+> Task :expo-constants:packageDebugResources
+> Task :expo-in-app-updates:generateDebugResValues FROM-CACHE
+> Task :expo-in-app-updates:generateDebugResources FROM-CACHE
+> Task :expo-in-app-updates:packageDebugResources
+> Task :expo-modules-core:generateDebugResValues FROM-CACHE
+> Task :expo-modules-core:generateDebugResources FROM-CACHE
+> Task :expo-modules-core:packageDebugResources
+> Task :notifee_react-native:generateDebugResValues FROM-CACHE
+> Task :notifee_react-native:generateDebugResources FROM-CACHE
+> Task :notifee_react-native:packageDebugResources
+> Task :react-native-async-storage_async-storage:generateDebugResValues FROM-CACHE
+> Task :react-native-async-storage_async-storage:generateDebugResources FROM-CACHE
+> Task :react-native-async-storage_async-storage:packageDebugResources
+> Task :react-native-edge-to-edge:generateDebugResValues FROM-CACHE
+> Task :react-native-edge-to-edge:generateDebugResources
+> Task :react-native-edge-to-edge:packageDebugResources
+> Task :react-native-firebase_app:generateDebugResValues FROM-CACHE
+> Task :react-native-firebase_app:generateDebugResources FROM-CACHE
+> Task :react-native-firebase_app:packageDebugResources
+> Task :react-native-firebase_messaging:generateDebugResValues FROM-CACHE
+> Task :react-native-firebase_messaging:generateDebugResources
+> Task :react-native-firebase_messaging:packageDebugResources
+> Task :react-native-safe-area-context:generateDebugResValues FROM-CACHE
+> Task :react-native-safe-area-context:generateDebugResources FROM-CACHE
+> Task :react-native-safe-area-context:packageDebugResources
+> Task :react-native-screens:generateDebugResValues FROM-CACHE
+> Task :react-native-screens:generateDebugResources
+> Task :react-native-screens:packageDebugResources
+> Task :react-native-svg:generateDebugResValues FROM-CACHE
+> Task :react-native-svg:generateDebugResources FROM-CACHE
+> Task :react-native-svg:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :expo:extractDeepLinksDebug FROM-CACHE
+> Task :expo-constants:extractDeepLinksDebug FROM-CACHE
+> Task :expo-in-app-updates:extractDeepLinksDebug FROM-CACHE
+> Task :expo-modules-core:extractDeepLinksDebug FROM-CACHE
+> Task :notifee_react-native:extractDeepLinksDebug FROM-CACHE
+> Task :app:parseDebugLocalResources
+> Task :react-native-async-storage_async-storage:extractDeepLinksDebug FROM-CACHE
+> Task :react-native-edge-to-edge:extractDeepLinksDebug FROM-CACHE
+> Task :react-native-edge-to-edge:processDebugManifest
+> Task :expo:processDebugManifest
+
+> Task :expo-modules-core:processDebugManifest
+/Users/macbook/Eduxl/EduxlSuper/node_modules/expo-modules-core/android/src/main/AndroidManifest.xml:8:9-11:45 Warning:
+	meta-data#com.facebook.soloader.enabled@android:value was tagged at AndroidManifest.xml:8 to replace other declarations but no other declaration present
+
+> Task :expo-in-app-updates:processDebugManifest
+> Task :expo-constants:processDebugManifest
+
+> Task :react-native-async-storage_async-storage:processDebugManifest
+package="com.reactnativecommunity.asyncstorage" found in source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-async-storage/async-storage/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.reactnativecommunity.asyncstorage" from the source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-async-storage/async-storage/android/src/main/AndroidManifest.xml.
+
+> Task :notifee_react-native:processDebugManifest
+package="io.invertase.notifee" found in source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.invertase.notifee" from the source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native/android/src/main/AndroidManifest.xml.
+
+> Task :react-native-firebase_app:extractDeepLinksDebug
+> Task :react-native-firebase_messaging:extractDeepLinksDebug
+
+> Task :react-native-firebase_app:processDebugManifest
+package="io.invertase.firebase" found in source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/app/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.invertase.firebase" from the source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/app/android/src/main/AndroidManifest.xml.
+
+> Task :react-native-safe-area-context:extractDeepLinksDebug FROM-CACHE
+> Task :react-native-screens:extractDeepLinksDebug FROM-CACHE
+
+> Task :react-native-firebase_messaging:processDebugManifest
+package="io.invertase.firebase.messaging" found in source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/messaging/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="io.invertase.firebase.messaging" from the source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-firebase/messaging/android/src/main/AndroidManifest.xml.
+
+> Task :react-native-safe-area-context:processDebugManifest
+package="com.th3rdwave.safeareacontext" found in source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-safe-area-context/android/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.th3rdwave.safeareacontext" from the source AndroidManifest.xml: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-safe-area-context/android/src/main/AndroidManifest.xml.
+
+> Task :react-native-svg:extractDeepLinksDebug FROM-CACHE
+> Task :react-native-screens:processDebugManifest
+> Task :react-native-svg:processDebugManifest
+> Task :expo:compileDebugLibraryResources
+> Task :app:mergeDebugResources
+
+> Task :app:processDebugMainManifest
+/Users/macbook/Eduxl/EduxlSuper/android/app/src/debug/AndroidManifest.xml:6:5-162 Warning:
+	application@android:usesCleartextTraffic was tagged at AndroidManifest.xml:6 to replace other declarations but no other declaration present
+/Users/macbook/Eduxl/EduxlSuper/android/app/src/debug/AndroidManifest.xml Warning:
+	provider#expo.modules.filesystem.FileSystemFileProvider@android:authorities was tagged at AndroidManifest.xml:0 to replace other declarations but no other declaration present
+
+> Task :app:processDebugManifest
+> Task :expo-constants:compileDebugLibraryResources FROM-CACHE
+> Task :expo:parseDebugLocalResources
+> Task :expo-in-app-updates:compileDebugLibraryResources FROM-CACHE
+> Task :expo-constants:parseDebugLocalResources
+> Task :expo-in-app-updates:parseDebugLocalResources FROM-CACHE
+> Task :expo-modules-core:compileDebugLibraryResources FROM-CACHE
+> Task :expo-modules-core:parseDebugLocalResources FROM-CACHE
+> Task :notifee_react-native:compileDebugLibraryResources FROM-CACHE
+> Task :notifee_react-native:parseDebugLocalResources FROM-CACHE
+> Task :expo-modules-core:generateDebugRFile
+> Task :expo:generateDebugRFile
+> Task :expo-in-app-updates:generateDebugRFile
+> Task :expo-constants:generateDebugRFile
+> Task :react-native-async-storage_async-storage:compileDebugLibraryResources FROM-CACHE
+> Task :react-native-async-storage_async-storage:parseDebugLocalResources FROM-CACHE
+> Task :notifee_react-native:generateDebugRFile
+> Task :react-native-edge-to-edge:compileDebugLibraryResources
+> Task :react-native-async-storage_async-storage:generateDebugRFile
+> Task :react-native-firebase_app:compileDebugLibraryResources FROM-CACHE
+> Task :react-native-firebase_app:parseDebugLocalResources FROM-CACHE
+> Task :react-native-edge-to-edge:parseDebugLocalResources
+> Task :react-native-firebase_app:generateDebugRFile
+> Task :react-native-firebase_messaging:compileDebugLibraryResources
+> Task :react-native-edge-to-edge:generateDebugRFile
+> Task :react-native-safe-area-context:compileDebugLibraryResources FROM-CACHE
+> Task :react-native-safe-area-context:parseDebugLocalResources FROM-CACHE
+> Task :react-native-firebase_messaging:parseDebugLocalResources
+> Task :react-native-safe-area-context:generateDebugRFile
+> Task :react-native-firebase_messaging:generateDebugRFile
+> Task :react-native-svg:compileDebugLibraryResources FROM-CACHE
+> Task :react-native-screens:parseDebugLocalResources
+> Task :react-native-svg:parseDebugLocalResources FROM-CACHE
+> Task :expo:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-screens:compileDebugLibraryResources
+> Task :react-native-screens:generateDebugRFile
+> Task :expo:generateDebugBuildConfig
+> Task :expo-constants:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-svg:generateDebugRFile
+> Task :expo-constants:generateDebugBuildConfig
+> Task :expo-modules-core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-modules-core:generateDebugBuildConfig
+> Task :expo-in-app-updates:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-constants:javaPreCompileDebug
+> Task :expo-in-app-updates:generateDebugBuildConfig
+> Task :expo-modules-core:javaPreCompileDebug
+> Task :expo-in-app-updates:javaPreCompileDebug FROM-CACHE
+> Task :expo:javaPreCompileDebug FROM-CACHE
+> Task :notifee_react-native:generateDebugBuildConfig
+> Task :notifee_react-native:javaPreCompileDebug FROM-CACHE
+
+> Task :notifee_react-native:compileDebugJavaWithJavac
+/Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native/android/src/main/java/io/invertase/notifee/NotifeeApiModule.java:42: warning: [removal] onCatalystInstanceDestroy() in NativeModule has been deprecated and marked for removal
+  public void onCatalystInstanceDestroy() {
+              ^
+Note: /Users/macbook/Eduxl/EduxlSuper/node_modules/@notifee/react-native/android/src/main/java/io/invertase/notifee/NotifeeReactUtils.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+1 warning
+
+> Task :react-native-async-storage_async-storage:generateDebugBuildConfig
+> Task :react-native-async-storage_async-storage:javaPreCompileDebug FROM-CACHE
+> Task :notifee_react-native:bundleLibCompileToJarDebug
+
+> Task :react-native-async-storage_async-storage:compileDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /Users/macbook/Eduxl/EduxlSuper/node_modules/@react-native-async-storage/async-storage/android/src/javaPackage/java/com/reactnativecommunity/asyncstorage/AsyncStoragePackage.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :react-native-edge-to-edge:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-async-storage_async-storage:bundleLibCompileToJarDebug
+> Task :react-native-edge-to-edge:generateDebugBuildConfig
+> Task :react-native-edge-to-edge:javaPreCompileDebug FROM-CACHE
+> Task :react-native-firebase_app:generateDebugBuildConfig
+> Task :react-native-firebase_app:javaPreCompileDebug FROM-CACHE
+
+> Task :react-native-firebase_app:compileDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-firebase_app:bundleLibCompileToJarDebug
+> Task :app:processDebugManifestForPackage
+
+> Task :react-native-edge-to-edge:compileDebugKotlin
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-edge-to-edge/android/src/main/java/com/zoontek/rnedgetoedge/EdgeToEdgePackage.kt:21:24 'constructor(name: String, className: String, canOverrideExistingModule: Boolean, needsEagerInit: Boolean, hasConstants: Boolean, isCxxModule: Boolean, isTurboModule: Boolean): ReactModuleInfo' is deprecated. This constructor is deprecated and will be removed in the future. Use ReactModuleInfo(String, String, boolean, boolean, boolean, boolean)].
+
+> Task :react-native-edge-to-edge:compileDebugJavaWithJavac
+> Task :react-native-edge-to-edge:bundleLibCompileToJarDebug
+> Task :react-native-firebase_messaging:generateDebugBuildConfig
+> Task :react-native-firebase_messaging:javaPreCompileDebug FROM-CACHE
+
+> Task :react-native-firebase_messaging:compileDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-firebase_messaging:bundleLibCompileToJarDebug
+> Task :react-native-safe-area-context:generateDebugBuildConfig
+> Task :react-native-safe-area-context:javaPreCompileDebug FROM-CACHE
+> Task :react-native-screens:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-screens:generateDebugBuildConfig
+> Task :react-native-screens:javaPreCompileDebug FROM-CACHE
+> Task :react-native-svg:generateDebugBuildConfig
+> Task :react-native-svg:javaPreCompileDebug FROM-CACHE
+> Task :app:processDebugResources
+
+> Task :react-native-svg:compileDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :app:javaPreCompileDebug FROM-CACHE
+> Task :react-native-svg:bundleLibCompileToJarDebug
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :expo:mergeDebugShaders
+> Task :expo:compileDebugShaders NO-SOURCE
+> Task :expo:generateDebugAssets UP-TO-DATE
+> Task :expo:packageDebugAssets
+> Task :expo-constants:mergeDebugShaders
+> Task :expo-constants:compileDebugShaders NO-SOURCE
+> Task :expo-constants:generateDebugAssets UP-TO-DATE
+> Task :expo-constants:packageDebugAssets
+> Task :expo-in-app-updates:mergeDebugShaders
+> Task :expo-in-app-updates:compileDebugShaders NO-SOURCE
+> Task :expo-in-app-updates:generateDebugAssets UP-TO-DATE
+> Task :expo-in-app-updates:packageDebugAssets
+> Task :expo-modules-core:mergeDebugShaders
+> Task :expo-modules-core:compileDebugShaders NO-SOURCE
+> Task :expo-modules-core:generateDebugAssets UP-TO-DATE
+> Task :expo-modules-core:packageDebugAssets
+> Task :notifee_react-native:mergeDebugShaders
+> Task :notifee_react-native:compileDebugShaders NO-SOURCE
+> Task :notifee_react-native:generateDebugAssets UP-TO-DATE
+> Task :notifee_react-native:packageDebugAssets
+> Task :react-native-async-storage_async-storage:mergeDebugShaders
+> Task :react-native-async-storage_async-storage:compileDebugShaders NO-SOURCE
+> Task :react-native-async-storage_async-storage:generateDebugAssets UP-TO-DATE
+> Task :react-native-async-storage_async-storage:packageDebugAssets
+> Task :react-native-edge-to-edge:mergeDebugShaders
+> Task :react-native-edge-to-edge:compileDebugShaders NO-SOURCE
+> Task :react-native-edge-to-edge:generateDebugAssets UP-TO-DATE
+> Task :react-native-edge-to-edge:packageDebugAssets
+> Task :react-native-firebase_app:mergeDebugShaders
+> Task :react-native-firebase_app:compileDebugShaders NO-SOURCE
+> Task :react-native-firebase_app:generateDebugAssets UP-TO-DATE
+> Task :react-native-firebase_app:packageDebugAssets
+> Task :react-native-firebase_messaging:mergeDebugShaders
+> Task :react-native-firebase_messaging:compileDebugShaders NO-SOURCE
+> Task :react-native-firebase_messaging:generateDebugAssets UP-TO-DATE
+> Task :react-native-firebase_messaging:packageDebugAssets
+> Task :react-native-safe-area-context:mergeDebugShaders
+> Task :react-native-safe-area-context:compileDebugShaders NO-SOURCE
+> Task :react-native-safe-area-context:generateDebugAssets UP-TO-DATE
+> Task :react-native-safe-area-context:packageDebugAssets
+> Task :react-native-screens:mergeDebugShaders
+> Task :react-native-screens:compileDebugShaders NO-SOURCE
+> Task :react-native-screens:generateDebugAssets UP-TO-DATE
+> Task :react-native-screens:packageDebugAssets
+> Task :react-native-svg:mergeDebugShaders
+> Task :react-native-svg:compileDebugShaders NO-SOURCE
+> Task :react-native-svg:generateDebugAssets UP-TO-DATE
+> Task :react-native-svg:packageDebugAssets
+> Task :app:mergeDebugAssets
+> Task :react-native-edge-to-edge:bundleLibRuntimeToJarDebug
+> Task :app:compressDebugAssets
+> Task :notifee_react-native:bundleLibRuntimeToJarDebug
+> Task :react-native-async-storage_async-storage:bundleLibRuntimeToJarDebug
+> Task :react-native-firebase_messaging:bundleLibRuntimeToJarDebug
+> Task :react-native-firebase_app:bundleLibRuntimeToJarDebug
+
+> Task :react-native-safe-area-context:compileDebugKotlin
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:59:23 'val uiImplementation: UIImplementation!' is deprecated. Deprecated in Java.
+
+> Task :react-native-safe-area-context:compileDebugJavaWithJavac
+> Task :react-native-safe-area-context:bundleLibCompileToJarDebug
+> Task :react-native-safe-area-context:bundleLibRuntimeToJarDebug
+> Task :app:desugarDebugFileDependencies
+> Task :notifee_react-native:processDebugJavaRes NO-SOURCE
+> Task :react-native-async-storage_async-storage:processDebugJavaRes NO-SOURCE
+> Task :react-native-svg:bundleLibRuntimeToJarDebug
+> Task :react-native-edge-to-edge:processDebugJavaRes
+> Task :react-native-firebase_app:processDebugJavaRes NO-SOURCE
+> Task :react-native-firebase_messaging:processDebugJavaRes NO-SOURCE
+> Task :react-native-safe-area-context:processDebugJavaRes
+> Task :react-native-svg:processDebugJavaRes NO-SOURCE
+> Task :react-native-edge-to-edge:bundleLibRuntimeToDirDebug
+> Task :notifee_react-native:bundleLibRuntimeToDirDebug
+> Task :app:checkDebugDuplicateClasses
+> Task :react-native-async-storage_async-storage:bundleLibRuntimeToDirDebug
+> Task :react-native-safe-area-context:bundleLibRuntimeToDirDebug
+
+> Task :react-native-screens:compileDebugKotlin
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/RNScreensPackage.kt:66:17 'constructor(name: String, className: String, canOverrideExistingModule: Boolean, needsEagerInit: Boolean, hasConstants: Boolean, isCxxModule: Boolean, isTurboModule: Boolean): ReactModuleInfo' is deprecated. This constructor is deprecated and will be removed in the future. Use ReactModuleInfo(String, String, boolean, boolean, boolean, boolean)].
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:46:77 Unchecked cast of '(androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior<android.view.View!>?..androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior<*>?)' to 'com.google.android.material.bottomsheet.BottomSheetBehavior<com.swmansion.rnscreens.Screen>'.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:378:36 'fun setTranslucent(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:397:36 'fun setColor(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:415:36 'fun setNavigationBarColor(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt:432:36 'fun setNavigationBarTranslucent(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:217:31 'var targetElevation: Float' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:220:13 'fun setHasOptionsMenu(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:397:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Please add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:404:22 'fun onPrepareOptionsMenu(p0: Menu): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:407:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Please add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackFragment.kt:412:22 'fun onCreateOptionsMenu(p0: Menu, p1: MenuInflater): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackHeaderConfigViewManager.kt:7:8 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackHeaderConfigViewManager.kt:210:9 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackHeaderConfigViewManager.kt:212:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenStackHeaderConfigViewManager.kt:214:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:7:8 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:204:14 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:221:14 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:238:14 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:247:14 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:382:48 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:383:49 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:384:45 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:385:52 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:386:48 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:387:51 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:388:56 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:389:57 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenViewManager.kt:390:51 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:55:42 'fun replaceSystemWindowInsets(p0: Int, p1: Int, p2: Int, p3: Int): WindowInsetsCompat' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:56:39 'val systemWindowInsetLeft: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:58:39 'val systemWindowInsetRight: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:59:39 'val systemWindowInsetBottom: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:102:53 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:106:37 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:113:48 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:116:32 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:162:49 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:218:43 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:218:72 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:224:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:241:55 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:283:13 'fun setColor(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:285:13 'fun setTranslucent(screen: Screen, activity: Activity?, context: ReactContext?): Unit' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:289:13 'fun setNavigationBarColor(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:290:13 'fun setNavigationBarTranslucent(screen: Screen, activity: Activity?): Unit' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:354:42 'var statusBarColor: Int?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:356:48 'var isStatusBarTranslucent: Boolean?' is deprecated. For apps targeting SDK 35 or above this prop has no effect because edge-to-edge is enabled by default and the status bar is always translucent.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:359:57 'var navigationBarColor: Int?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/ScreenWindowTraits.kt:360:63 'var isNavigationBarTranslucent: Boolean?' is deprecated. For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:5:8 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:142:9 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:144:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:146:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:148:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:150:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:152:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/SearchBarManager.kt:154:13 'class MapBuilder : Any' is deprecated. Deprecated in Java.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:7:8 'object ReactFeatureFlags : Any' is deprecated. Use com.facebook.react.internal.featureflags.ReactNativeFeatureFlags instead.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/bottomsheet/BottomSheetDialogRootView.kt:25:13 'object ReactFeatureFlags : Any' is deprecated. Use com.facebook.react.internal.featureflags.ReactNativeFeatureFlags instead.
+
+> Task :expo-modules-core:compileDebugKotlin
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/expo-modules-core/android/src/main/java/expo/modules/apploader/AppLoaderProvider.kt:34:52 Unchecked cast of 'java.lang.Class<*>!' to 'java.lang.Class<out expo.modules.apploader.HeadlessAppLoader>'.
+
+> Task :app:mergeExtDexDebug
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbd, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbo, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.signin.zbb, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 7: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbv, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 7: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbv, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 7: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbi, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 7: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbi, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbp, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbs, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 10: invokespecial Lcom/google/android/gms/common/api/Api$AbstractClientBuilder;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.zba, but was com.google.android.gms.common.api.Api$AbstractClientBuilder.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbl, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbn, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbu, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbq, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 6: invokespecial Lcom/google/android/gms/common/api/Api$AbstractClientBuilder;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.internal.auth-api.zbae, but was com.google.android.gms.common.api.Api$AbstractClientBuilder.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbh, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbg, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbm, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbk, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 17: invokespecial Lcom/google/android/gms/auth/api/signin/internal/zbl;<init>(Lcom/google/android/gms/common/api/GoogleApiClient;)V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.signin.internal.zbi, but was com.google.android.gms.auth.api.signin.internal.zbl.<init>(com.google.android.gms.common.api.GoogleApiClient).
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 20: invokespecial Lcom/google/android/gms/auth/api/signin/internal/zbl;<init>(Lcom/google/android/gms/common/api/GoogleApiClient;)V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.signin.internal.zbk, but was com.google.android.gms.auth.api.signin.internal.zbl.<init>(com.google.android.gms.common.api.GoogleApiClient).
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbw, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbc, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbe, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbj, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbr, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.internal.auth-api.zbay, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 6: invokespecial Lcom/google/android/gms/common/api/Api$AbstractClientBuilder;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.internal.auth-api.zbak, but was com.google.android.gms.common.api.Api$AbstractClientBuilder.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbt, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.signin.internal.zbu, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 2: invokespecial Ljava/lang/Object;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.auth.api.identity.zbb, but was java.lang.Object.<init>().
+WARNING: /Users/macbook/.gradle/caches/8.13/transforms/57dcedd84d048c839f0b83b5b2ff06b7/transformed/play-services-auth-21.5.0-runtime.jar: D8: Invalid stack map table at instruction index 6: invokespecial Lcom/google/android/gms/common/api/Api$AbstractClientBuilder;<init>()V, error: Constructor mismatch, expected constructor from com.google.android.gms.internal.auth-api.zbw, but was com.google.android.gms.common.api.Api$AbstractClientBuilder.<init>().
+
+> Task :expo-modules-core:compileDebugJavaWithJavac
+> Task :expo-modules-core:bundleLibCompileToJarDebug
+> Task :react-native-screens:compileDebugJavaWithJavac
+> Task :react-native-screens:bundleLibCompileToJarDebug
+> Task :react-native-screens:bundleLibRuntimeToJarDebug
+> Task :expo-modules-core:processDebugJavaRes
+> Task :react-native-screens:processDebugJavaRes
+> Task :react-native-firebase_messaging:bundleLibRuntimeToDirDebug
+> Task :react-native-firebase_app:bundleLibRuntimeToDirDebug
+> Task :expo-modules-core:bundleLibRuntimeToJarDebug
+> Task :react-native-screens:bundleLibRuntimeToDirDebug
+> Task :react-native-svg:bundleLibRuntimeToDirDebug
+> Task :expo-constants:compileDebugKotlin
+> Task :expo-in-app-updates:compileDebugKotlin
+> Task :expo-constants:compileDebugJavaWithJavac
+> Task :expo-constants:bundleLibCompileToJarDebug
+> Task :expo-in-app-updates:compileDebugJavaWithJavac
+> Task :expo-in-app-updates:bundleLibCompileToJarDebug
+> Task :expo-in-app-updates:bundleLibRuntimeToJarDebug
+> Task :expo-modules-core:bundleLibRuntimeToDirDebug
+> Task :expo-constants:bundleLibRuntimeToJarDebug
+> Task :expo-constants:processDebugJavaRes
+> Task :expo-in-app-updates:processDebugJavaRes
+> Task :expo-in-app-updates:bundleLibRuntimeToDirDebug
+> Task :expo-constants:bundleLibRuntimeToDirDebug
+
+> Task :expo:compileDebugKotlin
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/expo/android/src/main/java/expo/modules/fetch/ExpoFetchModule.kt:30:39 'constructor(reactContext: ReactContext): ForwardingCookieHandler' is deprecated. Use the default constructor.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/expo/android/src/main/java/expo/modules/fetch/NativeResponse.kt:41:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Please add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/macbook/Eduxl/EduxlSuper/node_modules/expo/android/src/main/java/expo/modules/fetch/NativeResponse.kt:43:11 'fun deallocate(): Unit' is deprecated. Use sharedObjectDidRelease() instead.
+
+> Task :app:configureCMakeDebug[arm64-v8a]
+> Task :expo:compileDebugJavaWithJavac
+> Task :expo:bundleLibCompileToJarDebug
+> Task :expo:bundleLibRuntimeToJarDebug
+> Task :expo:processDebugJavaRes
+> Task :expo:bundleLibRuntimeToDirDebug
+> Task :app:compileDebugKotlin
+
+> Task :app:buildCMakeDebug[arm64-v8a]
+C/C++: ninja: Entering directory `/Users/macbook/Eduxl/EduxlSuper/android/app/.cxx/Debug/1h585z32/arm64-v8a'
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:31:44: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    31 | void RNSVGImageEventEmitter::onLoad(OnLoad $event) const {
+C/C++:       |                                            ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:32:26: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    32 |   dispatchEvent("load", [$event=std::move($event)](jsi::Runtime &runtime) {
+C/C++:       |                          ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:32:43: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    32 |   dispatchEvent("load", [$event=std::move($event)](jsi::Runtime &runtime) {
+C/C++:       |                                           ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:33:10: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    33 |     auto $payload = jsi::Object(runtime);
+C/C++:       |          ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:36:40: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    36 |   source.setProperty(runtime, "width", $event.source.width);
+C/C++:       |                                        ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:37:41: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    37 |   source.setProperty(runtime, "height", $event.source.height);
+C/C++:       |                                         ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:38:38: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    38 |   source.setProperty(runtime, "uri", $event.source.uri);
+C/C++:       |                                      ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:39:3: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    39 |   $payload.setProperty(runtime, "source", source);
+C/C++:       |   ^
+C/C++: /Users/macbook/Eduxl/EduxlSuper/node_modules/react-native-svg/android/build/generated/source/codegen/jni/react/renderer/components/rnsvg/EventEmitters.cpp:41:12: warning: '$' in identifier [-Wdollar-in-identifier-extension]
+C/C++:    41 |     return $payload;
+C/C++:       |            ^
+C/C++: 9 warnings generated.
+
+> Task :app:compileDebugJavaWithJavac
+> Task :app:dexBuilderDebug
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeDebugJniLibFolders
+> Task :expo:mergeDebugJniLibFolders
+> Task :expo:mergeDebugNativeLibs NO-SOURCE
+> Task :expo:copyDebugJniLibsProjectOnly
+> Task :expo-constants:mergeDebugJniLibFolders
+> Task :expo-constants:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-constants:copyDebugJniLibsProjectOnly
+> Task :expo-in-app-updates:mergeDebugJniLibFolders
+> Task :expo-in-app-updates:mergeDebugNativeLibs NO-SOURCE
+> Task :expo-in-app-updates:copyDebugJniLibsProjectOnly
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :expo-modules-core:configureCMakeDebug[arm64-v8a]
+> Task :expo-modules-core:buildCMakeDebug[arm64-v8a]
+> Task :expo-modules-core:mergeDebugJniLibFolders
+> Task :notifee_react-native:mergeDebugJniLibFolders
+> Task :notifee_react-native:mergeDebugNativeLibs NO-SOURCE
+> Task :notifee_react-native:copyDebugJniLibsProjectOnly
+> Task :react-native-async-storage_async-storage:mergeDebugJniLibFolders
+> Task :react-native-async-storage_async-storage:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-async-storage_async-storage:copyDebugJniLibsProjectOnly
+> Task :react-native-edge-to-edge:mergeDebugJniLibFolders
+> Task :react-native-edge-to-edge:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-edge-to-edge:copyDebugJniLibsProjectOnly
+> Task :react-native-firebase_app:mergeDebugJniLibFolders
+> Task :react-native-firebase_app:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-firebase_app:copyDebugJniLibsProjectOnly
+> Task :react-native-firebase_messaging:mergeDebugJniLibFolders
+> Task :react-native-firebase_messaging:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-firebase_messaging:copyDebugJniLibsProjectOnly
+> Task :react-native-safe-area-context:mergeDebugJniLibFolders
+> Task :react-native-safe-area-context:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-safe-area-context:copyDebugJniLibsProjectOnly
+> Task :expo-modules-core:mergeDebugNativeLibs
+> Task :react-native-screens:configureCMakeDebug[arm64-v8a]
+> Task :expo-modules-core:copyDebugJniLibsProjectOnly
+> Task :react-native-screens:buildCMakeDebug[arm64-v8a]
+> Task :react-native-screens:mergeDebugJniLibFolders
+> Task :react-native-svg:mergeDebugJniLibFolders
+> Task :react-native-svg:mergeDebugNativeLibs NO-SOURCE
+> Task :react-native-svg:copyDebugJniLibsProjectOnly
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :react-native-screens:mergeDebugNativeLibs
+> Task :app:writeDebugSigningConfigVersions
+> Task :react-native-screens:copyDebugJniLibsProjectOnly
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+[Incubating] Problems report is available at: file:///Users/macbook/Eduxl/EduxlSuper/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 7s
+332 actionable tasks: 240 executed, 55 from cache, 37 up-to-date
+Starting Metro Bundler
+Waiting on http://localhost:8081
+› Installing /Users/macbook/Eduxl/EduxlSuper/android/app/build/outputs/apk/debug/app-debug.apk
+› Opening com.samheart.eduxl/.MainActivity on Pixel_10
+
+› Logs for your project will appear below.
+Android ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android ./index.ts ▓▓▓▓▓▓░░░░░░░░░░ 38.4% (350/568)
+Android ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 75.2% ( 940/1084)
+Android Bundled 9205ms index.ts (1228 modules)
+ LOG  FCM Token retrieved successfully: fRlns9bSR1yn3mGS3H1w1T:APA91bE-OfT3WqYHf8KezC2DJzLvYSrccHlOz4pxFxyRY3HBXdvnJn-Er2sGSDTng3f2mXAwxlfc1EEiUjNyO6N36nz2Miz2V7K7PLlf-0N4LxUhkQ7DXqQ
+ LOG  {"aaa": "1.0.6"}
+ LOG  Update modal state: {"force": false, "message": undefined, "visible": false}
+ LOG  Update check response: {"code": 404, "message": "Application not found", "request_id": "FA045cG7R6qEUIUe8Hk9cQ", "status": "error"}
+Android ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 89ms index.ts (1 module)
+ LOG  {"aaa": "1.0.6"}
+ LOG  Update modal state: {"force": false, "message": undefined, "visible": false}
+ LOG  FCM Token retrieved successfully: crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw
+ LOG  {"aaa": "1.0.6"}
+ LOG  Update modal state: {"force": false, "message": undefined, "visible": false}
+ LOG  Update check response: {"code": 404, "message": "Application not found", "request_id": "tNjGNaE4RgO7DIZD8Hk9cQ", "status": "error"}
+Android ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Android Bundled 86ms index.ts (1 module)
+ LOG  FCM Token retrieved successfully: crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw
+ LOG  {"aaa": "1.0.6"}
+ LOG  Update modal state: {"force": false, "message": undefined, "visible": false}
+ LOG  Update check response: {"code": 404, "message": "Application not found", "request_id": "tMM2kjNXRBKH2OfQN8N_Fg", "status": "error"}
+ LOG  
+╔══ 📤 REQUEST
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/auth/register
+ LOG  ║  Body: {
+  "name": "Ngozi Umeh",
+  "email": "ngozi.umeh.uxtest@example.com",
+  "password": "TestPass123"
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/auth/register
+║  Status: 201
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Account created successfully",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTliZDk0NTljNmM3MGUyNmUwMjA5MzYiLCJpYXQiOjE3ODg1OTg1OTcsImV4cCI6MTc4OTIwMzM5N30.scojVGh_1dJ3By726x_CGJEzj421uivw1i8bnr9Vt0c",
+    "user": {
+      "_id": "6a9bd9459c6c70e26e020936",
+      "name": "Ngozi Umeh",
+      "email": "ngozi.umeh.uxtest@example.com"
+    }
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+==========================================
+ LOG  📥 REGISTER SUCCESSFUL RESPONSE:
+ LOG  {
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTliZDk0NTljNmM3MGUyNmUwMjA5MzYiLCJpYXQiOjE3ODg1OTg1OTcsImV4cCI6MTc4OTIwMzM5N30.scojVGh_1dJ3By726x_CGJEzj421uivw1i8bnr9Vt0c",
+  "user": {
+    "_id": "6a9bd9459c6c70e26e020936",
+    "name": "Ngozi Umeh",
+    "email": "ngozi.umeh.uxtest@example.com"
+  }
+}
+ LOG  ==========================================
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/progress
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/drillpad/subjects
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/user/me
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/user
+ LOG  ╚════════════════════════════════════════
+ LOG  
+==========================================
+ LOG  📤 REGISTER FCM TOKEN PAYLOAD:
+ LOG  {
+  "token": "crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw"
+}
+ LOG  ==========================================
+ LOG  
+╔══ 📤 REQUEST
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/notification/token
+ LOG  ║  Body: {
+  "token": "crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw"
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/user
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Profile retrieved successfully",
+  "data": {
+    "_id": "6a9bd9459c6c70e26e020938",
+    "userId": "6a9bd9459c6c70e26e020936",
+    "onboardingCompleted": false,
+    "onboardingStep": 0,
+    "semesterCourses": [],
+    "completedGoals": [],
+    "studyPattern": {
+      "currentStreak": 0,
+      "longestStreak": 0,
+      "totalSessionsCompleted": 0,
+      "totalMinutesStudied": 0
+    },
+    "coachPreferences": {
+      "notificationsEnabled": true,
+      "weeklyReviewEnabled": true,
+      "tonePreference": "direct"
+    },
+    "createdAt": "2026-09-05T08:56:37.385Z",
+    "updatedAt": "2026-09-05T08:56:37.385Z",
+    "__v": 0
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/user/me
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Profile status retrieved",
+  "data": {
+    "hasProfile": true,
+    "onboardingCompleted": false,
+    "onboardingStep": 0
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/progress
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Success",
+  "data": {
+    "userId": "6a9bd9459c6c70e26e020936",
+    "xp": 0,
+    "streak": 0,
+    "streakFreezeAvailable": false,
+    "badges": [],
+    "lastPracticeDate": null,
+    "allBadges": [
+      {
+        "id": "first_test",
+        "name": "First Step",
+        "icon": "🎯",
+        "desc": "Complete your first test"
+      },
+      {
+        "id": "score_80",
+        "name": "High Scorer",
+        "icon": "⭐",
+        "desc": "Score 80%+ on any test"
+      },
+      {
+        "id": "score_100",
+        "name": "Perfect Score",
+        "icon": "💯",
+        "desc": "Score 100% on any test"
+      },
+      {
+        "id": "streak_3",
+        "name": "On a Roll",
+        "icon": "🔥",
+        "desc": "3-day practice streak"
+      },
+      {
+        "id": "streak_7",
+        "name": "Week Warrior",
+        "icon": "🗓️",
+        "desc": "7-day practice streak"
+      },
+      {
+        "id": "streak_30",
+        "name": "Monthly Legend",
+        "icon": "🏆",
+        "desc": "30-day practice streak"
+      },
+      {
+        "id": "xp_500",
+        "name": "Level Up",
+        "icon": "📈",
+        "desc": "Reach 500 XP"
+      },
+      {
+        "id": "xp_1000",
+        "name": "Knowledge Seeker",
+        "icon": "📚",
+        "desc": "Reach 1000 XP"
+      },
+      {
+        "id": "xp_5000",
+        "name": "Master",
+        "icon": "🎓",
+        "desc": "Reach 5000 XP"
+      },
+      {
+        "id": "numerical_ace",
+        "name": "Number Ninja",
+        "icon": "🔢",
+        "desc": "Score 90%+ on Numerical"
+      },
+      {
+        "id": "verbal_ace",
+        "name": "Word Wizard",
+        "icon": "📖",
+        "desc": "Score 90%+ on Verbal"
+      },
+      {
+        "id": "logical_ace",
+        "name": "Logic Lord",
+        "icon": "🧠",
+        "desc": "Score 90%+ on Logical"
+      },
+      {
+        "id": "abstract_ace",
+        "name": "Pattern Pro",
+        "icon": "🔷",
+        "desc": "Score 90%+ on Abstract"
+      }
+    ]
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/drillpad/subjects
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Subjects fetched",
+  "data": []
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/notification/token
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "FCM token updated successfully",
+  "data": {
+    "userId": "6a9bd9459c6c70e26e020936",
+    "fcmToken": "crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw",
+    "isUpdated": true,
+    "previousToken": null
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+==========================================
+ LOG  📥 REGISTER FCM TOKEN BACKEND RESPONSE:
+ LOG  {
+  "userId": "6a9bd9459c6c70e26e020936",
+  "fcmToken": "crrftLBwTE-BGt3WKiWS0v:APA91bH4IcitytqaXymSCvFDuoNVIvcYE8rA21ZMR7Jls696rv8n6xWaZwZx_-WXi9Sh0hdGVElY9zl1__kdtLBQdRnb_kah9xwGiZkGoho_OHSPpjPVXkw",
+  "isUpdated": true,
+  "previousToken": null
+}
+ LOG  ==========================================
+ LOG  
+╔══ 📤 REQUEST
+║  PUT https://eduxl2-production-daa2.up.railway.app/api/v1/user
+ LOG  ║  Body: {
+  "persona": "graduate"
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  PUT https://eduxl2-production-daa2.up.railway.app/api/v1/user
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "_id": "6a9bd9459c6c70e26e020938",
+    "userId": "6a9bd9459c6c70e26e020936",
+    "onboardingCompleted": false,
+    "onboardingStep": 1,
+    "semesterCourses": [],
+    "completedGoals": [],
+    "studyPattern": {
+      "currentStreak": 0,
+      "longestStreak": 0,
+      "totalSessionsCompleted": 0,
+      "totalMinutesStudied": 0
+    },
+    "coachPreferences": {
+      "notificationsEnabled": true,
+      "weeklyReviewEnabled": true,
+      "tonePreference": "direct"
+    },
+    "createdAt": "2026-09-05T08:56:37.385Z",
+    "updatedAt": "2026-09-05T08:57:37.274Z",
+    "__v": 0,
+    "persona": "graduate"
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/drillpad/subjects
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/drillpad/subjects
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Subjects fetched",
+  "data": []
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1companytrack/tracks
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1companytrack/tracks
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Success",
+  "data": [
+    {
+      "_id": "6a53f1ed9b68c4e708ef11eb",
+      "companyId": "access-bank",
+      "__v": 0,
+      "brandColor": "#F97316",
+      "createdAt": "2026-07-12T19:58:36.687Z",
+      "emoji": "🏦",
+      "isActive": true,
+      "name": "Access Bank",
+      "stages": [
+        {
+          "type": "cv_gate",
+          "name": "Stage 1 — Online Application & Screening",
+          "order": 1,
+          "status": "coming_soon",
+          "fallbackMessage": "CV analysis is coming soon. For now, check our general CV tips before applying."
+        },
+        {
+          "type": "aptitude_test",
+          "name": "Stage 2 — Cognitive/Aptitude Test",
+          "order": 2,
+          "status": "live"
+        },
+        {
+          "type": "psychometric",
+          "name": "Stage 3 — Psychometric Assessment",
+          "order": 3,
+          "status": "coming_soon",
+          "fallbackMessage": "Psychometric practice questions are coming soon."
+        },
+        {
+          "type": "assessment_center",
+          "name": "Stage 4 — Assessment Center & Essay Writing",
+          "order": 4,
+          "status": "coming_soon",
+          "fallbackMessage": "Assessment center prep materials are coming soon."
+        },
+        {
+          "type": "interview",
+          "name": "Stage 5 — Panel Interview",
+          "order": 5,
+          "status": "coming_soon",
+          "fallbackMessage": "Interview prep content is coming soon."
+        },
+        {
+          "type": "interview",
+          "name": "Stage 6 — Executive Interview",
+          "order": 6,
+          "status": "coming_soon",
+          "fallbackMessage": "Interview prep content is coming soon."
+        }
+      ],
+      "updatedAt": "2026-07-12T19:58:36.687Z"
+    }
+  ]
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📤 REQUEST
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/bankready/questions?type=numerical&limit=10&mode=practice
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  GET https://eduxl2-production-daa2.up.railway.app/api/v1/bankready/questions
+║  Status: 200
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Success",
+  "data": {
+    "questions": [
+      {
+        "_id": "69dcfa99a527689926919036",
+        "questionText": "Loan book composition: Mortgages=₦12bn, SME=₦8bn, Consumer=₦15bn, Corporate=₦25bn. What percentage is the corporate loan book?",
+        "options": {
+          "A": "40%",
+          "B": "41.7%",
+          "C": "42.5%",
+          "D": "43%"
+        },
+        "correctAnswer": "B",
+        "explanation": "Total = 12+8+15+25 = 60bn. Corporate % = 25/60 × 100 = 41.7%.",
+        "category": "numerical",
+        "tags": [
+          "data interpretation",
+          "percentages"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2bb",
+        "questionText": "Emeka scored 68 marks out of 80 in an aptitude test. What percentage did he score?",
+        "options": {
+          "A": "80%",
+          "B": "82%",
+          "C": "85%",
+          "D": "88%"
+        },
+        "correctAnswer": "C",
+        "explanation": "(68/80) × 100 = 85%.",
+        "category": "numerical",
+        "tags": [
+          "percentages"
+        ],
+        "difficulty": "easy"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2b1",
+        "questionText": "A portfolio returned 8% in Year 1, -5% in Year 2, and 12% in Year 3. What is the average annual return?",
+        "options": {
+          "A": "4.5%",
+          "B": "5%",
+          "C": "5.5%",
+          "D": "6%"
+        },
+        "correctAnswer": "B",
+        "explanation": "Average = (8 + (-5) + 12) / 3 = 15/3 = 5%.",
+        "category": "numerical",
+        "tags": [
+          "averages",
+          "percentages"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2a5",
+        "questionText": "A savings account earns 12% p.a. compound interest. ₦500,000 is deposited. What is the balance after 2 years?",
+        "options": {
+          "A": "₦620,000",
+          "B": "₦627,200",
+          "C": "₦560,000",
+          "D": "₦614,400"
+        },
+        "correctAnswer": "B",
+        "explanation": "Year 1: 500,000 × 1.12 = 560,000. Year 2: 560,000 × 1.12 = ₦627,200.",
+        "category": "numerical",
+        "tags": [
+          "interest calculations",
+          "compound interest"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa99a52768992691903e",
+        "questionText": "A bank's domiciliary account holder deposits $5,000 when rate is ₦1,550/$. She withdraws when rate is ₦1,700/$. What is her naira gain?",
+        "options": {
+          "A": "₦700,000",
+          "B": "₦725,000",
+          "C": "₦750,000",
+          "D": "₦775,000"
+        },
+        "correctAnswer": "C",
+        "explanation": "Gain = (1,700 - 1,550) × 5,000 = 150 × 5,000 = ₦750,000.",
+        "category": "numerical",
+        "tags": [
+          "currency calculations"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2a6",
+        "questionText": "A trader buys goods for ₦180,000 and sells for ₦225,000. What is the profit margin?",
+        "options": {
+          "A": "20%",
+          "B": "25%",
+          "C": "22.5%",
+          "D": "28%"
+        },
+        "correctAnswer": "B",
+        "explanation": "Profit = ₦45,000. Margin = (45,000 / 180,000) × 100 = 25%.",
+        "category": "numerical",
+        "tags": [
+          "profit & loss"
+        ],
+        "difficulty": "easy"
+      },
+      {
+        "_id": "69dcfa99a527689926919005",
+        "questionText": "A merchant buys goods for ₦450,000. His overheads are 10% of cost price. He sells for ₦550,000. What is his net profit?",
+        "options": {
+          "A": "₦45,000",
+          "B": "₦55,000",
+          "C": "₦60,000",
+          "D": "₦65,000"
+        },
+        "correctAnswer": "B",
+        "explanation": "Overheads = 10% of 450,000 = ₦45,000. Total cost = 495,000. Profit = 550,000 - 495,000 = ₦55,000.",
+        "category": "numerical",
+        "tags": [
+          "profit & loss"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa99a527689926919017",
+        "questionText": "Adaeze can process 150 loan applications in 5 days. Emeka can process the same number in 6 days. Working together, how many days will it take?",
+        "options": {
+          "A": "2.5 days",
+          "B": "2.73 days",
+          "C": "3.0 days",
+          "D": "3.25 days"
+        },
+        "correctAnswer": "B",
+        "explanation": "Adaeze's rate = 1/5 per day. Emeka's rate = 1/6 per day. Combined = 1/5 + 1/6 = 11/30. Days = 30/11 ≈ 2.73 days.",
+        "category": "numerical",
+        "tags": [
+          "work rate",
+          "ratios"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2cb",
+        "questionText": "Fatima and Emeka invested ₦600,000 and ₦400,000 respectively in a business. They share profits in proportion to their investment. If profit is ₦250,000, how much does Fatima get?",
+        "options": {
+          "A": "₦120,000",
+          "B": "₦140,000",
+          "C": "₦150,000",
+          "D": "₦160,000"
+        },
+        "correctAnswer": "C",
+        "explanation": "Fatima's share = 600/(600+400) × 250,000 = 0.6 × 250,000 = ₦150,000.",
+        "category": "numerical",
+        "tags": [
+          "ratios",
+          "proportions"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "_id": "69dcfa1f533b7c23b2a1a2b2",
+        "questionText": "₦1,500,000 is shared among 3 partners in ratio 2:3:5. What does the largest share receive?",
+        "options": {
+          "A": "₦450,000",
+          "B": "₦600,000",
+          "C": "₦750,000",
+          "D": "₦700,000"
+        },
+        "correctAnswer": "C",
+        "explanation": "Largest share = 5/(2+3+5) × 1,500,000 = 0.5 × 1,500,000 = ₦750,000.",
+        "category": "numerical",
+        "tags": [
+          "ratios"
+        ],
+        "difficulty": "easy"
+      }
+    ],
+    "total": 10
+  }
+}
+ LOG  ╚════════════════════════════════════════
+ WARN  SerializableStateInvariantMiddleware took 136ms, which is more than the warning threshold of 32ms. 
+If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
+It is disabled in production builds, so you don't need to worry about that.
+ LOG  
+╔══ 📤 REQUEST
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/bankready/submit
+ LOG  ║  Body: {
+  "answers": [
+    {
+      "questionId": "69dcfa99a527689926919036",
+      "selectedOption": "B"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2bb",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2b1",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2a5",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa99a52768992691903e",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2a6",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa99a527689926919005",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa99a527689926919017",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2cb",
+      "selectedOption": "C"
+    },
+    {
+      "questionId": "69dcfa1f533b7c23b2a1a2b2",
+      "selectedOption": "C"
+    }
+  ],
+  "timeTaken": 1112,
+  "module": "numerical",
+  "mode": "practice"
+}
+ LOG  ╚════════════════════════════════════════
+ LOG  
+╔══ 📥 RESPONSE
+║  POST https://eduxl2-production-daa2.up.railway.app/api/v1/bankready/submit
+║  Status: 201
+ LOG  ║  Body: {
+  "success": true,
+  "message": "Test submitted successfully",
+  "data": {
+    "result": {
+      "_id": "6a9be1f19c6c70e26e020948",
+      "module": "numerical",
+      "score": 5,
+      "totalQuestions": 10,
+      "accuracy": 50,
+      "timeTaken": 1112,
+      "weakAreas": [
+        "profit & loss",
+        "averages"
+      ],
+      "createdAt": "2026-09-05T09:33:37.795Z"
+    },
+    "wrongAnswerDetails": [
+      {
+        "questionId": "69dcfa1f533b7c23b2a1a2b1",
+        "questionText": "A portfolio returned 8% in Year 1, -5% in Year 2, and 12% in Year 3. What is the average annual return?",
+        "yourAnswer": "C",
+        "correctAnswer": "B",
+        "explanation": "Average = (8 + (-5) + 12) / 3 = 15/3 = 5%.",
+        "tags": [
+          "averages",
+          "percentages"
+        ]
+      },
+      {
+        "questionId": "69dcfa1f533b7c23b2a1a2a5",
+        "questionText": "A savings account earns 12% p.a. compound interest. ₦500,000 is deposited. What is the balance after 2 years?",
+        "yourAnswer": "C",
+        "correctAnswer": "B",
+        "explanation": "Year 1: 500,000 × 1.12 = 560,000. Year 2: 560,000 × 1.12 = ₦627,200.",
+        "tags": [
+          "interest calculations",
+          "compound interest"
+        ]
+      },
+      {
+        "questionId": "69dcfa1f533b7c23b2a1a2a6",
+        "questionText": "A trader buys goods for ₦180,000 and sells for ₦225,000. What is the profit margin?",
+        "yourAnswer": "C",
+        "correctAnswer": "B",
+        "explanation": "Profit = ₦45,000. Margin = (45,000 / 180,000) × 100 = 25%.",
+        "tags": [
+          "profit & loss"
+        ]
+      },
+      {
+        "questionId": "69dcfa99a527689926919005",
+        "questionText": "A merchant buys goods for ₦450,000. His overheads are 10% of cost price. He sells for ₦550,000. What is his net profit?",
+        "yourAnswer": "C",
+        "correctAnswer": "B",
+        "explanation": "Overheads = 10% of 450,000 = ₦45,000. Total cost = 495,000. Profit = 550,000 - 495,000 = ₦55,000.",
+        "tags": [
+          "profit & loss"
+        ]
+      },
+      {
+        "questionId": "69dcfa99a527689926919017",
+        "questionText": "Adaeze can process 150 loan applications in 5 days. Emeka can process the same number in 6 days. Working together, how many days will it take?",
+        "yourAnswer": "C",
+        "correctAnswer": "B",
+        "explanation": "Adaeze's rate = 1/5 per day. Emeka's rate = 1/6 per day. Combined = 1/5 + 1/6 = 11/30. Days = 30/11 ≈ 2.73 days.",
+        "tags": [
+          "work rate",
+          "ratios"
+        ]
+      }
+    ],
+    "progress": {
+      "xpEarned": 50,
+      "streak": 1,
+      "newBadges": [
+        "first_test"
+      ],
+      "streakBonus": false
+    }
+  }
+}
+ LOG  ╚════════════════════════════════════════
