@@ -1,4 +1,4 @@
-import notifee, { AndroidImportance, EventType } from "@notifee/react-native";
+import notifee, { AndroidImportance, EventType, TriggerType } from "@notifee/react-native";
 import { Platform } from "react-native";
 
 /**
@@ -49,6 +49,58 @@ export const displayIncomingNotification = async (remoteMessage: any) => {
     });
   } catch (error) {
     console.error("❌ Error displaying Notifee notification:", error);
+  }
+};
+
+/**
+ * Schedule 20-minute and 5-minute pre-due reminders using Notifee timestamp triggers.
+ */
+export const scheduleTaskReminders = async (taskId: string, title: string, dueTimestampMs: number) => {
+  try {
+    const channelId = await createNotificationChannel();
+    const now = Date.now();
+
+    // 1. Schedule 20-minute prior reminder
+    const trigger20mTime = dueTimestampMs - 20 * 60 * 1000;
+    if (trigger20mTime > now) {
+      await notifee.createTriggerNotification(
+        {
+          id: `task_${taskId}_20m`,
+          title: `⏰ Task Reminder (20 mins left)`,
+          body: `"${title}" is due in 20 minutes!`,
+          data: { taskId, type: '20m_reminder' },
+          android: { channelId, importance: AndroidImportance.HIGH, pressAction: { id: 'default' } },
+          ios: { sound: 'default' },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: trigger20mTime,
+        }
+      );
+      console.log(`⏰ Scheduled 20-min reminder for "${title}" at ${new Date(trigger20mTime).toLocaleTimeString()}`);
+    }
+
+    // 2. Schedule 5-minute prior reminder
+    const trigger5mTime = dueTimestampMs - 5 * 60 * 1000;
+    if (trigger5mTime > now) {
+      await notifee.createTriggerNotification(
+        {
+          id: `task_${taskId}_5m`,
+          title: `🚨 Task Reminder (5 mins left)`,
+          body: `"${title}" is due in 5 minutes!`,
+          data: { taskId, type: '5m_reminder' },
+          android: { channelId, importance: AndroidImportance.HIGH, pressAction: { id: 'default' } },
+          ios: { sound: 'default' },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: trigger5mTime,
+        }
+      );
+      console.log(`🚨 Scheduled 5-min reminder for "${title}" at ${new Date(trigger5mTime).toLocaleTimeString()}`);
+    }
+  } catch (error) {
+    console.error("❌ Error scheduling Notifee task reminders:", error);
   }
 };
 
