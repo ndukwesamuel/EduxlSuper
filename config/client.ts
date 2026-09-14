@@ -13,8 +13,8 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-// export const BASE_URL = "https://eduxl2.up.railway.app/api/v1"
-export const BASE_URL = "https://eduxl2-production-daa2.up.railway.app/api/v1"
+export const BASE_URL = "http://10.0.2.2:7071/api/v1"
+// export const BASE_URL = "https://eduxl2-production-daa2.up.railway.app/api/v1"
 
 
 // "eduxl2-production-0b8e.up.railway.app/api/v1"  
@@ -117,6 +117,36 @@ export const loginUser = (email: string, password: string): Promise<AuthResponse
 
 export const registerUser = (name: string, email: string, password: string): Promise<AuthResponse> =>
   api.post<{ success: boolean; data: AuthResponse }>("/auth/register", { name, email, password }).then(unwrap);
+
+// ── To-Do List  →  /api/v1/todo/* ─────────────────────────────────
+export interface ApiTodoItem {
+  _id: string;
+  userId?: string;
+  title: string;
+  description?: string;
+  category?: string;
+  dueDate: string;
+  dueTimeString?: string;
+  completed: boolean;
+  isStarred?: boolean;
+  isNotified?: boolean;
+  notifiedAt20m?: boolean;
+  notifiedAt5m?: boolean;
+  priority?: "high" | "medium" | "low";
+  createdAt?: string;
+}
+
+export const fetchTodosApi = (): Promise<ApiTodoItem[]> =>
+  api.get<{ success: boolean; data: ApiTodoItem[] }>("/todo").then(unwrap);
+
+export const createTodoApi = (todo: Partial<ApiTodoItem>): Promise<ApiTodoItem> =>
+  api.post<{ success: boolean; data: ApiTodoItem }>("/todo", todo).then(unwrap);
+
+export const updateTodoApi = (id: string, updates: Partial<ApiTodoItem>): Promise<ApiTodoItem> =>
+  api.patch<{ success: boolean; data: ApiTodoItem }>(`/todo/${id}`, updates).then(unwrap);
+
+export const deleteTodoApi = (id: string): Promise<{ success: boolean }> =>
+  api.delete<{ success: boolean }>(`/todo/${id}`).then(r => r.data);
 
 // ── Questions  →  /api/v1/bankready/questions ─────────────────────
 export interface QuestionsResponse {

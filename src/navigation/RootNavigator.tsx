@@ -77,6 +77,10 @@ import CompanyTestResultsScreen from '../screens/companytrack/CompanyTestResults
 import CompanyHistoryScreen from '../screens/companytrack/CompanyHistoryScreen';
 import CompanyAptitudeTestStageScreen from '../screens/companytrack/CompanyAptitudeTestStageScreen';
 
+// ── To-Do List & Task Details ────────────────────────────────────
+import TodoListScreen from '../screens/todo/TodoListScreen';
+import TaskDetailScreen from '../screens/todo/TaskDetailScreen';
+
 // ─────────────────────────────────────────────────────────────────
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -165,6 +169,10 @@ function AppNavigator() {
       <AppStack.Screen name="AiQuizSetup"   component={AiQuizSetupScreen} />
       <AppStack.Screen name="AiQuizSession" component={AiQuizSessionScreen} options={{ gestureEnabled: false }} />
       <AppStack.Screen name="AiQuizResults" component={AiQuizResultsScreen} options={{ gestureEnabled: false }} />
+
+      {/* ── To-Do List & Task Details ── */}
+      <AppStack.Screen name="TodoList"   component={TodoListScreen} />
+      <AppStack.Screen name="TaskDetail" component={TaskDetailScreen} />
 
     </AppStack.Navigator>
   );
