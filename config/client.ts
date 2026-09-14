@@ -14,7 +14,8 @@ import type {
 } from "../src/store/testSlice" //"../store/testSlice";
 
 // export const BASE_URL = "https://eduxl2.up.railway.app/api/v1"
-export const BASE_URL = "https://eduxl2-production-daa2.up.railway.app/api/v1"
+export const BASE_URL = "https://eduxl2-production-bfa5.up.railway.app/api/v1"
+// "https://eduxl2-production-daa2.up.railway.app/api/v1"
 
 
 // "eduxl2-production-0b8e.up.railway.app/api/v1"  

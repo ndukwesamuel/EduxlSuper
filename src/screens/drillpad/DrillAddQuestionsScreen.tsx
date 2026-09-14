@@ -214,8 +214,8 @@ export default function DrillAddQuestionsScreen() {
 
       const file = res.assets[0];
 
-      if (file.size && file.size > 50 * 1024 * 1024) {
-        Alert.alert('File too large', 'Please use a PDF under 50MB');
+      if (file.size && file.size > 100 * 1024 * 1024) {
+        Alert.alert('File too large', 'Please use a PDF under 100MB');
         return;
       }
 
@@ -338,8 +338,8 @@ export default function DrillAddQuestionsScreen() {
 
       const file = res.assets[0];
 
-      if (file.size && file.size > 20 * 1024 * 1024) {
-        Alert.alert('File too large', 'Please use a file under 20MB');
+      if (file.size && file.size > 100 * 1024 * 1024) {
+        Alert.alert('File too large', 'Please use a file under 100MB');
         return;
       }
 
@@ -647,7 +647,7 @@ export default function DrillAddQuestionsScreen() {
                   Upload your notes, textbook pages, or any reference material. We'll save
                   the content so the AI can use it when you chat — no questions generated, just stored as reference.
                 </Text>
-                <Text style={styles.pdfStep}>1. Pick a PDF or image (max 20MB)</Text>
+                <Text style={styles.pdfStep}>1. Pick a PDF or image (max 100MB)</Text>
                 <Text style={styles.pdfStep}>2. We extract and save the content</Text>
                 <Text style={styles.pdfStep}>3. Ask AI about it anytime in chat</Text>
               </View>
