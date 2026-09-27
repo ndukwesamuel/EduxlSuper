@@ -24,12 +24,12 @@ export default function TaskDetailScreen() {
   const route = useRoute<any>();
 
   const taskId = route.params?.taskId;
-  const initialTitle = route.params?.title || "Bill payment";
+  const initialTitle = route.params?.title || "";
 
   const [todo, setTodo] = useState<TodoItem | null>(null);
   const [title, setTitle] = useState(initialTitle);
-  const [description, setDescription] = useState("pay credit card bill amount $450");
-  const [dueTimeString, setDueTimeString] = useState("3:00 PM");
+  const [description, setDescription] = useState("");
+  const [dueTimeString, setDueTimeString] = useState("");
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -54,15 +54,21 @@ export default function TaskDetailScreen() {
 
   const handleSave = async () => {
     setSaving(true);
-    if (taskId) {
-      await updateTodoItem(taskId, {
-        title,
-        description,
-        dueTimeString
-      });
+    try {
+      if (taskId) {
+        await updateTodoItem(taskId, {
+          title,
+          description,
+          dueTimeString
+        });
+      }
+      navigation.goBack();
+    } catch {
+      // updateTodoItem already surfaced a toast — stay on screen so the
+      // user's edits aren't lost and they can retry.
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    navigation.goBack();
   };
 
   const handleDelete = async () => {
@@ -72,8 +78,12 @@ export default function TaskDetailScreen() {
         text: "Delete",
         style: "destructive",
         onPress: async () => {
-          if (taskId) await deleteTodoItem(taskId);
-          navigation.goBack();
+          try {
+            if (taskId) await deleteTodoItem(taskId);
+            navigation.goBack();
+          } catch {
+            // deleteTodoItem already surfaced a toast — stay on screen.
+          }
         }
       }
     ]);

@@ -10,13 +10,15 @@ import {
   deleteTodoApi
 } from "../../config/client";
 import { scheduleTaskReminders } from "../utils/notifee";
+import { store } from "../store/store";
+import { showToast } from "../store/toastSlice";
 
 export interface TodoItem {
   _id: string;
   userId?: string;
   title: string;
   description?: string;
-  category?: string; // e.g. "Groceries", "Priority", "Work", "Personal"
+  category?: string; // e.g. "Study", "Assignment", "Exam", "Personal"
   dueDate: string;   // ISO string or date
   dueTimeString?: string; // e.g. "2:35pm"
   completed: boolean;
@@ -44,25 +46,31 @@ export async function fetchTodos(): Promise<TodoItem[]> {
     console.warn("⚠️ Eduxl2 backend fetch warning, using cached items:", error);
   }
 
-  // AsyncStorage cache fallback if offline
+  // AsyncStorage cache fallback if offline — read-only fallback is fine here,
+  // it's just showing what we already know, not pretending a write succeeded.
   try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed: TodoItem[] = JSON.parse(raw);
-      return checkAndAutoNotify(parsed);
-    }
+    const cached = await getCachedTodos();
+    return checkAndAutoNotify(cached);
   } catch {}
 
   return [];
 }
 
+/** Read the local cache directly, no network — for cheap local-state lookups. */
+async function getCachedTodos(): Promise<TodoItem[]> {
+  const raw = await AsyncStorage.getItem(STORAGE_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+
 /**
  * Create a new todo item on Eduxl2 backend API.
+ * Throws on failure — callers should catch and keep the user's input rather
+ * than have this silently fabricate a local-only item that never syncs.
  */
 export async function addTodo(
   title: string,
   description: string = "",
-  category: string = "Groceries",
+  category: string = "General",
   dueMinutes: number = 30,
   customDueTimeString?: string
 ): Promise<TodoItem> {
@@ -85,60 +93,43 @@ export async function addTodo(
 
   try {
     const created = await createTodoApi(newTodoPayload);
-    if (created && created._id) {
-      await scheduleTaskReminders(created._id, created.title, targetDate.getTime());
-      await updateCacheWithItem(created);
-      return created;
-    }
+    await scheduleTaskReminders(created._id, created.title, targetDate.getTime());
+    await updateCacheWithItem(created);
+    return created;
   } catch (error) {
     console.error("❌ Error creating todo on Eduxl2 backend:", error);
+    store.dispatch(showToast({ message: "Couldn't create task. Check your connection and try again.", variant: "error" }));
+    throw error;
   }
-
-  // Local fallback object if server is unreachable
-  const localFallback: TodoItem = {
-    _id: "task_" + Date.now(),
-    ...newTodoPayload,
-    createdAt: new Date().toISOString()
-  };
-  await scheduleTaskReminders(localFallback._id, localFallback.title, targetDate.getTime());
-  await updateCacheWithItem(localFallback);
-  return localFallback;
 }
 
 /**
  * Update todo item on Eduxl2 backend API.
+ * Throws on failure — see addTodo's note on why this no longer fabricates a
+ * fake local success.
  */
-export async function updateTodoItem(id: string, updates: Partial<TodoItem>): Promise<TodoItem | null> {
+export async function updateTodoItem(id: string, updates: Partial<TodoItem>): Promise<TodoItem> {
   try {
     const updated = await updateTodoApi(id, updates);
-    if (updated) {
-      await updateCacheWithItem(updated);
-      if (updates.dueDate && updates.title) {
-        const timestamp = new Date(updates.dueDate).getTime();
-        await scheduleTaskReminders(id, updates.title, timestamp);
-      }
-      return updated;
+    await updateCacheWithItem(updated);
+    if (updates.dueDate && updates.title) {
+      const timestamp = new Date(updates.dueDate).getTime();
+      await scheduleTaskReminders(id, updates.title, timestamp);
     }
+    return updated;
   } catch (error) {
     console.error("❌ Error updating todo on Eduxl2 backend:", error);
+    store.dispatch(showToast({ message: "Couldn't update task. Check your connection and try again.", variant: "error" }));
+    throw error;
   }
-
-  // Local cache update fallback
-  const existing = await fetchTodos();
-  const target = existing.find(t => t._id === id);
-  if (!target) return null;
-
-  const localUpdated = { ...target, ...updates };
-  await updateCacheWithItem(localUpdated);
-  return localUpdated;
 }
 
 /**
  * Toggle completion status on Eduxl2 backend API.
  */
 export async function toggleTodoComplete(id: string): Promise<TodoItem | null> {
-  const existing = await fetchTodos();
-  const target = existing.find(t => t._id === id);
+  const cached = await getCachedTodos();
+  const target = cached.find(t => t._id === id);
   if (!target) return null;
 
   return updateTodoItem(id, { completed: !target.completed });
@@ -152,10 +143,12 @@ export async function deleteTodoItem(id: string): Promise<boolean> {
     await deleteTodoApi(id);
   } catch (error) {
     console.error("❌ Error deleting todo on Eduxl2 backend:", error);
+    store.dispatch(showToast({ message: "Couldn't delete task. Check your connection and try again.", variant: "error" }));
+    throw error;
   }
 
-  const existing = await fetchTodos();
-  const filtered = existing.filter(t => t._id !== id);
+  const cached = await getCachedTodos();
+  const filtered = cached.filter(t => t._id !== id);
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   return true;
 }
@@ -175,8 +168,9 @@ function checkAndAutoNotify(todos: TodoItem[]): TodoItem[] {
   });
 }
 
+/** Merge one item into the local cache without hitting the network. */
 async function updateCacheWithItem(todo: TodoItem) {
-  const existing = await fetchTodos();
-  const updated = [todo, ...existing.filter(t => t._id !== todo._id)];
+  const cached = await getCachedTodos();
+  const updated = [todo, ...cached.filter(t => t._id !== todo._id)];
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 }

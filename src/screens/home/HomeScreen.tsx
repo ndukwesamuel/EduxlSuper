@@ -329,12 +329,11 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* ── MY TASKS & TO-DO LIST (Matching Image 2 Dashboard) ────── */}
+          {/* ── MY TASKS & TO-DO LIST ──────────────────────────────── */}
           {(() => {
             const pendingTasks = homeTodos.filter(t => !t.completed);
-            const priorityTask = homeTodos.find(t => t.priority === "high" || t.category === "Priority") || homeTodos[0];
-            const groceryTasks = homeTodos.filter(t => t.category === "Groceries");
-            const completedGroceries = groceryTasks.filter(t => t.completed).length;
+            const priorityTask = pendingTasks.find(t => t.priority === "high") || pendingTasks[0];
+            const upcomingTask = pendingTasks.find(t => t._id !== priorityTask?._id);
 
             return (
               <>
@@ -354,7 +353,7 @@ export default function HomeScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {/* Priority Task Grid Cards */}
+                {/* Task Grid Cards */}
                 <View style={s.todoGrid}>
                   {/* Priority Card */}
                   <TouchableOpacity
@@ -368,33 +367,37 @@ export default function HomeScreen() {
                   >
                     <Text style={s.priorityTag}>Priority</Text>
                     <Text style={s.priorityTitle} numberOfLines={1}>
-                      {priorityTask ? priorityTask.title : "Bill Payment"}
+                      {priorityTask ? priorityTask.title : "No priority task"}
                     </Text>
                     <Text style={s.priorityDesc} numberOfLines={2}>
-                      {priorityTask ? (priorityTask.description || "pay credit card bill amount $450") : "pay credit card bill amount $450"}
+                      {priorityTask ? (priorityTask.description || "Tap to view details") : "Add a task to see it here"}
                     </Text>
                     <View style={s.priorityFooter}>
-                      <Text style={s.priorityTime}>
-                        ⏰ {priorityTask?.dueTimeString || "2:35pm"}
-                      </Text>
+                      {priorityTask?.dueTimeString && (
+                        <Text style={s.priorityTime}>⏰ {priorityTask.dueTimeString}</Text>
+                      )}
                       <View style={s.redDot} />
                     </View>
                   </TouchableOpacity>
 
-                  {/* Grocery List Card */}
+                  {/* Upcoming Task Card */}
                   <TouchableOpacity
                     style={s.groceryCardLight}
-                    onPress={() => navigation.navigate("TodoList" as any, { category: "Groceries" })}
+                    onPress={() =>
+                      upcomingTask
+                        ? navigation.navigate("TaskDetail" as any, { taskId: upcomingTask._id, title: upcomingTask.title })
+                        : navigation.navigate("TodoList" as any)
+                    }
                     activeOpacity={0.88}
                   >
-                    <Text style={s.groceryTag}>Groceries</Text>
-                    <Text style={s.groceryTitle}>
-                      Grocery List ({completedGroceries}/{groceryTasks.length || 9})
+                    <Text style={s.groceryTag}>Up next</Text>
+                    <Text style={s.groceryTitle} numberOfLines={1}>
+                      {upcomingTask ? upcomingTask.title : "No other tasks"}
                     </Text>
                     <Text style={s.groceryPreview} numberOfLines={3}>
-                      {groceryTasks.length > 0
-                        ? groceryTasks.slice(0, 4).map(t => `• ${t.title}`).join("\n")
-                        : "• Manuka honey\n• Peanut butter\n• Olive oil"}
+                      {upcomingTask
+                        ? (upcomingTask.description || "Tap to view details")
+                        : "Add a task to plan your study day"}
                     </Text>
                     <Text style={s.groceryCta}>Open list →</Text>
                   </TouchableOpacity>

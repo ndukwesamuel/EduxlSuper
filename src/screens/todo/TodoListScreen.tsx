@@ -86,7 +86,7 @@ export default function TodoListScreen() {
   const route = useRoute<any>();
 
   const [todos, setTodos] = useState<TodoItem[]>([]);
-  const [listTitle, setListTitle] = useState(route.params?.category || "Groceries");
+  const [listTitle, setListTitle] = useState(route.params?.category || "My Tasks");
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
 
@@ -128,27 +128,37 @@ export default function TodoListScreen() {
       customTimeInput
     );
 
-    await addTodo(
-      newTaskTitle.trim(),
-      taskDescription.trim(),
-      listTitle,
-      dueMinutesOffset,
-      formattedTargetTime
-    );
+    try {
+      await addTodo(
+        newTaskTitle.trim(),
+        taskDescription.trim(),
+        listTitle,
+        dueMinutesOffset,
+        formattedTargetTime
+      );
 
-    setNewTaskTitle("");
-    setTaskDescription("");
-    setCustomTimeInput("");
-    setShowAddModal(false);
-    setAdding(false);
-    await loadData();
+      setNewTaskTitle("");
+      setTaskDescription("");
+      setCustomTimeInput("");
+      setShowAddModal(false);
+      await loadData();
+    } catch {
+      // addTodo already surfaced a toast — keep the modal open with the
+      // user's input intact so they can retry instead of losing it.
+    } finally {
+      setAdding(false);
+    }
   };
 
   const handleToggle = async (id: string) => {
     setTodos(prev =>
       prev.map(t => (t._id === id ? { ...t, completed: !t.completed } : t))
     );
-    await toggleTodoComplete(id);
+    try {
+      await toggleTodoComplete(id);
+    } catch {
+      await loadData(); // resync — the optimistic update above didn't actually happen
+    }
   };
 
   const handleStarToggle = async (id: string, currentStarred?: boolean, currentNotified?: boolean) => {
@@ -156,7 +166,11 @@ export default function TodoListScreen() {
     setTodos(prev =>
       prev.map(t => (t._id === id ? { ...t, isStarred: nextState, isNotified: nextState } : t))
     );
-    await updateTodoItem(id, { isStarred: nextState, isNotified: nextState });
+    try {
+      await updateTodoItem(id, { isStarred: nextState, isNotified: nextState });
+    } catch {
+      await loadData();
+    }
   };
 
   const renderTaskItem = ({ item }: { item: TodoItem }) => {
