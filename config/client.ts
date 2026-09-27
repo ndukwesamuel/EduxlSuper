@@ -13,12 +13,9 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-// export const BASE_URL = "https://eduxl2.up.railway.app/api/v1"
-export const BASE_URL = "https://eduxl2-production-bfa5.up.railway.app/api/v1"
-// "https://eduxl2-production-daa2.up.railway.app/api/v1"
+export const BASE_URL = "https://eduxl2-production-b1b0.up.railway.app/api/v1"
 
 
-// "eduxl2-production-0b8e.up.railway.app/api/v1"  
 
 
 const api = axios.create({
@@ -303,6 +300,12 @@ export interface DrillSessionResult {
     selectedOption: string;
     explanation?: string;
   }[];
+  progress?: {
+    xpEarned: number;
+    streak: number;
+    newBadges: string[];
+    streakBonus: boolean;
+  };
 }
 
 export interface DrillSessionHistory {
@@ -434,6 +437,11 @@ export interface Podcast {
   subjectId: string | { _id: string; name: string };
   userId: string;
   title: string;
+  // Generation now runs in the background — 'processing' right after the
+  // POST call, 'ready' once audioUrl is actually populated, or 'failed'
+  // (see `error`). Poll getPodcast(_id) or wait for the push notification.
+  status: 'processing' | 'ready' | 'failed';
+  error?: string;
   script: PodcastScriptTurn[] | string;
   audioUrl: string;
   audioPublicId: string;
@@ -446,11 +454,15 @@ export interface Podcast {
 export const getSubjectPodcasts = (subjectId: string): Promise<Podcast[]> =>
   api.get<{ success: boolean; data: Podcast[] }>(`/drillpad/subjects/${subjectId}/podcast`).then(unwrap);
 
-// ── Create a new podcast — multipart form-data: file, title (optional) ──
+// ── Start generating a new podcast — multipart form-data: file, title (optional) ──
+// Returns almost immediately with status: 'processing' — the real work
+// (script + ~14 TTS calls + stitching + upload) happens in the background
+// and can take over a minute. Poll getPodcast(podcast._id) until it's
+// 'ready'/'failed', or wait for the push notification sent either way.
 export const createSubjectPodcast = (subjectId: string, formData: FormData): Promise<Podcast> =>
   api.post<{ success: boolean; data: Podcast }>(`/drillpad/subjects/${subjectId}/podcast`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-    timeout: 60_000,
+    timeout: 30_000, // just starting the job now, not waiting for it to finish
   }).then(unwrap);
 
 // ── Get a single podcast ───────────────────────────────────────────
@@ -539,6 +551,12 @@ export interface WhiteboardVideo {
   userId: string;
   topic: string;
   style: string;
+  // Generation now runs in the background — 'processing' right after the
+  // POST call, 'ready' once video_url is actually populated, or 'failed'
+  // (see `error`) if the render broke. Poll getWhiteboardVideoById or wait
+  // for the push notification sent when it finishes either way.
+  status: 'processing' | 'ready' | 'failed';
+  error?: string;
   video_url: string;
   video_public_id: string;
   total_scenes: number;
@@ -554,15 +572,22 @@ export const getWhiteboardVideos = (subjectId: string): Promise<WhiteboardVideo[
     .get<{ success: boolean; data: WhiteboardVideo[] }>(`/drillpad/subjects/${subjectId}/whiteboard-video`)
     .then(unwrap);
 
-// ── Generate a new whiteboard video — multipart/form-data ──────────
-// Same path as the list endpoint, different verb (POST).
+// ── Get a single whiteboard video by id — for polling generation status ──
+export const getWhiteboardVideoById = (videoId: string): Promise<WhiteboardVideo> =>
+  api
+    .get<{ success: boolean; data: WhiteboardVideo }>(`/drillpad/whiteboard-video/${videoId}`)
+    .then(unwrap);
+
+// ── Start generating a new whiteboard video — multipart/form-data ─────
+// Returns almost immediately with status: 'processing' — the actual
+// render (can take minutes) happens on the server in the background.
+// Poll getWhiteboardVideoById(video._id) until status is 'ready'/'failed'.
 // formData fields: file (PDF/image, only needed in "file" mode), topic (text), style (text)
-// Generation takes 20-40s+, so this needs a generous timeout.
 export const generateWhiteboardVideo = (subjectId: string, formData: FormData): Promise<WhiteboardVideo> =>
   api
     .post<{ success: boolean; data: WhiteboardVideo }>(`/drillpad/subjects/${subjectId}/whiteboard-video`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-      timeout: 120_000,
+      timeout: 30_000, // just starting the job now, not waiting for it to finish
     })
     .then(unwrap);
 

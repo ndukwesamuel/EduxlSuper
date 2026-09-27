@@ -173,7 +173,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
 // ⚠️ adjust this import path to match your project structure
-import { generateWhiteboardVideo, WhiteboardVideo } from '../../../config/client';
+import { generateWhiteboardVideo, getWhiteboardVideoById, WhiteboardVideo } from '../../../config/client';
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
 
@@ -201,12 +201,44 @@ export default function WhiteboardGeneratingScreen() {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim     = useRef(new Animated.Value(1)).current;
 
+  // Generation now runs in the background on the server (it can take
+  // minutes), so after starting it we poll for status instead of waiting
+  // on one long request. Ref so the interval can be cleared from anywhere.
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, []);
+
+  const pollUntilDone = useCallback((videoId: string) => {
+    stopPolling();
+    pollRef.current = setInterval(async () => {
+      try {
+        const latest = await getWhiteboardVideoById(videoId);
+        if (latest.status === 'ready') {
+          stopPolling();
+          setVideo(latest);
+        } else if (latest.status === 'failed') {
+          stopPolling();
+          setError(latest.error ?? 'Video generation failed. Please try again.');
+        }
+        // status === 'processing' → keep polling
+      } catch {
+        // transient network hiccup — just try again on the next tick
+      }
+    }, 4000);
+  }, [stopPolling]);
+
   // ── The real network call ──────────────────────────────────────
   const runGeneration = useCallback(async () => {
     setError(null);
     setVideo(null);
     setStepIdx(0);
     setCompleted([]);
+    stopPolling();
     try {
       const formData = new FormData();
       formData.append('style', style ?? 'notebook');
@@ -219,15 +251,20 @@ export default function WhiteboardGeneratingScreen() {
           type: file.mimeType || 'application/octet-stream',
         });
       }
-      const result = await generateWhiteboardVideo(subjectId, formData);
-      setVideo(result);
+      const started = await generateWhiteboardVideo(subjectId, formData);
+      if (started.status === 'ready') {
+        setVideo(started); // in case the server ever resolves it synchronously
+      } else {
+        pollUntilDone(started._id);
+      }
     } catch (e: any) {
       setError(e?.response?.data?.message ?? 'Video generation failed. Please try again.');
     }
-  }, [subjectId, topic, style, mode, file]);
+  }, [subjectId, topic, style, mode, file, pollUntilDone, stopPolling]);
 
   useEffect(() => {
     runGeneration();
+    return () => stopPolling();
   }, [runGeneration]);
 
   // Pulse animation on the active icon
@@ -349,7 +386,14 @@ export default function WhiteboardGeneratingScreen() {
           })}
         </View>
 
-        <Text style={styles.footerNote}>This usually takes 20-40 seconds. Don't close the app.</Text>
+        <Text style={styles.footerNote}>
+          {video ? '' : "This can take a few minutes. You can leave this screen — we'll notify you when it's ready."}
+        </Text>
+        {!video && !error && (
+          <TouchableOpacity style={styles.backLink} onPress={() => navigation.goBack()}>
+            <Text style={styles.backLinkText}>← Continue in background</Text>
+          </TouchableOpacity>
+        )}
 
       </View>
     </SafeAreaView>

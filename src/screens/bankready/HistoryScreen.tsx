@@ -16,7 +16,7 @@ import { fetchHistory, HistoryAttempt, HistoryResponse } from "../../../config/c
 
 // import { fetchQuestions, submitTest } from 
 
-import { AppStackParamList } from "../../navigation/types";
+import { BankReadyStackParamList } from "../../navigation/types";
 import { Colors, FontSize, Radius, Spacing, Shadows, ModuleConfig } from "../../theme";
 import CCCard from "../../components/CCCard";
 import CCTag from "../../components/CCTag";
@@ -24,7 +24,7 @@ import CCLoader from "../../components/CCLoader";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 
-type Route = RouteProp<AppStackParamList, "History">;
+type Route = RouteProp<BankReadyStackParamList, "History">;
 
 type TabId = "all" | "numerical" | "verbal" | "logical" | "abstract";
 const TABS: { id: TabId; label: string; icon: string }[] = [

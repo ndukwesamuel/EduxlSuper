@@ -9,6 +9,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
 import { getCompanyHistory, CompanyHistoryAttempt } from '../../../config/client';
+import CCLoader from '../../components/CCLoader';
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<{ params: { companyId: string } }, 'params'>;
@@ -69,10 +70,7 @@ export default function CompanyHistoryScreen() {
       </View>
 
       {loading ? (
-        <View style={styles.loadingBox}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-          <Text style={styles.loadingText}>Loading history…</Text>
-        </View>
+        <CCLoader message="Loading history…" />
       ) : (
         <ScrollView
           contentContainerStyle={styles.scroll}

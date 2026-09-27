@@ -49,7 +49,7 @@ export default function AiQuizResultsScreen() {
             if (subjectId && subjectName) {
               navigation.navigate('DrillSubject', { subjectId, subjectName });
             } else {
-              navigation.navigate('DrillPad');
+              navigation.navigate('MainTabs' as any, { screen: 'DrillPad' } as any);
             }
           }}
           style={styles.doneBtn}

@@ -10,6 +10,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootState, AppDispatch } from "../../store/store";
 import { setProfile, setProfileStatus } from "../../store/profileSlice";
+import { showToast } from "../../store/toastSlice";
 import {
   fetchProgress, UserProgress,
   getSubjects, DrillSubject,
@@ -217,10 +218,15 @@ export default function HomeScreen() {
       dispatch(setProfileStatus(status));
       dispatch(setProfile(prof));
       if (!status.persona) setShowPersonaModal(true);
-    } catch {}
+    } catch {
+      dispatch(showToast({ message: "Couldn't load your progress. Pull down to try again.", variant: "error" }));
+    }
   };
 
-  useEffect(() => { loadData(); }, [user]);
+  useEffect(() => {
+    setRefreshing(true);
+    loadData().finally(() => setRefreshing(false));
+  }, [user]);
 
   useFocusEffect(
     useCallback(() => {
@@ -252,7 +258,7 @@ export default function HomeScreen() {
     if (persona === 'graduate') {
       navigation.navigate('BankReady');
     } else {
-      navigation.navigate('MainTabs', { screen: 'LearnPad' } as any);
+      navigation.navigate('MainTabs', { screen: 'DrillPad' } as any);
     }
   };
 
@@ -459,7 +465,7 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                   );
                 })}
-                <TouchableOpacity style={s.seeAllChip} activeOpacity={0.8} onPress={() => navigation.navigate("LearnPad" as any)}>
+                <TouchableOpacity style={s.seeAllChip} activeOpacity={0.8} onPress={() => navigation.navigate("DrillPad" as any)}>
                   <Text style={s.seeAllArrow}>›</Text>
                   <Text style={s.seeAllText}>See all</Text>
                 </TouchableOpacity>
@@ -471,7 +477,7 @@ export default function HomeScreen() {
           <Text style={s.sec}>YOUR STUDY COACH</Text>
           <TouchableOpacity
             style={s.drillCard}
-            onPress={() => navigation.navigate('MainTabs', { screen: 'LearnPad' } as any)}
+            onPress={() => navigation.navigate('MainTabs', { screen: 'DrillPad' } as any)}
             activeOpacity={0.9}
           >
             <View style={s.drillCardTop}>
@@ -493,34 +499,6 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
 
-          {/* ── SPECIALIST TRACKS — graduate only ─────────────────
-          {persona === 'graduate' && (
-            <>
-              <Text style={s.sec}>SPECIALIST TRACKS</Text>
-              <View style={s.tracksRow}>
-              
-
-                <TouchableOpacity
-                  style={[s.trackCard, s.trackLight]}
-                  onPress={() => navigation.navigate("CompanyTracks")}
-                  activeOpacity={0.88}
-                >
-                  <View style={s.trackTopRow}>
-                    <View style={[s.trackIcon, s.trackIconLight]}>
-                      <Text style={{ fontSize: 18 }}>🏢</Text>
-                    </View>
-                    <View style={[s.trackBadge, s.trackBadgeNew]}>
-                      <Text style={s.trackBadgeNewText}>NEW</Text>
-                    </View>
-                  </View>
-                  <Text style={[s.trackName, { color: "#0F172A" }]}>Company Tracks</Text>
-                  <Text style={[s.trackDesc, { color: "#64748B" }]}>Shell, KPMG, PwC simulations</Text>
-                  <Text style={[s.trackCta, { color: "#4F46E5" }]}>Explore →</Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          )} */}
-
           {/* ── SPECIALIST TRACKS — graduate only ───────────────── */}
 {persona === 'graduate' && (
   <>
@@ -529,7 +507,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={[s.trackCard, s.trackLight]}
-        onPress={() => navigation.navigate('MainTabs', { screen: 'Graduate' } as any)}
+        onPress={() => navigation.navigate('MainTabs', { screen: 'CompanyTracks' } as any)}
         activeOpacity={0.88}
       >
         <View style={s.trackTopRow}>

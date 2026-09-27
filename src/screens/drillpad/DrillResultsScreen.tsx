@@ -225,6 +225,25 @@ export default function DrillResultsScreen() {
           <Text style={styles.subjectLabel}>{subjectName} · {mode} mode</Text>
         </View>
 
+        {/* XP earned */}
+        {result.progress && result.progress.xpEarned > 0 && (
+          <View style={styles.xpBanner}>
+            <Text style={styles.xpBannerText}>
+              ⭐ +{result.progress.xpEarned} XP earned!
+            </Text>
+            {result.progress.streakBonus && (
+              <Text style={styles.xpBonusText}>
+                🔥 7-day streak bonus included
+              </Text>
+            )}
+            {result.progress.newBadges.length > 0 && (
+              <Text style={styles.xpBonusText}>
+                🏅 New badge{result.progress.newBadges.length > 1 ? "s" : ""} unlocked!
+              </Text>
+            )}
+          </View>
+        )}
+
         {/* Stats row */}
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
@@ -310,6 +329,18 @@ const styles = StyleSheet.create({
   scorePercent: { fontSize: FontSize.heading3, fontWeight: '700', color: Colors.textSecondary, marginTop: 4 },
   scoreMessage: { fontSize: FontSize.bodyLarge, color: Colors.textSecondary, marginTop: 8, textAlign: 'center' },
   subjectLabel: { fontSize: FontSize.caption, color: Colors.textMuted, marginTop: 8, textTransform: 'capitalize' },
+  xpBanner: {
+    backgroundColor: '#FFFBEB',
+    borderRadius: Radius.lg,
+    padding: Spacing.lg,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+    marginBottom: Spacing.lg,
+    alignItems: 'center',
+    gap: 4,
+  },
+  xpBannerText: { fontSize: FontSize.heading3, fontWeight: '700', color: Colors.gold },
+  xpBonusText: { fontSize: FontSize.bodySmall, color: Colors.textSecondary },
   statsRow: { flexDirection: 'row', gap: 8, marginBottom: Spacing['2xl'] },
   statBox: { flex: 1, backgroundColor: Colors.surface, borderRadius: Radius.md, padding: 12, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
   statNum: { fontSize: FontSize.heading2, fontWeight: '800', color: Colors.textPrimary },

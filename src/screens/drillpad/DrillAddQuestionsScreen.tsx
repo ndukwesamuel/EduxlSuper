@@ -14,8 +14,10 @@ import * as Clipboard from 'expo-clipboard';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { AppStackParamList } from '../../navigation/types';
-import { Colors, Spacing } from '../../theme';
+import { Colors, Spacing, Radius } from '../../theme';
 import { addBulkQuestions, addSingleQuestion, DrillOption, BASE_URL } from '../../../config/client';
+import { useDispatch } from 'react-redux';
+import { showToast } from '../../store/toastSlice';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'DrillAddQuestions'>;
@@ -116,6 +118,7 @@ function parseCSV(
 export default function DrillAddQuestionsScreen() {
   const navigation = useNavigation<Nav>();
   const route      = useRoute<Route>();
+  const dispatch   = useDispatch();
   const { subjectId, subjectName } = route.params;
 
   const [tab, setTab]                   = useState<TabType>('pdf');
@@ -193,9 +196,8 @@ export default function DrillAddQuestionsScreen() {
     setSubmitting(true);
     try {
       const result = await addBulkQuestions(subjectId, preview);
-      Alert.alert('Done!', `${result.added} questions added to ${subjectName}`, [
-        { text: 'OK', onPress: () => navigation.goBack() },
-      ]);
+      dispatch(showToast({ message: `${result.added} questions added to ${subjectName}`, variant: 'success' }));
+      navigation.goBack();
     } catch {
       Alert.alert('Error', 'Could not add questions');
     } finally {
@@ -317,9 +319,8 @@ export default function DrillAddQuestionsScreen() {
     setPdfSubmitting(true);
     try {
       const result = await addBulkQuestions(subjectId, pdfQuestions);
-      Alert.alert('Done!', `${result.added} questions added to ${subjectName}`, [
-        { text: 'OK', onPress: () => navigation.goBack() },
-      ]);
+      dispatch(showToast({ message: `${result.added} questions added to ${subjectName}`, variant: 'success' }));
+      navigation.goBack();
     } catch {
       Alert.alert('Error', 'Could not upload questions');
     } finally {
@@ -813,10 +814,10 @@ const styles = StyleSheet.create({
   copyBtnText:   { fontSize: 12, fontWeight: '700', color: '#065F46' },
   promptText:    { fontSize: 12, color: '#047857', lineHeight: 20, fontFamily: 'monospace' },
 
-  sampleBtn:     { borderWidth: 1.5, borderColor: Colors.brand, borderRadius: 50, paddingVertical: 14, alignItems: 'center', marginBottom: 16 },
+  sampleBtn:     { borderWidth: 1.5, borderColor: Colors.brand, borderRadius: Radius.full, paddingVertical: 14, alignItems: 'center', marginBottom: 16 },
   sampleBtnText: { fontSize: 15, fontWeight: '700', color: Colors.brand },
 
-  primaryBtn:     { backgroundColor: Colors.brand, borderRadius: 50, paddingVertical: 16, alignItems: 'center', marginBottom: 12 },
+  primaryBtn:     { backgroundColor: Colors.brand, borderRadius: Radius.full, paddingVertical: 16, alignItems: 'center', marginBottom: 12 },
   primaryBtnText: { fontSize: 16, fontWeight: '700', color: '#fff' },
 
   previewCard:  { backgroundColor: '#F0FDF4', borderRadius: 12, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#BBF7D0' },
@@ -860,9 +861,9 @@ const styles = StyleSheet.create({
   materialInfoCard:  { backgroundColor: '#F5F3FF', borderRadius: 12, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: '#DDD6FE' },
   materialInfoTitle: { fontSize: 15, fontWeight: '700', color: '#3730A3', marginBottom: 8 },
   materialInfoText:  { fontSize: 13, color: '#4338CA', lineHeight: 20, marginBottom: 12 },
-  materialBtn:       { backgroundColor: '#7C3AED', borderRadius: 50, paddingVertical: 16, alignItems: 'center', marginBottom: 12 },
+  materialBtn:       { backgroundColor: Colors.purple, borderRadius: Radius.full, paddingVertical: 16, alignItems: 'center', marginBottom: 12 },
   materialBtnText:   { fontSize: 16, fontWeight: '700', color: '#fff' },
-  materialLinkBtn:     { borderWidth: 1.5, borderColor: '#7C3AED', borderRadius: 50, paddingVertical: 14, alignItems: 'center', marginBottom: 12 },
+  materialLinkBtn:     { borderWidth: 1.5, borderColor: Colors.purple, borderRadius: Radius.full, paddingVertical: 14, alignItems: 'center', marginBottom: 12 },
   materialLinkBtnText: { fontSize: 15, fontWeight: '700', color: '#7C3AED' },
 
   // ── Link modal ──
@@ -876,8 +877,8 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary, marginBottom: 16,
   },
   linkModalActions:  { flexDirection: 'row', gap: 10 },
-  linkModalCancelBtn: { flex: 1, paddingVertical: 13, borderRadius: 50, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  linkModalCancelBtn: { flex: 1, paddingVertical: 13, borderRadius: Radius.full, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
   linkModalCancelBtnText: { fontSize: 14, fontWeight: '700', color: Colors.textSecondary },
-  linkModalSaveBtn:  { flex: 1, paddingVertical: 13, borderRadius: 50, alignItems: 'center', backgroundColor: '#7C3AED' },
+  linkModalSaveBtn:  { flex: 1, paddingVertical: 13, borderRadius: Radius.full, alignItems: 'center', backgroundColor: Colors.purple },
   linkModalSaveBtnText: { fontSize: 14, fontWeight: '700', color: '#fff' },
 });

@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./src/store/store";
 import RootNavigator from "./src/navigation/RootNavigator";
 import UpdateModal from "./src/updateApp/UpdateModal";
+import ToastHost from "./src/components/ToastHost";
 
 import { useUpdateChecker } from "./src/updateApp/useUpdateChecker";
 import { requestUserPermissionAndGetToken, getFcm } from "./src/utils/fcm";
@@ -20,6 +21,7 @@ function AppContent() {
     <>
       <RootNavigator />
       <UpdateModal visible={visible} force={force} message={message} onClose={dismiss} />
+      <ToastHost />
     </>
   );
 }

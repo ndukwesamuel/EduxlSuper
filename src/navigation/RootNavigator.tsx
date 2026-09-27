@@ -1,8 +1,9 @@
 
 
 // ─── RootNavigator.tsx ───────────────────────────────────────────
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useRef } from 'react';
+import { BackHandler } from 'react-native';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
@@ -22,13 +23,9 @@ import ResetPasswordScreen  from '../screens/auth/ResetPasswordScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
 // ── BankReady ─────────────────────────────────────────────────────
-import BankReadyHomeScreen from '../screens/bankready/BankReadyHomeScreen';
-import TestScreen          from '../screens/bankready/TestScreen';
-import ResultsScreen       from '../screens/bankready/ResultsScreen';
-import HistoryScreen       from '../screens/bankready/HistoryScreen';
+import BankReadyStackNavigator from './BankReadyStackNavigator';
 
 // ── DrillPad ──────────────────────────────────────────────────────
-import DrillPadHomeScreen      from '../screens/drillpad/DrillPadHomeScreen';
 import DrillSubjectScreen      from '../screens/drillpad/DrillSubjectScreen';
 import DrillAddQuestionsScreen from '../screens/drillpad/DrillAddQuestionsScreen';
 import DrillSessionScreen      from '../screens/drillpad/DrillSessionScreen';
@@ -38,7 +35,6 @@ import AILessonScreen          from '../screens/drillpad/AILessonScreen';
 import PodcastPlayerScreen     from '../screens/drillpad/Podcastplayerscreen';
 
 // ── Company Tracks ────────────────────────────────────────────────
-import CompanyTracksScreen from '../screens/home/Companytracksscreen';
 
 // ── Shell Track ───────────────────────────────────────────────────
 import ShellTrackHomeScreen          from '../screens/shell/ShellTrackHomeScreen';
@@ -81,6 +77,9 @@ import CompanyAptitudeTestStageScreen from '../screens/companytrack/CompanyAptit
 import TodoListScreen from '../screens/todo/TodoListScreen';
 import TaskDetailScreen from '../screens/todo/TaskDetailScreen';
 
+// ── Help ──────────────────────────────────────────────────────────
+import HelpScreen from '../screens/profile/HelpScreen';
+
 // ─────────────────────────────────────────────────────────────────
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -106,14 +105,10 @@ function AppNavigator() {
       <AppStack.Screen name="MainTabs" component={BottomTabNavigator} />
 
       {/* ── BankReady ── */}
-      <AppStack.Screen name="BankReady" component={BankReadyHomeScreen} />
-      <AppStack.Screen name="Test"      component={TestScreen} />
-      <AppStack.Screen name="Results"   component={ResultsScreen} />
-      <AppStack.Screen name="History"   component={HistoryScreen} />
+      <AppStack.Screen name="BankReady" component={BankReadyStackNavigator} />
 
 <AppStack.Screen name="SubjectChat" component={SubjectChatScreen} />
       {/* ── DrillPad ── */}
-      <AppStack.Screen name="DrillPad"          component={DrillPadHomeScreen} />
       <AppStack.Screen name="DrillSubject"      component={DrillSubjectScreen} />
       <AppStack.Screen name="DrillAddQuestions" component={DrillAddQuestionsScreen} />
       <AppStack.Screen name="DrillSession"      component={DrillSessionScreen}  options={{ gestureEnabled: false }} />
@@ -122,8 +117,6 @@ function AppNavigator() {
       <AppStack.Screen name="AILesson"          component={AILessonScreen}      options={{ gestureEnabled: false }} />
       <AppStack.Screen name="PodcastPlayer"     component={PodcastPlayerScreen} options={{ gestureEnabled: false }} />
 
-      {/* ── Company Tracks ── */}
-      <AppStack.Screen name="CompanyTracks" component={CompanyTracksScreen} />
       {/* ── Company Tracks ── */}
 <AppStack.Screen name="CompanyTrackHome" component={CompanyTrackHomeScreen} />
 
@@ -174,6 +167,9 @@ function AppNavigator() {
       <AppStack.Screen name="TodoList"   component={TodoListScreen} />
       <AppStack.Screen name="TaskDetail" component={TaskDetailScreen} />
 
+      {/* ── Help ── */}
+      <AppStack.Screen name="Help" component={HelpScreen} />
+
     </AppStack.Navigator>
   );
 }
@@ -181,8 +177,32 @@ function AppNavigator() {
 // ── Root Navigator ────────────────────────────────────────────────
 export default function RootNavigator() {
   const user = useSelector((s: RootState) => s.auth.user);
+  const navigationRef = useRef<NavigationContainerRef<any>>(null);
+
+  // The AppStack is flat (MainTabs sits alongside ~45 pushed screens rather
+  // than nesting them under their own tab), so once those pushed screens run
+  // out of back history, the hardware back button falls through to closing
+  // the app instead of surfacing the tab bar. Only step in at that exact
+  // terminal point — every normal in-flow "go back one screen" press still
+  // falls through untouched via the early `canGoBack()` return.
+  useEffect(() => {
+    if (!user) return;
+    const onBackPress = () => {
+      if (navigationRef.current?.canGoBack()) {
+        return false;
+      }
+      if (navigationRef.current?.getCurrentRoute()?.name === 'Home') {
+        return false;
+      }
+      (navigationRef.current as any)?.navigate('MainTabs', { screen: 'Home' });
+      return true;
+    };
+    const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => sub.remove();
+  }, [user]);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <RootStack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
         {user ? (
           <RootStack.Screen name="App"  component={AppNavigator}  />

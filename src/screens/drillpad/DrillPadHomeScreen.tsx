@@ -13,6 +13,8 @@ import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, FontSize, Radius, Spacing } from '../../theme';
 import { getSubjects, createSubject, DrillSubject } from '../../../config/client';
+import CCButton from '../../components/CCButton';
+import CCLoader from '../../components/CCLoader';
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
 
@@ -136,9 +138,7 @@ export default function LearnScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={Colors.brand} />
-        </View>
+        <CCLoader />
       </SafeAreaView>
     );
   }
@@ -219,9 +219,7 @@ export default function LearnScreen() {
             <Text style={styles.emptyDesc}>
               Create a course, add your questions from ChatGPT or any AI tool, and start drilling.
             </Text>
-            <TouchableOpacity style={styles.emptyBtn} onPress={() => setModalVisible(true)}>
-              <Text style={styles.emptyBtnText}>Create your first course</Text>
-            </TouchableOpacity>
+            <CCButton label="Create your first course" onPress={() => setModalVisible(true)} />
           </View>
         )}
 
@@ -326,10 +324,14 @@ export default function LearnScreen() {
         <View style={{ height: 80 }} />
       </ScrollView>
 
-      {/* ── FAB ── */}
-      <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
-        <PlusIcon size={24} />
-      </TouchableOpacity>
+      {/* ── FAB — only once there's a list to add alongside; the empty state
+           above already has its own "Create your first course" CTA, so a
+           second floating "+" there would just be a redundant tap target. */}
+      {courses.length > 0 && (
+        <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
+          <PlusIcon size={24} />
+        </TouchableOpacity>
+      )}
 
       {/* ── Create course modal ── */}
       <Modal
@@ -376,16 +378,12 @@ export default function LearnScreen() {
               >
                 <Text style={styles.cancelText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.createBtn, creating && { opacity: 0.6 }]}
+              <CCButton
+                label="Create course"
                 onPress={handleCreate}
-                disabled={creating}
-              >
-                {creating
-                  ? <ActivityIndicator size="small" color="#fff" />
-                  : <Text style={styles.createText}>Create course</Text>
-                }
-              </TouchableOpacity>
+                loading={creating}
+                style={{ flex: 2 }}
+              />
             </View>
           </Pressable>
         </Pressable>
@@ -404,7 +402,7 @@ const styles = StyleSheet.create({
   header:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', padding: 20, paddingBottom: 8 },
   title:    { fontSize: 30, fontWeight: '800', color: '#0F172A', letterSpacing: -0.8 },
   subtitle: { fontSize: 13, color: '#94A3B8', fontWeight: '500', marginTop: 4 },
-  addBtn:   { width: 44, height: 44, borderRadius: 22, backgroundColor: '#0F172A', alignItems: 'center', justifyContent: 'center' },
+  addBtn:   { width: 44, height: 44, borderRadius: 22, backgroundColor: Colors.brand, alignItems: 'center', justifyContent: 'center' },
 
   // Search
   searchBar:   { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 14, padding: 11, marginHorizontal: 20, marginBottom: 4 },
@@ -458,8 +456,6 @@ const styles = StyleSheet.create({
   emptyIcon:   { fontSize: 42, marginBottom: 12 },
   emptyTitle:  { fontSize: 18, fontWeight: '700', color: '#0F172A', marginBottom: 6 },
   emptyDesc:   { fontSize: 13, color: '#94A3B8', lineHeight: 20, textAlign: 'center', marginBottom: 24 },
-  emptyBtn:    { backgroundColor: '#0F172A', paddingHorizontal: 28, paddingVertical: 14, borderRadius: 999 },
-  emptyBtnText:{ fontSize: 14, fontWeight: '700', color: '#fff' },
 
   // FAB
   fab: {
@@ -483,8 +479,6 @@ const styles = StyleSheet.create({
   sheetBtns:  { flexDirection: 'row', gap: 12, marginTop: 24 },
   cancelBtn:  { flex: 1, padding: 15, borderRadius: 12, borderWidth: 1, borderColor: '#E2E8F0', alignItems: 'center' },
   cancelText: { fontSize: 14, fontWeight: '600', color: '#64748B' },
-  createBtn:  { flex: 2, padding: 15, borderRadius: 12, backgroundColor: Colors.brand, alignItems: 'center' },
-  createText: { fontSize: 14, fontWeight: '700', color: '#fff' },
 
   // AI Quiz Card
   aiQuizCard: { backgroundColor: '#EEF2FF', marginHorizontal: 20, padding: 20, borderRadius: 20, marginBottom: 20, borderWidth: 1, borderColor: '#C7D2FE' },

@@ -195,7 +195,7 @@
 // src/components/PersonaModal.tsx
 // Full replacement — adds Redux dispatch after successful persona save
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal, View, Text, TouchableOpacity,
   StyleSheet, ActivityIndicator, Alert,
@@ -210,12 +210,17 @@ type Persona = 'undergraduate' | 'graduate';
 interface Props {
   visible: boolean;
   onComplete: () => void;
+  initialPersona?: Persona | null;
 }
 
-export default function PersonaModal({ visible, onComplete }: Props) {
+export default function PersonaModal({ visible, onComplete, initialPersona }: Props) {
   const dispatch                    = useDispatch<AppDispatch>();
-  const [selected, setSelected]     = useState<Persona | null>(null);
+  const [selected, setSelected]     = useState<Persona | null>(initialPersona ?? null);
   const [loading,  setLoading]      = useState(false);
+
+  useEffect(() => {
+    if (visible) setSelected(initialPersona ?? null);
+  }, [visible, initialPersona]);
 
   const handleSubmit = async () => {
     if (!selected) return;

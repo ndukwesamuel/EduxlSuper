@@ -1894,6 +1894,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
 import { getDrillQuestions, flagQuestion, DrillQuestion } from '../../../config/client';
+import { Colors, FontSize, Radius, Spacing } from '../../theme';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
 type Route = RouteProp<AppStackParamList, 'Flashcard'>;
@@ -2078,17 +2079,17 @@ export default function FlashcardScreen() {
           <Text style={styles.summarySubject}>{subjectName.toUpperCase()}</Text>
 
           <View style={styles.summaryStats}>
-            <View style={[styles.summaryBox, { backgroundColor: '#D1FAE5' }]}>
-              <Text style={[styles.summaryNum, { color: '#065F46' }]}>{easyCount}</Text>
-              <Text style={[styles.summaryLbl, { color: '#047857' }]}>Mastered</Text>
+            <View style={[styles.summaryBox, { backgroundColor: Colors.successSurface }]}>
+              <Text style={[styles.summaryNum, { color: Colors.successText }]}>{easyCount}</Text>
+              <Text style={[styles.summaryLbl, { color: Colors.successTextStrong }]}>Mastered</Text>
             </View>
-            <View style={[styles.summaryBox, { backgroundColor: '#FEF3C7' }]}>
-              <Text style={[styles.summaryNum, { color: '#92400E' }]}>{hardCount}</Text>
-              <Text style={[styles.summaryLbl, { color: '#B45309' }]}>Hard</Text>
+            <View style={[styles.summaryBox, { backgroundColor: Colors.warningSurfaceStrong }]}>
+              <Text style={[styles.summaryNum, { color: Colors.warningText }]}>{hardCount}</Text>
+              <Text style={[styles.summaryLbl, { color: Colors.warningTextStrong }]}>Hard</Text>
             </View>
-            <View style={[styles.summaryBox, { backgroundColor: '#FEF2F2' }]}>
-              <Text style={[styles.summaryNum, { color: '#991B1B' }]}>{missedCount}</Text>
-              <Text style={[styles.summaryLbl, { color: '#DC2626' }]}>Missed</Text>
+            <View style={[styles.summaryBox, { backgroundColor: Colors.dangerSurface }]}>
+              <Text style={[styles.summaryNum, { color: Colors.dangerText }]}>{missedCount}</Text>
+              <Text style={[styles.summaryLbl, { color: Colors.dangerAccent }]}>Missed</Text>
             </View>
           </View>
 
@@ -2215,8 +2216,8 @@ export default function FlashcardScreen() {
             style={[StyleSheet.absoluteFill, styles.cardSide, styles.cardBack, { opacity: answerOpacity }]}
             pointerEvents={isFlipped ? 'auto' : 'none'}
           >
-            <View style={[styles.cardBadge, { backgroundColor: '#D1FAE5' }]}>
-              <Text style={[styles.cardBadgeText, { color: '#065F46' }]}>ANSWER</Text>
+            <View style={[styles.cardBadge, { backgroundColor: Colors.successSurface }]}>
+              <Text style={[styles.cardBadgeText, { color: Colors.successText }]}>ANSWER</Text>
             </View>
             <View style={styles.answerRow}>
               <View style={styles.answerCircle}>
@@ -2254,25 +2255,25 @@ export default function FlashcardScreen() {
         {/* ── Bottom counts ── */}
         <View style={styles.bottomBar}>
           <View style={styles.bottomItem}>
-            <Text style={[styles.bottomNum, { color: '#065F46' }]}>
+            <Text style={[styles.bottomNum, { color: Colors.successText }]}>
               {results.filter(r => r.rating === 'easy').length}
             </Text>
             <Text style={styles.bottomLbl}>Easy</Text>
           </View>
           <View style={styles.bottomItem}>
-            <Text style={[styles.bottomNum, { color: '#92400E' }]}>
+            <Text style={[styles.bottomNum, { color: Colors.warningText }]}>
               {results.filter(r => r.rating === 'hard').length}
             </Text>
             <Text style={styles.bottomLbl}>Hard</Text>
           </View>
           <View style={styles.bottomItem}>
-            <Text style={[styles.bottomNum, { color: '#991B1B' }]}>
+            <Text style={[styles.bottomNum, { color: Colors.dangerText }]}>
               {results.filter(r => r.rating === 'missed').length}
             </Text>
             <Text style={styles.bottomLbl}>Missed</Text>
           </View>
           <View style={styles.bottomItem}>
-            <Text style={[styles.bottomNum, { color: '#94A3B8' }]}>
+            <Text style={[styles.bottomNum, { color: Colors.textMuted }]}>
               {questions.length - currentIdx - 1}
             </Text>
             <Text style={styles.bottomLbl}>Left</Text>
@@ -2285,46 +2286,46 @@ export default function FlashcardScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe:        { flex: 1, backgroundColor: '#F8FAFC' },
+  safe:        { flex: 1, backgroundColor: Colors.background },
   center:      { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  loadingText: { fontSize: 14, color: '#94A3B8' },
-  container:   { flex: 1, paddingHorizontal: 16 },
+  loadingText: { fontSize: 14, color: Colors.textMuted },
+  container:   { flex: 1, paddingHorizontal: Spacing.lg },
 
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.sm,
   },
-  exitBtn:  { fontSize: 18, color: '#94A3B8', fontWeight: '600', padding: 4 },
-  progress: { fontSize: 15, fontWeight: '700', color: '#0F172A' },
+  exitBtn:  { fontSize: 18, color: Colors.textMuted, fontWeight: '600', padding: Spacing.xs },
+  progress: { fontSize: FontSize.body, fontWeight: '700', color: Colors.textPrimary },
 
-  progressTrack: { height: 4, backgroundColor: '#E2E8F0', borderRadius: 2, marginBottom: 10 },
-  progressFill:  { height: 4, backgroundColor: '#1D4ED8', borderRadius: 2 },
+  progressTrack: { height: 4, backgroundColor: Colors.border, borderRadius: 2, marginBottom: 10 },
+  progressFill:  { height: 4, backgroundColor: Colors.brand, borderRadius: 2 },
 
   subjectLabel: {
-    fontSize: 11,
+    fontSize: FontSize.micro,
     fontWeight: '700',
-    color: '#94A3B8',
+    color: Colors.textMuted,
     letterSpacing: 1,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginBottom: 10,
   },
 
-  hintsRow:      { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, height: 26 },
-  hint:          { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 9999 },
-  hintLeft:      { backgroundColor: '#FEF2F2' },
-  hintRight:     { backgroundColor: '#D1FAE5' },
-  hintLeftText:  { fontSize: 11, fontWeight: '700', color: '#991B1B' },
-  hintRightText: { fontSize: 11, fontWeight: '700', color: '#065F46' },
+  hintsRow:      { flexDirection: 'row', justifyContent: 'space-between', marginBottom: Spacing.sm, height: 26 },
+  hint:          { paddingHorizontal: Spacing.md, paddingVertical: Spacing.xs, borderRadius: Radius.full },
+  hintLeft:      { backgroundColor: Colors.dangerSurface },
+  hintRight:     { backgroundColor: Colors.successSurface },
+  hintLeftText:  { fontSize: FontSize.micro, fontWeight: '700', color: Colors.dangerText },
+  hintRightText: { fontSize: FontSize.micro, fontWeight: '700', color: Colors.successText },
 
-  cardWrap: { flex: 1, marginBottom: 12 },
+  cardWrap: { flex: 1, marginBottom: Spacing.md },
 
   cardSide: {
     borderRadius: 20,
-    padding: 24,
+    padding: Spacing['2xl'],
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
@@ -2332,133 +2333,133 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardFront: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: Colors.border,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 20,
   },
   cardBack: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.surface,
     borderWidth: 1.5,
-    borderColor: '#10B981',
+    borderColor: Colors.success,
     justifyContent: 'center',
     gap: 16,
   },
 
   cardBadge: {
-    backgroundColor: '#EFF6FF',
-    borderRadius: 9999,
+    backgroundColor: Colors.numericalBg,
+    borderRadius: Radius.full,
     paddingHorizontal: 14,
     paddingVertical: 5,
     alignSelf: 'center',
   },
-  cardBadgeText: { fontSize: 10, fontWeight: '700', color: '#1D4ED8', letterSpacing: 1 },
+  cardBadgeText: { fontSize: 10, fontWeight: '700', color: Colors.brand, letterSpacing: 1 },
 
   questionText: {
-    fontSize: 17,
+    fontSize: FontSize.heading3,
     fontWeight: '700',
-    color: '#0F172A',
+    color: Colors.textPrimary,
     lineHeight: 28,
     textAlign: 'center',
   },
   tapBtn: {
-    backgroundColor: '#F1F5F9',
-    borderRadius: 9999,
-    paddingHorizontal: 20,
+    backgroundColor: Colors.surface2,
+    borderRadius: Radius.full,
+    paddingHorizontal: Spacing.xl,
     paddingVertical: 10,
   },
-  tapBtnText: { fontSize: 13, color: '#1D4ED8', fontWeight: '600' },
+  tapBtnText: { fontSize: FontSize.bodySmall, color: Colors.brand, fontWeight: '600' },
 
   answerRow:    { flexDirection: 'row', alignItems: 'flex-start', gap: 14 },
   answerCircle: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: '#D1FAE5',
+    backgroundColor: Colors.successSurface,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
-  answerLetter: { fontSize: 22, fontWeight: '800', color: '#065F46' },
-  answerText:   { flex: 1, fontSize: 16, fontWeight: '700', color: '#0F172A', lineHeight: 24, paddingTop: 10 },
+  answerLetter: { fontSize: 22, fontWeight: '800', color: Colors.successText },
+  answerText:   { flex: 1, fontSize: FontSize.bodyLarge, fontWeight: '700', color: Colors.textPrimary, lineHeight: 24, paddingTop: 10 },
 
   explanationBox: {
-    backgroundColor: '#FFFBEB',
+    backgroundColor: Colors.warningSurface,
     borderRadius: 12,
-    padding: 12,
+    padding: Spacing.md,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: Colors.warningBorder,
     gap: 4,
   },
-  explanationTitle: { fontSize: 11, fontWeight: '700', color: '#92400E' },
-  explanationText:  { fontSize: 12, color: '#78350F', lineHeight: 18 },
+  explanationTitle: { fontSize: FontSize.micro, fontWeight: '700', color: Colors.warningText },
+  explanationText:  { fontSize: FontSize.caption, color: Colors.warningTextStrongest, lineHeight: 18 },
 
-  swipeInstruction: { fontSize: 10, color: '#94A3B8', textAlign: 'center' },
+  swipeInstruction: { fontSize: 10, color: Colors.textMuted, textAlign: 'center' },
 
   actionRow: { flexDirection: 'row', gap: 8, marginBottom: 10 },
   btnMissed: {
-    flex: 1, backgroundColor: '#FEF2F2', borderRadius: 9999,
+    flex: 1, backgroundColor: Colors.dangerSurface, borderRadius: Radius.full,
     paddingVertical: 13, alignItems: 'center',
-    borderWidth: 1.5, borderColor: '#FECACA',
+    borderWidth: 1.5, borderColor: Colors.dangerBorder,
   },
   btnHard: {
-    flex: 1, backgroundColor: '#FEF3C7', borderRadius: 9999,
+    flex: 1, backgroundColor: Colors.warningSurfaceStrong, borderRadius: Radius.full,
     paddingVertical: 13, alignItems: 'center',
-    borderWidth: 1.5, borderColor: '#FDE68A',
+    borderWidth: 1.5, borderColor: Colors.warningBorder,
   },
   btnEasy: {
-    flex: 1, backgroundColor: '#D1FAE5', borderRadius: 9999,
+    flex: 1, backgroundColor: Colors.successSurface, borderRadius: Radius.full,
     paddingVertical: 13, alignItems: 'center',
-    borderWidth: 1.5, borderColor: '#A7F3D0',
+    borderWidth: 1.5, borderColor: Colors.successBorder,
   },
-  btnMissedText: { fontSize: 12, fontWeight: '700', color: '#991B1B' },
-  btnHardText:   { fontSize: 12, fontWeight: '700', color: '#92400E' },
-  btnEasyText:   { fontSize: 12, fontWeight: '700', color: '#065F46' },
+  btnMissedText: { fontSize: FontSize.caption, fontWeight: '700', color: Colors.dangerText },
+  btnHardText:   { fontSize: FontSize.caption, fontWeight: '700', color: Colors.warningText },
+  btnEasyText:   { fontSize: FontSize.caption, fontWeight: '700', color: Colors.successText },
 
   bottomBar: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    padding: 12,
-    marginBottom: 8,
+    borderColor: Colors.border,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
     justifyContent: 'space-around',
   },
   bottomItem: { alignItems: 'center', gap: 2 },
   bottomNum:  { fontSize: 18, fontWeight: '800' },
-  bottomLbl:  { fontSize: 10, color: '#94A3B8', fontWeight: '600' },
+  bottomLbl:  { fontSize: 10, color: Colors.textMuted, fontWeight: '600' },
 
   // Summary
-  summaryWrap:    { flex: 1, padding: 24, alignItems: 'center', justifyContent: 'center', gap: 16 },
+  summaryWrap:    { flex: 1, padding: Spacing['2xl'], alignItems: 'center', justifyContent: 'center', gap: 16 },
   summaryEmoji:   { fontSize: 56 },
-  summaryTitle:   { fontSize: 26, fontWeight: '800', color: '#0F172A', letterSpacing: -0.5 },
-  summarySubject: { fontSize: 11, color: '#94A3B8', fontWeight: '700', letterSpacing: 1 },
+  summaryTitle:   { fontSize: 26, fontWeight: '800', color: Colors.textPrimary, letterSpacing: -0.5 },
+  summarySubject: { fontSize: FontSize.micro, color: Colors.textMuted, fontWeight: '700', letterSpacing: 1 },
   summaryStats:   { flexDirection: 'row', gap: 10, width: '100%' },
-  summaryBox:     { flex: 1, borderRadius: 14, padding: 14, alignItems: 'center', gap: 4 },
-  summaryNum:     { fontSize: 28, fontWeight: '800' },
-  summaryLbl:     { fontSize: 11, fontWeight: '700' },
+  summaryBox:     { flex: 1, borderRadius: Radius.lg, padding: 14, alignItems: 'center', gap: 4 },
+  summaryNum:     { fontSize: FontSize.displayL, fontWeight: '800' },
+  summaryLbl:     { fontSize: FontSize.micro, fontWeight: '700' },
   srCard: {
-    width: '100%', backgroundColor: '#EFF6FF', borderRadius: 14,
-    padding: 14, gap: 6, borderWidth: 1, borderColor: '#BFDBFE',
+    width: '100%', backgroundColor: Colors.numericalBg, borderRadius: Radius.lg,
+    padding: 14, gap: 6, borderWidth: 1, borderColor: Colors.numericalBorder,
   },
-  srTitle: { fontSize: 12, fontWeight: '700', color: '#1D4ED8', marginBottom: 4 },
-  srRow:   { fontSize: 12, color: '#3B82F6', lineHeight: 18 },
+  srTitle: { fontSize: FontSize.caption, fontWeight: '700', color: Colors.brand, marginBottom: Spacing.xs },
+  srRow:   { fontSize: FontSize.caption, color: Colors.brandLight, lineHeight: 18 },
   drillMissedBtn: {
-    width: '100%', backgroundColor: '#FEF2F2', borderRadius: 9999,
+    width: '100%', backgroundColor: Colors.dangerSurface, borderRadius: Radius.full,
     paddingVertical: 15, alignItems: 'center',
-    borderWidth: 1.5, borderColor: '#FECACA',
+    borderWidth: 1.5, borderColor: Colors.dangerBorder,
   },
-  drillMissedText: { fontSize: 14, fontWeight: '700', color: '#991B1B' },
+  drillMissedText: { fontSize: 14, fontWeight: '700', color: Colors.dangerText },
   practiceBtn: {
-    width: '100%', backgroundColor: '#1D4ED8', borderRadius: 9999,
+    width: '100%', backgroundColor: Colors.brand, borderRadius: Radius.full,
     paddingVertical: 15, alignItems: 'center',
-    shadowColor: '#1D4ED8', shadowOffset: { width: 0, height: 6 },
+    shadowColor: Colors.brand, shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3, shadowRadius: 14, elevation: 6,
   },
-  practiceBtnText: { fontSize: 15, fontWeight: '700', color: '#fff' },
+  practiceBtnText: { fontSize: FontSize.body, fontWeight: '700', color: Colors.surface },
   backBtn:         { paddingVertical: 10 },
-  backBtnText:     { fontSize: 13, color: '#475569', fontWeight: '600' },
+  backBtnText:     { fontSize: FontSize.bodySmall, color: Colors.textSecondary, fontWeight: '600' },
 });

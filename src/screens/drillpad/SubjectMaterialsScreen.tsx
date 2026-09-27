@@ -10,6 +10,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { AppStackParamList } from '../../navigation/types';
 import { Colors, Spacing } from '../../theme';
+import CCLoader from '../../components/CCLoader';
 import { getSubjectMaterials, deleteMaterial, SubjectMaterial } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
@@ -145,9 +146,7 @@ export default function SubjectMaterialsScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={Colors.brand} />
-        </View>
+        <CCLoader />
       </SafeAreaView>
     );
   }

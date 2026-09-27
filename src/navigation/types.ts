@@ -16,14 +16,14 @@ SubjectMaterials: { subjectId: string; subjectName: string };
 
 export type AppTabParamList = {
   Home:     undefined;
-  LearnPad:    undefined;
+  DrillPad:    undefined;
   Progress: undefined;
   Profile:  undefined;
-  Graduate:  undefined;
+  CompanyTracks:  undefined;
 };
 
 export type BankReadyStackParamList = {
-  BankReadyHome: undefined;
+  BankReady: undefined;
   Test: {
     module:      'numerical' | 'verbal' | 'logical' | 'abstract';
     mode:        'exam' | 'practice' | 'speed';
@@ -52,13 +52,11 @@ CompanyHistory: { companyId: string };
 
   SubjectChat: { subjectId: string; subjectName: string; documentCount?: number; fileCount?: number; linkCount?: number };
   // ── BankReady ─────────────────────────────────────────────────────
+  // Test/Results/History live inside BankReadyStackNavigator now, not
+  // here — BankReady is a single flat entry into that nested stack.
   BankReady: undefined;
-  Test:      BankReadyStackParamList['Test'];
-  Results:   undefined;
-  History:   BankReadyStackParamList['History'];
 
   // ── DrillPad ──────────────────────────────────────────────────────
-  DrillPad:          undefined;
   DrillSubject:      { subjectId: string; subjectName: string };
   DrillAddQuestions: { subjectId: string; subjectName: string };
   DrillSession:      { subjectId: string; subjectName: string; mode: 'practice' | 'exam' | 'weak' };
@@ -68,9 +66,6 @@ CompanyHistory: { companyId: string };
   PodcastPlayer:     { podcastId: string; subjectName: string };
 
   SubjectMaterials: { subjectId: string; subjectName: string };
-
-  // ── Company Prep Tracks ───────────────────────────────────────────
-  CompanyTracks:     undefined;   // entry hub listing all company tracks
 
   // ── Shell Track ───────────────────────────────────────────────────
   ShellTrackHome:          undefined;
@@ -125,6 +120,8 @@ CompanyHistory: { companyId: string };
   // ── To-Do List & Task Details ────────────────────────────────────
   TodoList: { category?: string } | undefined;
   TaskDetail: { taskId?: string; title?: string; category?: string } | undefined;
+
+  Help: undefined;
 };
 
 

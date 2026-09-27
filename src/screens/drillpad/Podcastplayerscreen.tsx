@@ -9,6 +9,7 @@ import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navig
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
 import { AppStackParamList } from '../../navigation/types';
+import CCLoader from '../../components/CCLoader';
 import { getPodcast, Podcast } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
@@ -104,9 +105,7 @@ export default function PodcastPlayerScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-        </View>
+        <CCLoader />
       </SafeAreaView>
     );
   }

@@ -11,9 +11,11 @@ import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navig
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as DocumentPicker from 'expo-document-picker';
 import { AppStackParamList } from '../../navigation/types';
+import CCLoader from '../../components/CCLoader';
 import {
   getSubjectPodcasts,
   createSubjectPodcast,
+  getPodcast,
   deletePodcast,
   renamePodcast,
   Podcast,
@@ -148,18 +150,46 @@ export default function AILessonScreen() {
       const title = titleInput.trim() || subjectName;
       formData.append('title', title);
 
+      // Returns almost immediately with status: 'processing' — the polling
+      // effect below picks it up and updates the card once it's actually done.
       const podcast = await createSubjectPodcast(subjectId, formData);
       setPodcasts(prev => [podcast, ...prev]);
-
-      Alert.alert('AI Lesson ready!', `"${podcast.title}" has been generated.`);
     } catch (err: any) {
-      Alert.alert('Generation failed', err?.message || 'Could not generate AI lesson. Try again.');
+      Alert.alert('Generation failed', err?.message || 'Could not start AI lesson generation. Try again.');
     } finally {
       setGenerating(false);
       setPendingFile(null);
       setSelectedMaterialId(null);
     }
   };
+
+  // ── Poll any 'processing' podcasts until they're ready/failed ────
+  // Generation happens in the background on the server and can take over
+  // a minute, so this screen polls instead of blocking on the create call.
+  useEffect(() => {
+    const processingIds = podcasts.filter(p => p.status === 'processing').map(p => p._id);
+    if (processingIds.length === 0) return;
+
+    const interval = setInterval(async () => {
+      for (const id of processingIds) {
+        try {
+          const updated = await getPodcast(id);
+          if (updated.status === 'processing') continue;
+
+          setPodcasts(prev => prev.map(p => (p._id === id ? updated : p)));
+          if (updated.status === 'ready') {
+            Alert.alert('AI Lesson ready!', `"${updated.title}" has been generated.`);
+          } else if (updated.status === 'failed') {
+            Alert.alert('Generation failed', updated.error || `"${updated.title}" could not be generated.`);
+          }
+        } catch {
+          // transient network hiccup — just try again next tick
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [podcasts]);
 
   // ── Rename ────────────────────────────────────────────────────
   const openRename = (podcast: Podcast) => {
@@ -229,34 +259,47 @@ export default function AILessonScreen() {
   };
 
   // ── Render podcast card ──────────────────────────────────────
-  const renderItem = ({ item }: { item: Podcast }) => (
-    <TouchableOpacity
-      style={styles.podcastCard}
-      activeOpacity={0.8}
-      onPress={() => navigation.navigate('PodcastPlayer', { podcastId: item._id, subjectName })}
-      onLongPress={() => showOptions(item)}
-    >
-      <View style={styles.podcastIconWrap}>
-        <Text style={styles.podcastIcon}>🎧</Text>
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.podcastTitle} numberOfLines={1}>{item.title}</Text>
-        <Text style={styles.podcastMeta}>
-          {formatDuration(item.durationSeconds)} · {formatDate(item.createdAt)}
-        </Text>
-      </View>
-      <TouchableOpacity onPress={() => showOptions(item)} style={styles.moreBtn}>
-        <Text style={styles.moreBtnText}>⋯</Text>
+  const renderItem = ({ item }: { item: Podcast }) => {
+    const isProcessing = item.status === 'processing';
+    const isFailed = item.status === 'failed';
+    return (
+      <TouchableOpacity
+        style={styles.podcastCard}
+        activeOpacity={0.8}
+        disabled={isProcessing}
+        onPress={() => {
+          if (isFailed) {
+            Alert.alert('Generation failed', item.error || 'This lesson could not be generated.');
+            return;
+          }
+          navigation.navigate('PodcastPlayer', { podcastId: item._id, subjectName });
+        }}
+        onLongPress={() => showOptions(item)}
+      >
+        <View style={styles.podcastIconWrap}>
+          {isProcessing ? (
+            <ActivityIndicator size="small" color="#1D4ED8" />
+          ) : (
+            <Text style={styles.podcastIcon}>{isFailed ? '⚠️' : '🎧'}</Text>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.podcastTitle} numberOfLines={1}>{item.title}</Text>
+          <Text style={styles.podcastMeta}>
+            {isProcessing ? 'Generating…' : isFailed ? 'Generation failed — tap for details' : `${formatDuration(item.durationSeconds)} · ${formatDate(item.createdAt)}`}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={() => showOptions(item)} style={styles.moreBtn}>
+          <Text style={styles.moreBtnText}>⋯</Text>
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-        </View>
+        <CCLoader />
       </SafeAreaView>
     );
   }
@@ -290,7 +333,7 @@ export default function AILessonScreen() {
           <View style={styles.generatingBanner}>
             <ActivityIndicator size="small" color="#1D4ED8" />
             <Text style={styles.generatingText}>
-              Generating your lesson... this takes 20-40 seconds.
+              Starting generation... your lesson will appear below shortly.
             </Text>
           </View>
         )}

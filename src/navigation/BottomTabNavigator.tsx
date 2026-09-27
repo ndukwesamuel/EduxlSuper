@@ -13,8 +13,6 @@ import ProgressScreen from "../screens/progress/ProgressScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import DrillPadHomeScreen from "../screens/drillpad/DrillPadHomeScreen";
 import GraduateScreen from "../screens/home/GraduateScreen";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
 
@@ -75,8 +73,6 @@ function GraduateIcon({ color, size = 24 }: { color: string; size?: number }) {
 // ── Navigator ────────────────────────────────────────────────────
 export default function BottomTabNavigator() {
   const insets = useSafeAreaInsets();
-  const profileStatus = useSelector((s: RootState) => s.profile.status);
-  const isGraduate = profileStatus?.persona === "graduate";
 
   return (
     <Tab.Navigator
@@ -95,8 +91,8 @@ export default function BottomTabNavigator() {
           const size = 22;
           switch (route.name) {
             case "Home":     return <HomeIcon     color={color} size={size} />;
-            case "LearnPad": return <LearnIcon    color={color} size={size} />;
-            case "Graduate": return <GraduateIcon color={color} size={size} />;
+            case "DrillPad": return <LearnIcon    color={color} size={size} />;
+            case "CompanyTracks": return <GraduateIcon color={color} size={size} />;
             case "Progress": return <ProgressIcon color={color} size={size} />;
             case "Profile":  return <ProfileIcon  color={color} size={size} />;
             default:         return null;
@@ -105,14 +101,9 @@ export default function BottomTabNavigator() {
       })}
     >
       <Tab.Screen name="Home"     component={HomeScreen}       options={{ title: "Home" }} />
-      <Tab.Screen name="LearnPad" component={DrillPadHomeScreen} options={{ title: "LearnPad" }} />
-
-      {isGraduate ? (
-        <Tab.Screen name="Graduate" component={GraduateScreen} options={{ title: "Graduate" }} />
-      ) : (
-        <Tab.Screen name="Progress" component={ProgressScreen} options={{ title: "Progress" }} />
-      )}
-
+      <Tab.Screen name="DrillPad" component={DrillPadHomeScreen} options={{ title: "DrillPad" }} />
+      <Tab.Screen name="CompanyTracks" component={GraduateScreen} options={{ title: "Company Tracks" }} />
+      <Tab.Screen name="Progress" component={ProgressScreen} options={{ title: "Progress" }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
     </Tab.Navigator>
   );

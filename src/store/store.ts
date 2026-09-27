@@ -57,18 +57,20 @@ import { combineReducers } from '@reduxjs/toolkit';
 import authReducer    from './authSlice';
 import testReducer    from './testSlice';
 import profileReducer from './profileSlice'; // ← NEW
+import toastReducer   from './toastSlice';
 import { setTokenGetter } from '../../config/client';
 
 const persistConfig = {
   key:      'root',
   storage:  AsyncStorage,
-  whitelist: ['auth', 'profile'], // ← ADD 'profile' to persist it
+  whitelist: ['auth', 'profile'], // toast is session-only — deliberately not persisted
 };
 
 const rootReducer = combineReducers({
   auth:    authReducer,
   test:    testReducer,
   profile: profileReducer, // ← NEW
+  toast:   toastReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

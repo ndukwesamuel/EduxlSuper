@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
+import CCLoader from '../../components/CCLoader';
 import {
   getCompanyQuestions,
   submitCompanyTest,
@@ -213,10 +214,7 @@ export default function CompanyAptitudeTestStageScreen() {
   if (phase === 'submitting') {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.loadingBox}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-          <Text style={styles.loadingText}>Grading your answers…</Text>
-        </View>
+        <CCLoader message="Grading your answers…" />
       </SafeAreaView>
     );
   }

@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useDispatch, useSelector } from "react-redux";
-import { AppStackParamList } from "../../navigation/types";
+import { BankReadyStackParamList } from "../../navigation/types";
 import { RootState } from "../../store/store";
 import {
   startTest,
@@ -42,8 +42,8 @@ import type {
   ModuleCategory,
 } from "../../store/testSlice";
 
-type Nav = NativeStackNavigationProp<AppStackParamList>;
-type Route = RouteProp<AppStackParamList, "Test">;
+type Nav = NativeStackNavigationProp<BankReadyStackParamList>;
+type Route = RouteProp<BankReadyStackParamList, "Test">;
 
 const OPTION_KEYS: OptionKey[] = ["A", "B", "C", "D"];
 

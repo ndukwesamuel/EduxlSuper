@@ -14,7 +14,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AppStackParamList } from "../../navigation/types";
+import { BankReadyStackParamList } from "../../navigation/types";
 import {
   Colors,
   FontSize,
@@ -28,7 +28,7 @@ import CCCard from "../../components/CCCard";
 import CCTag from "../../components/CCTag";
 // import { CCCard, CCTag } from '../../components';
 
-type Nav = NativeStackNavigationProp<AppStackParamList>;
+type Nav = NativeStackNavigationProp<BankReadyStackParamList>;
 type TestMode = "exam" | "practice" | "speed";
 type Difficulty = "easy" | "medium" | "hard" | "mixed";
 
@@ -99,10 +99,10 @@ const MODULE_TAGS: Record<ModuleId, string[]> = {
 export default function BankReadyHomeScreen() {
   const navigation = useNavigation<Nav>();
   const [selectedMode, setSelectedMode] = useState<Record<ModuleId, TestMode>>({
-    numerical: "exam",
-    verbal: "exam",
-    logical: "exam",
-    abstract: "exam",
+    numerical: "practice",
+    verbal: "practice",
+    logical: "practice",
+    abstract: "practice",
   });
   const [selectedDiff, setSelectedDiff] = useState<
     Record<ModuleId, Difficulty>
@@ -138,7 +138,7 @@ export default function BankReadyHomeScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => (navigation as any).navigate('MainTabs', { screen: 'Home' })}
             style={styles.backBtn}
           >
             <Text style={styles.backText}>← Home</Text>

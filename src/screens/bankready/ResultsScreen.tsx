@@ -13,7 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { resetTest } from "../../store/testSlice";
-import { AppStackParamList } from "../../navigation/types";
+import { BankReadyStackParamList } from "../../navigation/types";
 import {
   Colors,
   FontSize,
@@ -27,7 +27,7 @@ import CCCard from "../../components/CCCard";
 import CCTag from "../../components/CCTag";
 import CCLoader from "../../components/CCLoader";
 
-type Nav = NativeStackNavigationProp<AppStackParamList>;
+type Nav = NativeStackNavigationProp<BankReadyStackParamList>;
 
 function AccuracyRing({ accuracy }: { accuracy: number }) {
   const size = 140;
@@ -125,7 +125,7 @@ export default function ResultsScreen() {
     <SafeAreaView style={styles.safe}>
       {/* ── Header ── */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("BankReady")}>
+        <TouchableOpacity onPress={() => (navigation as any).navigate('MainTabs', { screen: 'Home' })}>
           <Text style={styles.backText}>← Home</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{cfg.icon} Results</Text>

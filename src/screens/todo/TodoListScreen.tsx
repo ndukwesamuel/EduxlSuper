@@ -15,6 +15,7 @@ import {
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../../navigation/types";
+import CCLoader from "../../components/CCLoader";
 import {
   fetchTodos,
   addTodo,
@@ -265,9 +266,7 @@ export default function TodoListScreen() {
 
       {/* Task List */}
       {loading ? (
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color="#7C3AED" />
-        </View>
+        <CCLoader />
       ) : (
         <FlatList
           data={todos}

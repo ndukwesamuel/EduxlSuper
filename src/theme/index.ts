@@ -46,6 +46,27 @@ export const Colors = {
 
   // ── Overlay ────────────────────────────────────────────────────
   overlay:     'rgba(15, 23, 42, 0.6)',
+
+  // ── State surfaces — bg/border/text triads for feedback cards
+  //    (mastered/hard/missed style summaries, hint boxes, etc.) ────
+  successSurface:      '#D1FAE5',
+  successBorder:       '#A7F3D0',
+  successText:         '#065F46',
+  successTextStrong:   '#047857',
+
+  dangerSurface:  '#FEF2F2',
+  dangerBorder:   '#FECACA',
+  dangerText:     '#991B1B',
+  dangerAccent:   '#DC2626',
+
+  warningSurface:       '#FFFBEB',
+  warningSurfaceStrong: '#FEF3C7',
+  warningBorder:        '#FDE68A',
+  warningText:          '#92400E',
+  warningTextStrong:    '#B45309',
+  warningTextStrongest: '#78350F',
+
+  numericalBorder: '#BFDBFE',
 };
 
 export const Spacing = {

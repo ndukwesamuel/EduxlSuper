@@ -9,17 +9,33 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { clearUser } from "../../store/authSlice";
 import { Colors, FontSize, Radius, Spacing, Shadows } from "../../theme";
 import CCCard from "../../components/CCCard";
 import { deleteAccount } from "../../../config/client";
+import { AppStackParamList } from "../../navigation/types";
+import PersonaModal from "../home/PersonaModal";
+import { showToast } from "../../store/toastSlice";
 // import { CCCard } from '../../components';
+
+type Nav = NativeStackNavigationProp<AppStackParamList>;
+
+const PERSONA_LABEL: Record<string, string> = {
+  undergraduate: "University Student",
+  graduate: "Graduate / Professional",
+};
+
 export default function ProfileScreen() {
   const user = useSelector((s: RootState) => s.auth.user);
+  const persona = useSelector((s: RootState) => s.profile.status?.persona);
   const dispatch = useDispatch();
+  const navigation = useNavigation<Nav>();
   const [deleting, setDeleting] = useState(false);
+  const [showPersonaModal, setShowPersonaModal] = useState(false);
 
   const handleDeleteAccount = () => {
     Alert.alert(
@@ -34,6 +50,7 @@ export default function ProfileScreen() {
             setDeleting(true);
             try {
               await deleteAccount();
+              dispatch(showToast({ message: "Account deleted", variant: "success" }));
               dispatch(clearUser());
             } catch (e: any) {
               setDeleting(false);
@@ -70,7 +87,7 @@ export default function ProfileScreen() {
 
         {/* App info */}
         <CCCard style={styles.infoCard}>
-          <Text style={styles.infoTitle}>CareerClarity</Text>
+          <Text style={styles.infoTitle}>EduXL</Text>
           <Text style={styles.infoText}>
             Africa's Career Readiness Platform
           </Text>
@@ -81,7 +98,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Active Module</Text>
-            <Text style={styles.infoValue}>🏦 BankReady</Text>
+            <Text style={styles.infoValue}>🏦 Banking Exams</Text>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Coming Soon</Text>
@@ -89,10 +106,37 @@ export default function ProfileScreen() {
           </View>
         </CCCard>
 
+        {/* Study focus */}
+        <TouchableOpacity
+          style={styles.studyFocusBtn}
+          onPress={() => setShowPersonaModal(true)}
+          activeOpacity={0.8}
+        >
+          <View>
+            <Text style={styles.studyFocusLabel}>Study focus</Text>
+            <Text style={styles.studyFocusValue}>
+              {persona ? PERSONA_LABEL[persona] ?? persona : "Not set"}
+            </Text>
+          </View>
+          <Text style={styles.studyFocusChange}>Change</Text>
+        </TouchableOpacity>
+
+        {/* Help */}
+        <TouchableOpacity
+          style={styles.helpBtn}
+          onPress={() => navigation.navigate('Help' as any)}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.helpText}>Help & FAQ</Text>
+        </TouchableOpacity>
+
         {/* Logout */}
         <TouchableOpacity
           style={styles.logoutBtn}
-          onPress={() => dispatch(clearUser())}
+          onPress={() => {
+            dispatch(showToast({ message: "Signed out", variant: "info" }));
+            dispatch(clearUser());
+          }}
           activeOpacity={0.8}
         >
           <Text style={styles.logoutText}>Sign Out</Text>
@@ -110,6 +154,12 @@ export default function ProfileScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <PersonaModal
+        visible={showPersonaModal}
+        initialPersona={persona as any}
+        onComplete={() => setShowPersonaModal(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -172,6 +222,51 @@ const styles = StyleSheet.create({
     fontSize: FontSize.body,
     color: Colors.textPrimary,
     fontWeight: "500",
+  },
+
+  studyFocusBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: Colors.surface,
+    height: 60,
+    borderRadius: Radius.md,
+    paddingHorizontal: Spacing.lg,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: Spacing.md,
+  },
+  studyFocusLabel: {
+    fontSize: FontSize.caption,
+    color: Colors.textMuted,
+    fontWeight: "500",
+  },
+  studyFocusValue: {
+    fontSize: FontSize.body,
+    color: Colors.textPrimary,
+    fontWeight: "600",
+    marginTop: 2,
+  },
+  studyFocusChange: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.brand,
+    fontWeight: "700",
+  },
+
+  helpBtn: {
+    backgroundColor: Colors.surface,
+    height: 52,
+    borderRadius: Radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: Spacing.md,
+  },
+  helpText: {
+    color: Colors.textPrimary,
+    fontWeight: "600",
+    fontSize: FontSize.body,
   },
 
   logoutBtn: {

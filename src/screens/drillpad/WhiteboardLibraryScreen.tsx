@@ -370,6 +370,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
+import CCLoader from '../../components/CCLoader';
 // ⚠️ adjust this import path to wherever client.ts actually lives in your project
 import { getWhiteboardVideos, WhiteboardVideo } from  "../../../config/client" //'../../config/client';
 
@@ -437,9 +438,7 @@ export default function WhiteboardLibraryScreen() {
       </View>
 
       {loading ? (
-        <View style={styles.centerState}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-        </View>
+        <CCLoader />
       ) : error ? (
         <View style={styles.centerState}>
           <Text style={styles.emptyEmoji}>⚠️</Text>

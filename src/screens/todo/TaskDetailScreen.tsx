@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../../navigation/types";
 import { fetchTodos, updateTodoItem, deleteTodoItem, TodoItem } from "../../services/todoService";
+import CCLoader from "../../components/CCLoader";
 
 type Nav = NativeStackNavigationProp<AppStackParamList>;
 
@@ -81,9 +82,7 @@ export default function TaskDetailScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color="#7C3AED" />
-        </View>
+        <CCLoader />
       </SafeAreaView>
     );
   }

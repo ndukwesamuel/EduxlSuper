@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../navigation/types';
+import CCLoader from '../../components/CCLoader';
 import { getCompanyTrack, CompanyTrack, StageConfig, StageType } from '../../../config/client';
 
 type Nav   = NativeStackNavigationProp<AppStackParamList>;
@@ -86,10 +87,7 @@ export default function CompanyTrackHomeScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.loadingBox}>
-          <ActivityIndicator size="large" color="#1D4ED8" />
-          <Text style={styles.loadingText}>Loading track…</Text>
-        </View>
+        <CCLoader message="Loading track…" />
       </SafeAreaView>
     );
   }

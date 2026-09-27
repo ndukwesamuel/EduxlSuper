@@ -301,11 +301,13 @@ export default function LoginScreen({ navigation }: Props) {
                 </View>
 
 
-                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-                  <Text style={{ color: '#1D4ED8', fontSize: 13, fontWeight: '600' }}>
-                    Forgot password?
-                  </Text>
-                </TouchableOpacity>
+                {mode === 'login' && (
+                  <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                    <Text style={{ color: '#1D4ED8', fontSize: 13, fontWeight: '600' }}>
+                      Forgot password?
+                    </Text>
+                  </TouchableOpacity>
+                )}
 
                 {/* Error */}
                 {error !== "" && (
