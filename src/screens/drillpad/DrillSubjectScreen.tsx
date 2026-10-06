@@ -385,6 +385,18 @@ export default function DrillSubjectScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            style={styles.gridCard}
+            onPress={() => navigation.navigate('LectureVideoLibrary', { subjectId, subjectName })}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.gridIcon, { backgroundColor: '#DBEAFE' }]}>
+              <Text style={styles.gridEmoji}>🎥</Text>
+            </View>
+            <Text style={styles.gridTitle}>Lecture Videos</Text>
+            <Text style={styles.gridDesc}>Upload & chat with a recorded class</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={[styles.gridCard, { borderColor: '#C7D2FE', backgroundColor: '#F5F7FF' }]}
             // onPress={() => setChatOpen(true)}
 

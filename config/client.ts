@@ -13,7 +13,7 @@ import type {
   OptionKey,
 } from "../src/store/testSlice" //"../store/testSlice";
 
-export const BASE_URL = "https://eduxl2-production-b1b0.up.railway.app/api/v1"
+export const BASE_URL = "https://prod-main-eduxl2-2-98ef18-00rrcm9q11h.compute.instacloud-edge.com/api/v1"
 
 
 
@@ -299,6 +299,8 @@ export interface DrillSessionResult {
     correctOption: string;
     selectedOption: string;
     explanation?: string;
+    // Where in a lecture video this question came from (null for subject-wide questions).
+    source?: { videoId: string; chapterTitle?: string; start?: number; end?: number } | null;
   }[];
   progress?: {
     xpEarned: number;
@@ -435,6 +437,9 @@ export interface PodcastScriptTurn {
 export interface Podcast {
   _id: string;
   subjectId: string | { _id: string; name: string };
+  // Set only for a podcast generated from one lecture video's transcript
+  // (see createVideoPodcast) — unset for the existing subject-wide ones.
+  videoId?: string;
   userId: string;
   title: string;
   // Generation now runs in the background — 'processing' right after the
@@ -898,5 +903,173 @@ export const getCourseQuestions = (subjectId: string, limit: number = 50, shuffl
 
 export const submitCourseQuizSession = (subjectId: string, sessionData: { score: number; totalQuestions: number; answers?: any[] }): Promise<any> =>
   api.post<{ success: boolean; data: any }>(`/drillpad/subjects/${subjectId}/sessions`, sessionData).then(unwrap);
+
+// ── Lecture Videos  →  /api/v1/drillpad/.../lecture-videos  ─────────
+// A recorded lecture video the student uploads. The server transcribes it
+// once in the background (Deepgram), then derives chapters from that
+// transcript — also once. Every other feature (chat, future podcast/short-
+// clip generation) reads that same stored transcript; nothing here
+// re-transcribes.
+
+export interface TranscriptSegment {
+  start: number; // seconds
+  end: number;   // seconds
+  text: string;
+}
+
+export interface VideoChapter {
+  title: string;
+  start: number; // seconds
+  end: number;   // seconds
+}
+
+export interface LectureVideo {
+  _id: string;
+  subjectId: string;
+  userId: string;
+  title: string;
+  // 'uploading' right after the POST call, 'transcribing' while Deepgram
+  // works, 'ready' once transcript+chapters are populated, or 'failed'
+  // (see `error`). Poll getLectureVideo(_id) until it's ready/failed, or
+  // wait for the push notification sent either way.
+  status: 'uploading' | 'transcribing' | 'ready' | 'failed';
+  error?: string;
+  videoUrl?: string;
+  videoPublicId?: string;
+  durationSeconds: number;
+  transcript: TranscriptSegment[];
+  chapters: VideoChapter[];
+  // AI-generated — 2-4 sentence summary + bullet key points, so a student
+  // can get the gist before committing to watching. Empty until generation
+  // finishes alongside chapters (both populate at the same time as status
+  // moves to 'ready').
+  summary?: string;
+  keyPoints?: string[];
+  // "20 minute mode" — short animated explainer, built on request.
+  explainer?: {
+    status: 'idle' | 'processing' | 'ready' | 'failed';
+    videoUrl?: string;
+    durationSeconds?: number;
+    error?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Starts a 20-minute explainer render. Returns right away with
+// explainer.status 'processing'; poll getLectureVideo until it's 'ready'.
+export const createVideoExplainer = (videoId: string): Promise<LectureVideo> =>
+  api
+    .post<{ success: boolean; data: LectureVideo }>(`/drillpad/lecture-videos/${videoId}/explainer`, {}, {
+      timeout: 30_000,
+    })
+    .then(unwrap);
+
+// ── List lecture videos for a subject ──────────────────────────────
+export const getLectureVideos = (subjectId: string): Promise<LectureVideo[]> =>
+  api
+    .get<{ success: boolean; data: LectureVideo[] }>(`/drillpad/subjects/${subjectId}/lecture-videos`)
+    .then(unwrap);
+
+// ── Get a single lecture video — for polling upload/transcription status ──
+export const getLectureVideo = (videoId: string): Promise<LectureVideo> =>
+  api
+    .get<{ success: boolean; data: LectureVideo }>(`/drillpad/lecture-videos/${videoId}`)
+    .then(unwrap);
+
+// ── Upload a lecture video — multipart/form-data: file, title ──────
+// Returns almost immediately with status: 'uploading' — the actual upload
+// + transcription + chapter detection happens on the server in the
+// background (a full lecture can take several minutes). Poll
+// getLectureVideo(video._id) until status is 'ready'/'failed', or wait for
+// the push notification sent either way.
+export const uploadLectureVideo = (subjectId: string, formData: FormData): Promise<LectureVideo> =>
+  api
+    .post<{ success: boolean; data: LectureVideo }>(`/drillpad/subjects/${subjectId}/lecture-videos`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 60_000, // just starting the job now, not waiting for it to finish — but video files are large, give the upload itself more room than the usual 15s default
+    })
+    .then(unwrap);
+
+export const renameLectureVideo = (videoId: string, title: string): Promise<LectureVideo> =>
+  api
+    .put<{ success: boolean; data: LectureVideo }>(`/drillpad/lecture-videos/${videoId}`, { title })
+    .then(unwrap);
+
+export const deleteLectureVideo = (videoId: string): Promise<{ deleted: boolean }> =>
+  api
+    .delete<{ success: boolean; data: { deleted: boolean } }>(`/drillpad/lecture-videos/${videoId}`)
+    .then(unwrap);
+
+// ── Chat scoped to ONE video ────────────────────────────────────────
+// Pass timestampSeconds when the student asks while paused at a specific
+// point in the video — the answer is grounded in the transcript around
+// that moment instead of the whole video. Omit it for a general question.
+export const sendVideoChat = (
+  videoId: string,
+  message: string,
+  messages: ChatMessage[] = [],
+  timestampSeconds?: number
+): Promise<ChatResponse> =>
+  api
+    .post<{ success: boolean; data: ChatResponse }>(`/drillpad/lecture-videos/${videoId}/chat`, {
+      message,
+      messages,
+      ...(timestampSeconds !== undefined ? { timestampSeconds } : {}),
+    })
+    .then(unwrap);
+
+// ── "Listen instead" — a conversational podcast generated from ONE
+// video's transcript. Reuses the same Podcast type/player as subject-wide
+// AI Lessons (PodcastPlayer screen works unchanged — it just plays
+// whatever podcast._id it's given).
+export const getVideoPodcasts = (videoId: string): Promise<Podcast[]> =>
+  api
+    .get<{ success: boolean; data: Podcast[] }>(`/drillpad/lecture-videos/${videoId}/podcast`)
+    .then(unwrap);
+
+// Returns almost immediately with status: 'processing' — poll
+// getVideoPodcasts(videoId) until it's ready/failed, or wait for the push
+// notification sent either way, same as every other background job here.
+export const createVideoPodcast = (videoId: string): Promise<Podcast> =>
+  api
+    .post<{ success: boolean; data: Podcast }>(`/drillpad/lecture-videos/${videoId}/podcast`, {}, {
+      timeout: 30_000, // just starting the job now, not waiting for it to finish
+    })
+    .then(unwrap);
+
+// ── Lecture video practice (chapter sets) and spaced review ──────────
+export interface PracticeQuestion {
+  _id: string;
+  question: string;
+  options: { label: string; text: string }[];
+}
+
+export const getVideoPracticeSet = (videoId: string, chapterTitle?: string): Promise<{ questions: PracticeQuestion[]; poolSize: number; needsMore: boolean }> =>
+  api
+    .get<{ success: boolean; data: any }>(`/drillpad/lecture-videos/${videoId}/practice`, {
+      params: chapterTitle ? { chapterTitle } : undefined,
+    })
+    .then(unwrap);
+
+export const generateVideoPractice = (videoId: string, chapterIndex: number): Promise<{ generated: number }> =>
+  api
+    .post<{ success: boolean; data: { generated: number } }>(`/drillpad/lecture-videos/${videoId}/practice/generate`, { chapterIndex }, {
+      timeout: 90_000, // one AI call that writes ~10 questions
+    })
+    .then(unwrap);
+
+export interface ReviewQuestion extends PracticeQuestion {
+  subjectId: string;
+  chapterTitle?: string;
+  videoId?: string;
+}
+
+export const getDueReview = (subjectId?: string): Promise<{ questions: ReviewQuestion[]; totalDue: number }> =>
+  api
+    .get<{ success: boolean; data: any }>('/drillpad/review/due', {
+      params: subjectId ? { subjectId } : undefined,
+    })
+    .then(unwrap);
 
 export default api;

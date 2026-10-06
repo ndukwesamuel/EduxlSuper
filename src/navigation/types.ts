@@ -112,6 +112,17 @@ CompanyHistory: { companyId: string };
     style?:      string;
   };
 
+  LectureVideoLibrary: { subjectId: string; subjectName: string };
+  LectureVideoPlayer:  { videoId: string; subjectName?: string; startSeconds?: number };
+  PracticeSession: {
+    mode: 'chapter' | 'review';
+    videoId?: string;
+    chapterTitle?: string;
+    chapterIndex?: number;
+    subjectId?: string;
+    subjectName?: string;
+  };
+
   // ── AI File/Link Quiz ─────────────────────────────────────────────
   AiQuizSetup: { subjectId?: string; subjectName?: string } | undefined;
   AiQuizSession: { questions: any[]; subjectId?: string; subjectName?: string };

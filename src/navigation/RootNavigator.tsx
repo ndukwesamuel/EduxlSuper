@@ -58,6 +58,11 @@ import ShellProgressScreen           from '../screens/shell/ShellProgressScreen'
 import WhiteboardLibraryScreen    from '../screens/drillpad/WhiteboardLibraryScreen';
 import WhiteboardCreateScreen     from '../screens/drillpad/WhiteboardCreateScreen';
 import WhiteboardPlayerScreen     from '../screens/drillpad/WhiteboardPlayerScreen';
+
+// ── Lecture Videos ────────────────────────────────────────────────
+import LectureVideoLibraryScreen  from '../screens/drillpad/LectureVideoLibraryScreen';
+import LectureVideoPlayerScreen   from '../screens/drillpad/LectureVideoPlayerScreen';
+import PracticeSessionScreen      from '../screens/drillpad/PracticeSessionScreen';
 import WhiteboardGeneratingScreen from '../screens/drillpad/WhiteboardGeneratingScreen';
 import SubjectMaterialsScreen from '../screens/drillpad/SubjectMaterialsScreen';
 
@@ -157,6 +162,11 @@ function AppNavigator() {
       <AppStack.Screen name="WhiteboardCreate"     component={WhiteboardCreateScreen} />
       <AppStack.Screen name="WhiteboardGenerating" component={WhiteboardGeneratingScreen} options={{ gestureEnabled: false }} />
       <AppStack.Screen name="WhiteboardPlayer"     component={WhiteboardPlayerScreen} />
+
+      {/* ── Lecture Videos ── */}
+      <AppStack.Screen name="LectureVideoLibrary" component={LectureVideoLibraryScreen} />
+      <AppStack.Screen name="LectureVideoPlayer"  component={LectureVideoPlayerScreen} />
+      <AppStack.Screen name="PracticeSession"    component={PracticeSessionScreen} />
 
       {/* ── AI File/Link Quiz ── */}
       <AppStack.Screen name="AiQuizSetup"   component={AiQuizSetupScreen} />
